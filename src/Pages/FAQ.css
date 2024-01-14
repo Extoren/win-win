@@ -1,0 +1,127 @@
+
+
+:root {
+    --body-bg-color: #e5ecef;
+    --theme-bg-color: #fafafb;
+    --body-font: "Poppins", sans-serif;
+    --body-color: #2f2f33;
+    --active-color: #F79802;
+    --active-light-color: #FBBF77;
+    --header-bg-color: #fff;
+    --search-border-color: #efefef;
+    --border-color: #d8d8d8;
+    --alert-bg-color: #e8f2ff;
+    --subtitle-color: #000;
+    --inactive-color: #f0f0f0;
+    --placeholder-color: #9b9ba5;
+    --time-button: #B7410E;
+    --level-button: #FBBF77;
+    --button-color: #fff; 
+    --Hover-color: #F79802; 
+    --login-color: #F17829;
+  }
+  
+  .dark-mode {
+    --body-bg-color: #1d1d1d;
+    --theme-bg-color: #13131a;
+    --header-bg-color: #1c1c24;
+    --alert-bg-color: #292932;
+    --body-color: #fff;
+    --inactive-color: #292932;
+    --subtitle-color: #c1c1c1;
+    --time-button: #fff;
+    --level-button: #13131a;
+    --active-light-color: #D86E39;
+    --border-color: #26262f;
+    --search-border-color: #26262f; 
+    --login-color: #F17829;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--body-bg-color);
+    font-family: var(--body-font);
+    font-size: 15px;
+    color: var(--body-color); 
+}
+
+.dark-light svg {
+    margin-right: 8px;
+    width: 22px;
+    cursor: pointer;
+    fill: transparent;
+    transition: 0.5s; }
+  
+  .dark-mode .dark-light svg {
+    fill: #ffce45;
+    stroke: #ffce45; }
+  
+  .dark-mode .job-card svg {
+    box-shadow: none; }
+  
+  .dark-mode .search.item {
+    color: var(--body-color);
+    border-color: var(--body-color); }
+  
+  .dark-mode .search-location svg,
+  .dark-mode .search-job svg,
+  .dark-mode .search-salary svg {
+    color: var(--body-color); }
+  
+  .dark-mode .detail-button {
+    background-color: var(--inactive-color);
+    color: var(--subtitle-color); }
+  
+
+
+
+.faqs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+.faq-singular {
+    position: relative;
+    border-bottom: 1px solid #ccc;
+    padding: 0 30px 0 20px;
+    width: 50%;
+}
+
+@media (max-width: 1200px) {
+    .faq-singular {
+        width: 100%;
+    }
+}
+
+.faq-singular:hover,
+.faq-singular.active{
+    background: var(--body-bg-color);
+    background-image: linear-gradient(90deg, var(--active-light-color) 0%, var(--alert-bg-color) 8px);
+}
+.faq-singular .faq-question {
+    position: relative;
+    cursor: pointer;
+    margin: 0;
+    padding: 25px 25px 25px 0px;
+    font-weight: 700;
+    font-size: 13pt;
+}
+.faq-singular .faq-question:before {
+    position: absolute;
+    content: "+";
+    color: var(--active-color);
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 28px;
+    font-weight: 700;
+    transition: all .5s;
+}
+.faq-singular.active .faq-question:before {
+    transform: translateY(-50%) rotate(45deg) scale(1.3);
+}
+.faq-answer {
+    display: none;
+    padding-bottom: 20px;
+}
