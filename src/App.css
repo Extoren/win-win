@@ -74,7 +74,9 @@ body {
   background-color: var(--body-bg-color);
   font-family: var(--body-font);
   font-size: 15px;
-  color: var(--body-color); }
+  color: var(--body-color); 
+  overflow: hidden;
+}
 
 .dark-light svg {
   margin-right: 8px;
@@ -142,7 +144,8 @@ body {
   background-color: var(--header-bg-color);
   height: 60px;
   width: 100%;
-  font-size: 14px; }
+  font-size: 14px; 
+}
   .header-menu a {
     text-decoration: none;
     color: var(--body-color);
