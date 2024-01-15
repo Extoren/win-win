@@ -11,7 +11,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const jobsData = [
   { id: 1, svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
   { id: 2, svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
-  { id: 2, svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 2', price: '50' },
+  { id: 3, svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 2', price: '50' },
   // Add more job objects here...
 ];
 
