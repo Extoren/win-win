@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from '../Bilder/Logo_CC.png';
 import './Login.css';
 
 function Login() {
