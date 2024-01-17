@@ -2,6 +2,30 @@ import React from 'react';
 import './Login.css';
 
 function Login() {
+
+    function toggleActive(id) {
+        // Get the active-bg element
+        var activeBg = document.querySelector('#active-bg');
+    
+        // Calculate the new position of the active-bg
+        var newPosition = (id === 'register') ? '50%' : '0';
+    
+        // Update the left property of the active-bg
+        activeBg.style.left = newPosition;
+    
+        // Get the current active element
+        var activeElement = document.querySelector('.form-menu span.active');
+    
+        // Remove the 'active' class from the current active element
+        if (activeElement) {
+          activeElement.classList.remove('active');
+        }
+    
+        // Add the 'active' class to the clicked element
+        var clickedElement = document.getElementById(id);
+        clickedElement.classList.add('active');
+      }
+
     return (
 
         <div className="container">
@@ -13,13 +37,17 @@ function Login() {
                     <span
                         id="login"
                         className="active"
-                        onclick="showLoginForm(); toggleActive('login');"
+                        onClick={() => {
+                            toggleActive('login');
+                          }}
                     >
                         Login
                     </span>
                     <span
                         id="register"
-                        onclick="showRegisterForm(); toggleActive('register');"
+                        onClick={() => {
+                            toggleActive('register');
+                          }}
                     >
                         Registrer
                     </span>
