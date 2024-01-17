@@ -586,11 +586,11 @@ function Home() {
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                     <circle cx={12} cy={10} r={3} />
                   </svg>
-                  Norge, <span className="Change"> Velg By</span>
+                  Norge, <span className="Change"> Velg Fylke</span>
                   <i className="fas fa-chevron-down" style={{ position: "absolute", right: 10 }} />
                 {showLocations && (
                   <div className="other-locations">
-                    <p className="selected-location">Velg By</p>
+                    <p className="selected-location">Velg Fylke</p>
                     <p>Agder</p>
                     <p>Innlandet</p>
                     <p>Møre og Romsdal</p>
@@ -720,38 +720,38 @@ function Home() {
                         <span className="job-number">1</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job1" className="job-style" />
-                        <label htmlFor="job1">Rogaland</label>
+                        <input type="checkbox" id="job6" className="job-style" />
+                        <label htmlFor="job6">Rogaland</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job2" className="job-style" />
-                        <label htmlFor="job2">Svalbard</label>
+                        <input type="checkbox" id="job7" className="job-style" />
+                        <label htmlFor="job7">Svalbard</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job3" className="job-style" />
-                        <label htmlFor="job3">Troms og Finnmark</label>
+                        <input type="checkbox" id="job8" className="job-style" />
+                        <label htmlFor="job8">Troms og Finnmark</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job4" className="job-style" />
-                        <label htmlFor="job4">Trøndelag</label>
+                        <input type="checkbox" id="job9" className="job-style" />
+                        <label htmlFor="job9">Trøndelag</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job5" className="job-style" />
-                        <label htmlFor="job5">Vestfold og Telemark</label>
+                        <input type="checkbox" id="job10" className="job-style" />
+                        <label htmlFor="job10">Vestfold og Telemark</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job4" className="job-style" />
-                        <label htmlFor="job4">Vestland</label>
+                        <input type="checkbox" id="job11" className="job-style" />
+                        <label htmlFor="job11">Vestland</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job5" className="job-style" />
-                        <label htmlFor="job5">Viken</label>
+                        <input type="checkbox" id="job12" className="job-style" />
+                        <label htmlFor="job12">Viken</label>
                         <span className="job-number">0</span>
                       </div>
                     </div>
@@ -760,33 +760,33 @@ function Home() {
                     <div className="job-time-title">Ansettelsestype</div>
                     <div className="job-wrapper">
                       <div className="type-container">
-                        <input type="checkbox" id="job1" className="job-style" />
-                        <label htmlFor="job1">Heltidsjobber</label>
+                        <input type="checkbox" id="job13" className="job-style" />
+                        <label htmlFor="job13">Heltidsjobber</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job2" className="job-style" />
-                        <label htmlFor="job2">Deltidsjobber</label>
+                        <input type="checkbox" id="job14" className="job-style" />
+                        <label htmlFor="job14">Deltidsjobber</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job3" className="job-style" />
-                        <label htmlFor="job3">Eksterne jobber</label>
+                        <input type="checkbox" id="job15" className="job-style" />
+                        <label htmlFor="job15">Eksterne jobber</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job4" className="job-style" />
-                        <label htmlFor="job4">Kontrakt</label>
+                        <input type="checkbox" id="job16" className="job-style" />
+                        <label htmlFor="job16">Kontrakt</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
                         <input
                           type="checkbox"
-                          id="job5"
+                          id="job17"
                           className="job-style"
                           defaultChecked=""
                         />
-                        <label htmlFor="job5">Små jobber</label>
+                        <label htmlFor="job17">Små jobber</label>
                         <span className="job-number">1</span>
                       </div>
                     </div>
@@ -797,36 +797,36 @@ function Home() {
                       <div className="type-container">
                         <input
                           type="checkbox"
-                          id="job7"
+                          id="job18"
                           className="job-style"
                           defaultChecked=""
                         />
-                        <label htmlFor="job7">Studentnivå</label>
+                        <label htmlFor="job18">Studentnivå</label>
                         <span className="job-number">1</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job8" className="job-style" />
-                        <label htmlFor="job8">Inngangsnivå</label>
+                        <input type="checkbox" id="job19" className="job-style" />
+                        <label htmlFor="job19">Inngangsnivå</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job9" className="job-style" />
-                        <label htmlFor="job9">Midtnivå</label>
+                        <input type="checkbox" id="job20" className="job-style" />
+                        <label htmlFor="job20">Midtnivå</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job10" className="job-style" />
-                        <label htmlFor="job10">Seniornivå</label>
+                        <input type="checkbox" id="job21" className="job-style" />
+                        <label htmlFor="job21">Seniornivå</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job11" className="job-style" />
-                        <label htmlFor="job11">Regissører</label>
+                        <input type="checkbox" id="job22" className="job-style" />
+                        <label htmlFor="job22">Regissører</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job12" className="job-style" />
-                        <label htmlFor="job12">VP eller over</label>
+                        <input type="checkbox" id="job23" className="job-style" />
+                        <label htmlFor="job23">VP eller over</label>
                         <span className="job-number">0</span>
                       </div>
                     </div>
@@ -835,43 +835,38 @@ function Home() {
                     <div className="job-time-title">Lønnsområde</div>
                     <div className="job-wrapper">
                       <div className="type-container">
-                        <input
-                          type="checkbox"
-                          id="job13"
-                          className="job-style"
-                          defaultChecked=""
-                        />
-                        <label htmlFor="job13">0kr - 100kr</label>
+                        <input type="checkbox" id="job24" className="job-style"defaultChecked=""/>
+                        <label htmlFor="job24">0kr - 100kr</label>
                         <span className="job-number">1</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job14" className="job-style" />
-                        <label htmlFor="job14">100kr - 200kr</label>
+                        <input type="checkbox" id="job25" className="job-style" />
+                        <label htmlFor="job25">100kr - 200kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job15" className="job-style" />
-                        <label htmlFor="job15">200kr - 500kr</label>
+                        <input type="checkbox" id="job26" className="job-style" />
+                        <label htmlFor="job26">200kr - 500kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job16" className="job-style" />
-                        <label htmlFor="job16">500kr - 1500kr</label>
+                        <input type="checkbox" id="job27" className="job-style" />
+                        <label htmlFor="job27">500kr - 1500kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job17" className="job-style" />
-                        <label htmlFor="job17">1500kr - 3000kr</label>
+                        <input type="checkbox" id="job28" className="job-style" />
+                        <label htmlFor="job28">1500kr - 3000kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job18" className="job-style" />
-                        <label htmlFor="job18">3000kr - 4000kr</label>
+                        <input type="checkbox" id="job29" className="job-style" />
+                        <label htmlFor="job29">3000kr - 4000kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job19" className="job-style" />
-                        <label htmlFor="job19">4000kr - 5000kr</label>
+                        <input type="checkbox" id="job30" className="job-style" />
+                        <label htmlFor="job30">4000kr - 5000kr</label>
                         <span className="job-number">0</span>
                       </div>
                     </div>
