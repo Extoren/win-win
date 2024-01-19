@@ -402,7 +402,171 @@ function getSvg(svgName) {
       </div>
     </div>
   );
+
+  const OverviewCard = ({ job }) => {
+    // Define the structure of your OverviewCard here
+    // For example:
+    return (
+      <div className="job-card overview-card">
+        <div className="overview-wrapper">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 32 32"
+            style={{ backgroundColor: "#fff" }}
+          >
+            <rect width="100%" height="100%" fill="#fff" />
+            <foreignObject
+              width="100%"
+              height="100%"
+              style={{
+                backgroundColor: "#fff",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%"
+                }}
+              >
+                <i
+                  className="fas fa-leaf"
+                  style={{ color: "#ffae00", fontSize: 24 }}
+                />
+              </div>
+            </foreignObject>
+          </svg>
+          <div className="overview-detail">
+            <div className="job-card-title">{job.title}</div>
+            <div className="job-card-subtitle">(Adresse)</div>
+          </div>
+          <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
+            <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
+          </svg>
+        </div>
+        <div className="job-overview-buttons">
+          <div className="search-buttons time-button">
+            (Ansettelsestype)
+          </div>
+          <div className="search-buttons level-button">
+            (Ansiennitetsnivå)
+          </div>
+          <div className="job-stat">Ny</div>
+          <div className="job-day">1d</div>
+        </div>
+      </div>
+    );
+  };
   
+  const JobDetailView = ({ job, onClose }) => {
+    if (!job) return null;
+
+    
+  
+    return (
+      <div className="job-overview">
+        <div className="job-overview-cards">
+        <button className="job-overview-close" onClick={onClose}>Tilbake</button>
+          <div className="job-overview-card">
+            <OverviewCard job={job} />
+          </div>
+        </div>
+        <div className="job-explain">
+          <img
+            className="job-bg"
+            src="https://www.deere.no/assets/images/region-2/products/commercial-mowing/front-rotary-mowers/1600t-wide-area-rotary-mower-r2c010728-hero.jpg"
+            alt=""
+          />
+          <div className="job-logos">
+            {getSvg(job.svg)}
+          </div>
+          <div className="job-explain-content">
+            <div className="job-title-wrapper">
+              <div className="job-card-title">UI /UX Designer</div>
+              <div className="job-action">
+                <svg
+                  className="heart"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
+                </svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-share-2"
+                >
+                  <circle cx={18} cy={5} r={3} />
+                  <circle cx={6} cy={12} r={3} />
+                  <circle cx={18} cy={19} r={3} />
+                  <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" />
+                </svg>
+              </div>
+            </div>
+            <div className="job-subtitle-wrapper">
+              <div className="company-name">
+                (Navn Person)
+                <span className="comp-location">(Adresse)</span>
+              </div>
+              <div className="posted">
+                Lagt ut for ANTALL dag(er) siden
+                <span className="app-number">0 applikasjoner</span>
+              </div>
+            </div>
+            <div className="explain-bar">
+              <div className="explain-contents">
+                <div className="explain-title">Erfaring</div>
+                <div className="explain-subtitle">(Erfaring)</div>
+              </div>
+              <div className="explain-contents">
+                <div className="explain-title">Type ansatt</div>
+                <div className="explain-subtitle">(Ansiennitetsnivå)</div>
+              </div>
+              <div className="explain-contents">
+                <div className="explain-title">Ansettelsestype</div>
+                <div className="explain-subtitle">(Ansettelsestype)</div>
+              </div>
+              <div className="explain-contents">
+                <div className="explain-title">Tilby lønn</div>
+                <div className="explain-subtitle">{job.price}</div>
+              </div>
+            </div>
+            <div className="overview-text">
+              <div className="overview-text-header">Oversikt</div>
+              <div className="overview-text-subheader">
+                (Ren tekst beskrivelse her)
+              </div>
+            </div>
+            <div className="overview-text">
+              <div className="overview-text-header">
+                Stillingsbeskrivelse
+              </div>
+              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">Tilleggsinfo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
 function Home() {
 
@@ -433,6 +597,10 @@ function Home() {
     const handleJobClick = (job) => {
         setSelectedJob(job);
     };
+
+    const closeJobDetailView = () => {
+    setSelectedJob(null);
+  };
 
     const handleCategorySelection = (categoryName) => {
         setJobFilter(categoryName);
@@ -669,7 +837,8 @@ function Home() {
                 <button className="search-button">Finn Jobb</button>
               </div>
               <div className="main-container">
-                <div className="search-type">
+                {selectedJob == null && (
+                  <div className="search-type">
                   <div className="job-time">
                     <div className="job-time">
                       <p>Område i kart</p>
@@ -872,6 +1041,7 @@ function Home() {
                     </div>
                   </div>
                 </div>
+                )}
                 <div className="searched-jobs">
                   <div className="searched-bar">
                   <div className="searched-show">Viser {jobCount} jobber</div>
@@ -881,196 +1051,13 @@ function Home() {
                     </div>
                   </div>
                   <div className="job-cards">
-                      {jobsData.map(job => (
+                    {selectedJob == null && jobsData.map(job => (
                       <JobCard key={job.id} job={job} onClick={handleJobClick} />
-                      ))}
+                    ))}
                   </div>
-                  <div className="job-overview">
-                    <div className="job-overview-cards">
-                      <div className="job-overview-card">
-                        <div className="job-card overview-card">
-                          <div className="overview-wrapper">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 32 32"
-                              style={{ backgroundColor: "#fff" }}
-                            >
-                              <rect width="100%" height="100%" fill="#fff" />
-                              <foreignObject
-                                width="100%"
-                                height="100%"
-                                style={{
-                                  backgroundColor: "#fff",
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center"
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    height: "100%"
-                                  }}
-                                >
-                                  <i
-                                    className="fas fa-leaf"
-                                    style={{ color: "#ffae00", fontSize: 24 }}
-                                  />
-                                </div>
-                              </foreignObject>
-                            </svg>
-                            <div className="overview-detail">
-                              <div className="job-card-title">Gressklipping</div>
-                              <div className="job-card-subtitle">(Adresse)</div>
-                            </div>
-                            <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
-                              <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
-                            </svg>
-                          </div>
-                          <div className="job-overview-buttons">
-                            <div className="search-buttons time-button">
-                              (Ansettelsestype)
-                            </div>
-                            <div className="search-buttons level-button">
-                              (Ansiennitetsnivå)
-                            </div>
-                            <div className="job-stat">Ny</div>
-                            <div className="job-day">1d</div>
-                          </div>
-                        </div>
-                      </div>
-                      {/*<div class="job-overview-card">
-                <div class="job-card overview-card">
-                <div class="overview-wrapper">
-                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#fff" style="background-color:#1e1f26">
-                <path d="M24 7.6c0-.3 0-.5-.4-.6C12.2.2 12.4-.3 11.6 0 3 5.5.6 6.7.2 7.1c-.3.3-.2.8-.2 8.3 0 .9 7.7 5.5 11.5 8.4.4.3.8.2 1 0 11.2-8 11.5-7.6 11.5-8.4V7.6zm-1.5 6.5l-3.9-2.4L22.5 9zm-5.3-3.2l-4.5-2.7V2L22 7.6zM12 14.5l-3.9-2.7L12 9.5l3.9 2.3zm-.8-12.4v6L6.8 11 2.1 7.6zm-5.8 9.6l-3.9 2.4V9zm1.3 1l4.5 3.1v6l-9-6.3zm6 9.1v-6l4.6-3.1 4.6 2.8z" /></svg>
-                  <div class="overview-detail">
-                  <div class="job-card-title">Product Designer</div>
-                  <div class="job-card-subtitle">
-                    4517 Washington Ave. Syracuse.
-                  </div>
-                  </div>
-                  <svg class="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
-                  <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" /></svg>
-                </div>
-                <div class="job-overview-buttons">
-                  <div class="search-buttons time-button">Full Time</div>
-                  <div class="search-buttons level-button">Senior Level</div>
-                  <div class="job-stat">New</div>
-                  <div class="job-day">4d</div>
-                </div>
-                </div>
-              </div>*/}
-                    </div>
-                    <div className="job-explain">
-                      <img
-                        className="job-bg"
-                        src="https://www.deere.no/assets/images/region-2/products/commercial-mowing/front-rotary-mowers/1600t-wide-area-rotary-mower-r2c010728-hero.jpg"
-                        alt=""
-                      />
-                      <div className="job-logos">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 32 32"
-                          style={{ backgroundColor: "#f76754" }}
-                        >
-                          <path
-                            xmlns="http://www.w3.org/2000/svg"
-                            d="M0 .5h4.2v23H0z"
-                            fill="#042b48"
-                            data-original="#212121"
-                          />
-                          <path
-                            xmlns="http://www.w3.org/2000/svg"
-                            d="M15.4.5a8.6 8.6 0 100 17.2 8.6 8.6 0 000-17.2z"
-                            fill="#fefefe"
-                            data-original="#f4511e"
-                          />
-                        </svg>
-                      </div>
-                      <div className="job-explain-content">
-                        <div className="job-title-wrapper">
-                          <div className="job-card-title">UI /UX Designer</div>
-                          <div className="job-action">
-                            <svg
-                              className="heart"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
-                            </svg>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="feather feather-share-2"
-                            >
-                              <circle cx={18} cy={5} r={3} />
-                              <circle cx={6} cy={12} r={3} />
-                              <circle cx={18} cy={19} r={3} />
-                              <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" />
-                            </svg>
-                          </div>
-                        </div>
-                        <div className="job-subtitle-wrapper">
-                          <div className="company-name">
-                            (Navn Person)
-                            <span className="comp-location">(Adresse)</span>
-                          </div>
-                          <div className="posted">
-                            Lagt ut for ANTALL dag(er) siden
-                            <span className="app-number">0 applikasjoner</span>
-                          </div>
-                        </div>
-                        <div className="explain-bar">
-                          <div className="explain-contents">
-                            <div className="explain-title">Erfaring</div>
-                            <div className="explain-subtitle">(Erfaring)</div>
-                          </div>
-                          <div className="explain-contents">
-                            <div className="explain-title">Type ansatt</div>
-                            <div className="explain-subtitle">(Ansiennitetsnivå)</div>
-                          </div>
-                          <div className="explain-contents">
-                            <div className="explain-title">Ansettelsestype</div>
-                            <div className="explain-subtitle">(Ansettelsestype)</div>
-                          </div>
-                          <div className="explain-contents">
-                            <div className="explain-title">Tilby lønn</div>
-                            <div className="explain-subtitle">(Lønn)</div>
-                          </div>
-                        </div>
-                        <div className="overview-text">
-                          <div className="overview-text-header">Oversikt</div>
-                          <div className="overview-text-subheader">
-                            (Ren tekst beskrivelse her)
-                          </div>
-                        </div>
-                        <div className="overview-text">
-                          <div className="overview-text-header">
-                            Stillingsbeskrivelse
-                          </div>
-                          <div className="overview-text-item">Tilleggsinfo</div>
-                          <div className="overview-text-item">Tilleggsinfo</div>
-                          <div className="overview-text-item">Tilleggsinfo</div>
-                          <div className="overview-text-item">Tilleggsinfo</div>
-                          <div className="overview-text-item">Tilleggsinfo</div>
-                          <div className="overview-text-item">Tilleggsinfo</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {selectedJob && (
+                    <JobDetailView job={selectedJob} onClose={closeJobDetailView} />
+                  )}
                 </div>
               </div>
             </div>
