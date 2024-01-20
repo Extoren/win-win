@@ -710,6 +710,11 @@ a {
       color: var(--time-button) !important;
     }
 
+    .job-card-county {
+      float: right;
+      color: var(--placeholder-color);
+    }
+
 .overview-card:hover {
   background: var(--Hover-color);
   transition: none;

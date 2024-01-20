@@ -408,6 +408,7 @@ function getImg(imgName) {
             {getSvg(job.svg)}
           <div className="menu-dot" />
         </div>
+        <div className="job-card-county">{job.county}</div>
         <div className="job-card-title">{job.title}</div>
         <div className="job-card-subtitle">{job.description}</div>
         <div className="job-card-price"><br></br>{job.price} kr</div>
@@ -447,7 +448,7 @@ function getImg(imgName) {
           </svg>
           <div className="overview-detail">
             <div className="job-card-title">{job.title}</div>
-            <div className="job-card-subtitle">(Adresse)</div>
+            <div className="job-card-subtitle">{job.county}, {job.address}</div>
           </div>
           <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
             <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
@@ -470,10 +471,10 @@ function getImg(imgName) {
 
   // Example jobs data
   const jobsData = [
-    { id: 1, img: 'gress', svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
-    { id: 2, img: 'Løvrydding', svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
-    { id: 3, img: 'Snømåking', svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 2', price: '50' },
-    { id: 4, img: 'Hundelufting', svg: 'Hundelufting', title: 'Hundelufting', description: 'Description for Job 2', price: '30' },
+    { id: 1, name: 'navn person', county: 'Oslo', address: 'Adresse', img: 'gress', svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
+    { id: 2, name: 'navn person', county: 'Viken', address: 'Adresse', img: 'Løvrydding', svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
+    { id: 3, name: 'navn person', county: 'Agder', address: 'Adresse', img: 'Snømåking', svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 2', price: '50' },
+    { id: 4, name: 'navn person', county: 'Rogaland', address: 'Adresse', img: 'Hundelufting', svg: 'Hundelufting', title: 'Hundelufting', description: 'Description for Job 2', price: '30' },
     // Add more job objects here...
   ];
 
@@ -533,8 +534,8 @@ function getImg(imgName) {
             </div>
             <div className="job-subtitle-wrapper">
               <div className="company-name">
-                (Navn Person)
-                <span className="comp-location">(Adresse)</span>
+                {job.name}
+                <span className="comp-location">{job.county}, {job.address}</span>
               </div>
               <div className="posted">
                 Lagt ut for ANTALL dag(er) siden
