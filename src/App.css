@@ -684,7 +684,9 @@ a {
   background-color: var(--header-bg-color);
   border-radius: 8px;
   cursor: pointer;
-  transition: .2s; }
+  transition: .2s; 
+  margin-bottom: 10px;
+}
   .job-card:hover {
     transform: scale(1.02); }
   .job-card svg {
@@ -798,13 +800,8 @@ a {
     flex-direction: column;
     width: 330px;
     height: 100%;
+    margin-left: 40px;
     flex-shrink: 0; }
-    .job-overview-close {
-      margin-top: 40px;
-      margin-bottom: 10px;
-    }
-  .job-overview-card + .job-overview-card {
-    margin-top: 20px; }
   .job-overview-buttons {
     display: flex;
     align-items: center;
@@ -854,6 +851,27 @@ a {
         justify-content: center;
         cursor: pointer;
         z-index: 1; 
+        margin-top: 40px;
+        margin-bottom: 10px;
+      }
+
+      #show {
+        width: 100%;
+      }
+
+      @media (min-width: 1250px) {
+        #show {
+          display: none;
+        }
+      }
+
+      @media (max-width: 1250px) {
+        #hide {
+          display: none;
+        }
+        .job-overview-close {
+          margin-top: 0;
+        }
       }
 
 
@@ -874,7 +892,7 @@ a {
     align-self: start;
   }
 
-.job-bg {
+.job-bg, .job-bg img {
   border-radius: 8px 8px 0 0;
   object-fit: cover;
   width: 100%;
@@ -1063,13 +1081,49 @@ a {
   }
   }
 
-@media screen and (max-width: 760px) {
-  .detail-page .job-overview-cards {
-    display: none; }
+  @media screen and (max-width: 1250px) {
+    .job-overview {
+      flex-direction: column;
+      padding: 40px;
+    }
+    .job-overview-cards {
+      order: 2;
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .job-overview-card {
+      box-sizing: border-box;
+      margin-left: 40px;
+      margin-top: 20px;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .job-explain {
+      order: 1;
+      margin-top: 95vh;
+    }
+  }
+
+  @media (max-width: 1250px) {
+    .hide-searched-bar {
+      display: none;
+    }
+  }
+
+@media screen and (max-width: 800px) {
   .user-profile {
     margin-right: 0; }
   .job-explain {
-    margin-left: 0; } }
+    margin-left: 0; 
+    margin-top: 107vh;
+  } 
+  .job-overview-card {
+    margin-left: 0;
+    margin-right: 20px;
+  }
+}
 
 @media screen and (max-width: 730px) {
   .search-type {
@@ -1118,10 +1172,17 @@ a {
 }
 
 @media screen and (max-width: 500px) {
-  
+  .job-overview-card {
+    margin-left: -25px;
+    width: 100%;
+  }
+  .job-overview {
+    margin-top: 50px;
+    padding: 0;
+  }
 }
 
-@media screen and (max-width: 380px) {
+@media screen and (max-width: 450px) {
   .explain-contents {
     width: 100%;
     margin: 0; }
