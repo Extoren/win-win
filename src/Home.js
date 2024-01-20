@@ -371,6 +371,35 @@ function getSvg(svgName) {
     }
   }
   
+function getImg(imgName) {
+  switch (imgName) {
+    case 'gress':
+      return (
+        <div className="gress">
+          <img src="https://www.deere.no/assets/images/region-2/products/commercial-mowing/front-rotary-mowers/1600t-wide-area-rotary-mower-r2c010728-hero.jpg" alt="Gressklipping" />
+        </div>
+      );
+    case 'Løvrydding':
+      return (
+        <div className="Løvrydding">
+          <img src="https://www.thegrassmaster.com/wp-content/uploads/2019/03/leaf-clean-up1453-1-1024x683.jpg" alt="Løvrydding" />
+        </div>
+      );
+    case 'Snømåking':
+    return (
+      <div className="Snømåking">
+        <img src="https://yardworx.ca/wp-content/uploads/2021/11/snow-removal-calgary-edmonton.jpg" alt="Snømåking" />
+      </div>
+    );
+    case 'Hundelufting':
+    return (
+      <div className="Hundelufting">
+        <img src="https://img.freepik.com/premium-photo/bernese-mountain-dog-great-outdoors_969097-634.jpg" alt="Hundelufting" />
+      </div>
+    );
+  }
+}
+
   const JobCard = ({ job, onClick }) => (
     <div className="job-card" onClick={() => onClick(job)}>
       {/* Start here */}
@@ -403,40 +432,16 @@ function getSvg(svgName) {
     </div>
   );
 
-  const OverviewCard = ({ job }) => {
-    // Define the structure of your OverviewCard here
-    // For example:
+  const OverviewCard = ({ job, onClick  }) => {
     return (
-      <div className="job-card overview-card">
+      <div className="job-card overview-card" onClick={() => onClick(job)}>
         <div className="overview-wrapper">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 32 32"
-            style={{ backgroundColor: "#fff" }}
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
             <rect width="100%" height="100%" fill="#fff" />
-            <foreignObject
-              width="100%"
-              height="100%"
-              style={{
-                backgroundColor: "#fff",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
+            <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff",display: "flex",justifyContent: "center",alignItems: "center"}}>
               <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "100%"
-                }}
-              >
-                <i
-                  className="fas fa-leaf"
-                  style={{ color: "#ffae00", fontSize: 24 }}
-                />
+                style={{display: "flex",justifyContent: "center",alignItems: "center",height: "100%"}}>
+                {getSvg(job.svg)}
               </div>
             </foreignObject>
           </svg>
@@ -462,31 +467,40 @@ function getSvg(svgName) {
     );
   };
   
-  const JobDetailView = ({ job, onClose }) => {
+
+  // Example jobs data
+  const jobsData = [
+    { id: 1, img: 'gress', svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
+    { id: 2, img: 'Løvrydding', svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
+    { id: 3, img: 'Snømåking', svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 2', price: '50' },
+    { id: 4, img: 'Hundelufting', svg: 'Hundelufting', title: 'Hundelufting', description: 'Description for Job 2', price: '30' },
+    // Add more job objects here...
+  ];
+
+  const JobDetailView = ({ job, onOverviewClick, onClose }) => {
     if (!job) return null;
 
-    
-  
     return (
       <div className="job-overview">
         <div className="job-overview-cards">
-        <button className="job-overview-close" onClick={onClose}>Tilbake</button>
+        <button className="job-overview-close" id="hide" onClick={onClose}>Tilbake</button>
           <div className="job-overview-card">
-            <OverviewCard job={job} />
+          {jobsData.map(job => (
+            <OverviewCard job={job} onClick={() => onOverviewClick(job)} />
+          ))}
           </div>
         </div>
         <div className="job-explain">
-          <img
-            className="job-bg"
-            src="https://www.deere.no/assets/images/region-2/products/commercial-mowing/front-rotary-mowers/1600t-wide-area-rotary-mower-r2c010728-hero.jpg"
-            alt=""
-          />
+        <button className="job-overview-close" id="show" onClick={onClose}>Tilbake</button>
+          <div className="job-bg">
+            {getImg(job.img)}
+          </div>
           <div className="job-logos">
             {getSvg(job.svg)}
           </div>
           <div className="job-explain-content">
             <div className="job-title-wrapper">
-              <div className="job-card-title">UI /UX Designer</div>
+              <div className="job-card-title">{job.title}</div>
               <div className="job-action">
                 <svg
                   className="heart"
@@ -570,20 +584,12 @@ function getSvg(svgName) {
 
 function Home() {
 
-
-    // Example jobs data
-    const jobsData = [
-    { id: 1, svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
-    { id: 2, svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
-    { id: 3, svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 2', price: '50' },
-    // Add more job objects here...
-  ];
-
     
     const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
     const wrapperRef = useRef(null);
     const [selectedJob, setSelectedJob] = useState(null);
     const [showLocations, setShowLocations] = useState(false);
+    const [selectedOverview, setSelectedOverview] = useState(null);
     const [jobFilter, setJobFilter] = useState('');
     const inputRef = useRef(null);
     const categories = [
@@ -592,6 +598,10 @@ function Home() {
         'Male gjerder' , 'Småreparasjoner', 'Levere aviser', 'Organisere garasjesalg', 'Datatjenester for eldre',
         'Hjelpe med hagearbeid', 'Vannplanter for naboer', 'Hjelpe til med å flytte'
     ];
+
+    const handleOverviewClick = (job) => {
+      setSelectedJob(job);
+  };
 
 
     const handleJobClick = (job) => {
@@ -626,7 +636,6 @@ function Home() {
 
 
     return (
-        
         <div className="container">
             <div className="categories">
               <div className="category">
@@ -837,7 +846,6 @@ function Home() {
                 <button className="search-button">Finn Jobb</button>
               </div>
               <div className="main-container">
-                {selectedJob == null && (
                   <div className="search-type">
                   <div className="job-time">
                     <div className="job-time">
@@ -1041,14 +1049,13 @@ function Home() {
                     </div>
                   </div>
                 </div>
-                )}
                 <div className="searched-jobs">
-                  <div className="searched-bar">
-                  <div className="searched-show">Viser {jobCount} jobber</div>
-                    <div className="searched-sort">
-                      Sorter etter: <span className="post-time">Nyeste Post </span>
-                      <span className="menu-icon">▼</span>
-                    </div>
+                  <div className={`searched-bar ${selectedJob ? "hide-searched-bar" : ""}`}>
+                    <div className="searched-show">Viser {jobCount} jobber</div>
+                      <div className="searched-sort">
+                        Sorter etter: <span className="post-time">Nyeste Post </span>
+                        <span className="menu-icon">▼</span>
+                      </div>
                   </div>
                   <div className="job-cards">
                     {selectedJob == null && jobsData.map(job => (
@@ -1056,8 +1063,12 @@ function Home() {
                     ))}
                   </div>
                   {selectedJob && (
-                    <JobDetailView job={selectedJob} onClose={closeJobDetailView} />
-                  )}
+            <JobDetailView 
+                job={selectedJob} 
+                onOverviewClick={handleOverviewClick} 
+                onClose={closeJobDetailView} 
+            />
+        )}
                 </div>
               </div>
             </div>
