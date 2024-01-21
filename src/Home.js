@@ -408,7 +408,7 @@ function getImg(imgName) {
             {getSvg(job.svg)}
           <div className="menu-dot" />
         </div>
-        <div className="job-card-county">{job.county}</div>
+        <div className="job-card-county"><span>{job.date}</span> <br></br>{job.county}</div>
         <div className="job-card-title">{job.title}</div>
         <div className="job-card-subtitle">{job.description}</div>
         <div className="job-card-price"><br></br>{job.price} kr</div>
@@ -471,10 +471,10 @@ function getImg(imgName) {
 
   // Example jobs data
   const jobsData = [
-    { id: 1, name: 'navn person', county: 'Oslo', postalCode: '0010', img: 'gress', svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
-    { id: 2, name: 'navn person', county: 'Viken', postalCode: '3530', img: 'Løvrydding', svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
-    { id: 3, name: 'navn person', county: 'Agder', postalCode: '4438', img: 'Snømåking', svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 3', price: '50' },
-    { id: 4, name: 'navn person', county: 'Rogaland', postalCode: '4011', img: 'Hundelufting', svg: 'Hundelufting', title: 'Hundelufting', description: 'Description for Job 4', price: '30' },
+    { id: 1, date: 'Ny', name: 'navn person', county: 'Oslo', postalCode: '0010', img: 'gress', svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
+    { id: 2, date: 'Ny', name: 'navn person', county: 'Viken', postalCode: '3530', img: 'Løvrydding', svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
+    { id: 3, date: 'Ny', name: 'navn person', county: 'Agder', postalCode: '4438', img: 'Snømåking', svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 3', price: '50' },
+    { id: 4, date: 'Ny', name: 'navn person', county: 'Rogaland', postalCode: '4011', img: 'Hundelufting', svg: 'Hundelufting', title: 'Hundelufting', description: 'Description for Job 4', price: '30' },
     // Add more job objects here...
   ];
 
