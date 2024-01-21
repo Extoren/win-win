@@ -291,7 +291,7 @@ body {
   }
   
   input:not(:focus) + .Categories-nav {
-    display: block;
+    display: none;
   }
   
   .Categories-nav p {
