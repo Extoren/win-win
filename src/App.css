@@ -41,6 +41,7 @@
   --button-color: #fff; 
   --Hover-color: #F79802; 
   --login-color: #F17829;
+  --warning-color: #ff0000;
 }
 
 .dark-mode {
@@ -57,6 +58,7 @@
   --border-color: #26262f;
   --search-border-color: #26262f; 
   --login-color: #F17829;
+  --warning-color: #ff0000;
 }
 
 ::placeholder {
@@ -366,6 +368,11 @@ body {
     position: relative;
     cursor: pointer;
   }
+
+  .search-location .placeholder {
+    color: var(--placeholder-color);
+  }
+
   .other-locations {
     position: absolute;
     top: 100%;
@@ -775,6 +782,21 @@ a {
     background-color: var(--inactive-color);
     color: var(--subtitle-color); }
 
+.menu-holder {
+  margin-left: auto;
+  padding: 20px;
+  width: 4px;
+  height: 4px;
+  cursor: pointer; 
+  margin-top: -20px;
+  position: relative;
+}
+
+.menu-holder:hover > .menu-dot {
+  background-color: var(--active-color);
+  box-shadow: -6px 0 0 0 var(--active-color), 6px 0 0 0 var(--active-color);
+}
+
 .menu-dot {
   background-color: var(--placeholder-color);
   box-shadow: -6px 0 0 0 var(--placeholder-color), 6px 0 0 0 var(--placeholder-color);
@@ -784,7 +806,41 @@ a {
   padding: 0;
   border-radius: 50%;
   margin-left: auto;
-  margin-right: 8px; }
+  margin-right: 8px;
+  cursor: pointer; 
+}
+
+.menu {
+  right: 0;
+  margin-top: 10px;
+  position: absolute;
+  min-width: 10%;
+  text-align: right;
+  z-index: 1;
+  cursor: pointer;
+  background: var(--search-border-color);
+  border-radius: 10px;
+}
+
+.menu-item {
+  color: var(--body-color);
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.menu-item:hover {
+  background-color: var(--alert-bg-color);
+  border-radius: 10px;
+}
+
+.fa-heart {
+  color: var(--active-color);
+}
+
+.fa-flag {
+  color: var(--warning-color);
+}
 
 .header-shadow {
   box-shadow: 0 4px 20px rgba(88, 99, 148, 0.17);
