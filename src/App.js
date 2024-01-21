@@ -15,7 +15,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/" element={<Home />} />
-        <Route path="/index.html" element={<Home />} />
+        <Route path="/:jobId" element={<Home />} />
       </Routes>
   </Router>
   );

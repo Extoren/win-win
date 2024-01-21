@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect  } from 'react';
 import jobsData from './jobsData';
 import getSvg  from './Accesorios/getSvg';
 import getImg  from './Accesorios/getImg';
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 const JobCard = ({ job, onClick }) => {
@@ -232,9 +233,12 @@ function Home() {
         'Male gjerder' , 'Småreparasjoner', 'Levere aviser', 'Organisere garasjesalg', 'Datatjenester for eldre',
         'Hjelpe med hagearbeid', 'Vannplanter for naboer', 'Hjelpe til med å flytte'
     ];
+    const navigate = useNavigate();
+    const { jobId } = useParams();
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
+      navigate(`/${job.id}`);
   };
 
   const handleLocationSelection = (location, event) => {
@@ -247,11 +251,12 @@ function Home() {
   };  
 
     const handleJobClick = (job) => {
-        setSelectedJob(job);
+      navigate(`/${job.id}`);
     };
 
     const closeJobDetailView = () => {
-    setSelectedJob(null);
+      setSelectedJob(null);
+      navigate('/');
   };
 
     const handleCategorySelection = (categoryName) => {
@@ -278,6 +283,18 @@ function Home() {
         setJobCount(jobsData.length);
         setJobCounts(countJobsByCounty(jobsData));
     }, [jobsData]);
+
+    useEffect(() => {
+      if (jobId) {
+        const jobDetail = jobsData.find(job => job.id === parseInt(jobId, 10));
+        if (jobDetail) {
+          setSelectedJob(jobDetail);
+        } else {
+          // Handle case where job is not found
+          navigate('/'); // Redirect to home if job ID is invalid
+        }
+      }
+    }, [jobId, navigate]);
 
 
     return (
