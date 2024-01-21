@@ -90,11 +90,11 @@ function Login() {
                             <div className="radio-container">
                                 <div className="radio-wrapper">
                                 <input type="radio" id="option1" name="options" required="" />
-                                <label htmlFor="option1">Barn</label>
+                                <label htmlFor="option1">Arbeidstaker</label>
                                 </div>
                                 <div className="radio-wrapper">
                                 <input type="radio" id="option2" name="options" required="" />
-                                <label htmlFor="option2">Voksen</label>
+                                <label htmlFor="option2">Arbeidsgiver</label>
                                 </div>
                             </div>
                             <div className="checkbox-wrapper">
