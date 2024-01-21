@@ -715,6 +715,11 @@ a {
       float: right;
       color: var(--placeholder-color);
     }
+    .job-card-county span {
+      /* make it be on the right*/
+      float: right;
+      color: var(--active-color);
+    }
 
 .overview-card:hover {
   background: var(--Hover-color);
