@@ -3,6 +3,7 @@ import FAQ from "./Pages/FAQ";
 import Login from "./Pages/Login";
 import Header from './header';
 import Home from './Home';
+import Create from './create';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/" element={<Home />} />
         <Route path="/:jobId" element={<Home />} />
+        <Route path="/create" element={<Create />} />
       </Routes>
   </Router>
   );

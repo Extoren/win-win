@@ -296,6 +296,14 @@ function Home() {
       }
     }, [jobId, navigate]);
 
+    useEffect(() => {
+      // Update job count based on selected location
+      const filteredJobs = jobsData.filter(job => 
+          selectedLocation === '' || job.county === selectedLocation
+      );
+      setJobCount(filteredJobs.length);
+  }, [selectedLocation]); // Dependency array includes selectedLocation
+
 
     return (
         <div className="container">
