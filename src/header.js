@@ -45,7 +45,7 @@ function Header() {
       </div>
       <div className="header-menu-container">
         <div className="header-menu">
-            <NavLink to="/index.html" activeClassName="active">Finn Jobb</NavLink>
+            <NavLink to="/" activeClassName="active">Finn Jobb</NavLink>
             <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
         </div>
       </div>
