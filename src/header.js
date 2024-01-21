@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from './Bilder/Logo_CC.png';
 
 function Header() {
     const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
     const headerRef = useRef(null);
+    const [isLinkClicked, setLinkClicked] = useState(false);
+    const location = useLocation();
   
     // Function to toggle the theme
     const toggleTheme = () => {
@@ -35,6 +37,14 @@ function Header() {
       };
     }, [theme]);
 
+    const handleLinkClick = () => {
+      setLinkClicked(true);
+    }
+
+    useEffect(() => {
+      setLinkClicked(false);
+    }, [location]);
+
   return (
     <div className="header" ref={headerRef}>
       <div className="logo">
@@ -45,8 +55,11 @@ function Header() {
       </div>
       <div className="header-menu-container">
         <div className="header-menu">
-            <NavLink to="/" activeClassName="active">Finn Jobb</NavLink>
+        <NavLink to="/" activeClassName="active">Finn Jobb</NavLink>
             <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
+            <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
+              <i className="fas fa-plus-circle"></i> Lag Jobb
+            </NavLink>
         </div>
       </div>
       <div className="user-settings">

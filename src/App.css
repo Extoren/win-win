@@ -1231,6 +1231,18 @@ a {
     }
   }
 
+  .menu-background {
+    background-color: var(--Hover-color);
+    padding: 5px;
+    border-radius: 10px;
+  }
+
+  .menu-background:hover {
+    background-color: var(--alert-bg-color);
+    transition: 1s;
+  }
+  
+
 @media screen and (max-width: 520px) {
   .search-bar {
     flex-grow: 1; }
