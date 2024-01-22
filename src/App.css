@@ -77,7 +77,6 @@ body {
   font-family: var(--body-font);
   font-size: 15px;
   color: var(--body-color); 
-  overflow: hidden;
 }
 
 .dark-light svg {
@@ -85,7 +84,8 @@ body {
   width: 22px;
   cursor: pointer;
   fill: transparent;
-  transition: 0.5s; }
+  transition: 0.5s; 
+}
 
 .dark-mode .dark-light svg {
   fill: #ffce45;
@@ -228,6 +228,7 @@ body {
     flex-wrap: nowrap;
     white-space: nowrap;
     width: 100%; /* Set the width to 100% */
+    overflow: hidden;
   }
   
   .category-item {
@@ -243,7 +244,6 @@ body {
   
   .categories {
     position: relative;
-    overflow: hidden;
     height: 56px;
     white-space: nowrap;
     display: flex;

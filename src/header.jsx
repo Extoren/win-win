@@ -15,26 +15,10 @@ function Header() {
       localStorage.setItem('theme', newTheme);
     };
   
-    // Handle scroll event
-    const handleScroll = () => {
-      if (window.scrollY > 30) {
-        headerRef.current.classList.add("header-shadow");
-      } else {
-        headerRef.current.classList.remove("header-shadow");
-      }
-    };
-  
     // Load theme from local storage on mount
     useEffect(() => {
       document.body.className = theme;
   
-      // Add scroll event listener
-      window.addEventListener('scroll', handleScroll);
-  
-      // Cleanup function
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-      };
     }, [theme]);
 
     const handleLinkClick = () => {
@@ -55,7 +39,8 @@ function Header() {
       </div>
       <div className="header-menu-container">
         <div className="header-menu">
-        <NavLink to="/" activeClassName="active">Finn Jobb</NavLink>
+            <NavLink to="/" activeClassName="active">Finn Jobb</NavLink>
+            {/*<NavLink to="/" activeClassName="active">Dinne oppdrag</NavLink>*/}
             <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
             <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
               <i className="fas fa-plus-circle"></i> Lag Jobb
