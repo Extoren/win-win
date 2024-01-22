@@ -305,6 +305,15 @@ function Home() {
       setJobCount(filteredJobs.length);
   }, [selectedLocation]); // Dependency array includes selectedLocation
 
+  useEffect(() => {
+    // Apply the overflow: hidden; style to the body when the component is mounted
+    document.body.style.overflow = 'hidden';
+
+    // Remove the overflow: hidden; style from the body when the component is unmounted
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
     return (
         <div className="container">

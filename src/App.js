@@ -1,7 +1,6 @@
 import './App.css';
 import FAQ from "./Pages/FAQ";
 import Login from "./Pages/Login";
-import Header from './header';
 import Home from './Home';
 import Create from './Pages/create';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
