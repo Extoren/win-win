@@ -2,6 +2,7 @@ import './App.css';
 import { simulateTyping } from './simulateTyping';
 import React, { useState, useRef, useEffect  } from 'react';
 import jobsData from './jobsData';
+import Header from './header';
 import getSvg  from './Accesorios/getSvg';
 import getImg  from './Accesorios/getImg';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -307,6 +308,7 @@ function Home() {
 
     return (
         <div className="container">
+          <Header />
             <div className="categories">
               <div className="category">
                 <div className="category-menu">

@@ -3,7 +3,7 @@ import FAQ from "./Pages/FAQ";
 import Login from "./Pages/Login";
 import Header from './header';
 import Home from './Home';
-import Create from './create';
+import Create from './Pages/create';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -11,7 +11,6 @@ function App() {
 
   return (
     <Router>
-      <Header />
       <Routes>
         <Route path="/Login" element={<Login />} />
         <Route path="/faq" element={<FAQ />} />
