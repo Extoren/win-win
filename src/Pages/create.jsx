@@ -41,10 +41,12 @@ const Create = () => {
 
     const handleDescriptionChange = (event) => {
         let inputValue = event.target.value;
-        // Remove any non-alphanumeric characters (or modify this line as per your requirement)
-        inputValue = inputValue.replace(/[^a-zA-Z0-9 ]/g, "");
+        // Allow new lines, letters, numbers, and common punctuation.
+        inputValue = inputValue.replace(/[^\w\s,.!?;:()'"-]/g, "");
+        // Replace newline characters with <br /> tags
+        inputValue = inputValue.replace(/\n/g, "<br />");
         setDescription(inputValue);
-    };
+      };
 
     const handleAdditionalInfoChange = (event) => {
         let inputValue = event.target.value;
@@ -347,7 +349,7 @@ const Create = () => {
                             <div className="overview2-text">
                             <div className="overview2-text-header">Oversikt</div>
                             <div className="overview2-text-subheader">
-                            {description}
+                                <div dangerouslySetInnerHTML={{ __html: description }} />
                             </div>
                             </div>
                             <div className="overview2-text">
