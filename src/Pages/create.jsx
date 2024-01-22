@@ -25,6 +25,7 @@ const Create = () => {
     const [description, setDescription] = useState('');
     const [additionalInfo, setAdditionalInfo] = useState('');
     const [price, setPrice] = useState('');
+    const [postalCode, setPostalCode] = useState('');
 
     const [isFylkeOpen, setIsFylkeOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
@@ -40,10 +41,12 @@ const Create = () => {
 
     const handleDescriptionChange = (event) => {
         let inputValue = event.target.value;
-        // Remove any non-alphanumeric characters (or modify this line as per your requirement)
-        inputValue = inputValue.replace(/[^a-zA-Z0-9 ]/g, "");
+        // Allow new lines, letters, numbers, and common punctuation.
+        inputValue = inputValue.replace(/[^\w\s,.!?;:()'"-]/g, "");
+        // Replace newline characters with <br /> tags
+        inputValue = inputValue.replace(/\n/g, "<br />");
         setDescription(inputValue);
-    };
+      };
 
     const handleAdditionalInfoChange = (event) => {
         let inputValue = event.target.value;
@@ -62,6 +65,15 @@ const Create = () => {
         }
     };
     
+    const handlePostalCodeChange = (event) => {
+        const newValue = event.target.value;
+        if (newValue > 9999) {
+            alert("Postnummeret kan ikke være høyere enn 9999");
+            setPostalCode(9999); // Optional: Set the value to the max limit
+        } else {
+            setPostalCode(newValue);
+        }
+    };
     
     
     // Refs for dropdowns
@@ -154,10 +166,13 @@ const Create = () => {
                             <div>
                                 <label htmlFor="postalCode" className="form-label">Postnummer</label>
                                 <input
+                                    type="number"
                                     id="postalCode"
                                     className="form-input"
                                     placeholder="Skriv inn postnummer"
                                     required
+                                    onChange={handlePostalCodeChange}
+                                    max="4"
                                 />
                             </div>
                         </div>
@@ -306,7 +321,7 @@ const Create = () => {
                             <div className="job-subtitle-wrapper">
                             <div className="company-name">
                                  {job.name}
-                                <span className="comp-location">{/*{job.county}, {job.postalCode}*/}</span>
+                                <span className="comp-location">{/*{job.county},*/}{postalCode}</span>
                             </div>
                             <div className="posted">
                                 Lagt ut for ANTALL dag(er) siden
@@ -334,7 +349,7 @@ const Create = () => {
                             <div className="overview2-text">
                             <div className="overview2-text-header">Oversikt</div>
                             <div className="overview2-text-subheader">
-                            {description}
+                                <div dangerouslySetInnerHTML={{ __html: description }} />
                             </div>
                             </div>
                             <div className="overview2-text">
