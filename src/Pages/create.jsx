@@ -340,11 +340,11 @@ const Create = () => {
                             </div>
                             <div className="explain-bar">
                             <div className="explain-contents">
-                                <div className="explain-title">Erfaring</div>
+                                <div className="explain-title">Ansiennitetsnivå</div>
                                 <div className="explain2-subtitle">{selectedErfaring}</div>
                             </div>
                             <div className="explain-contents">
-                                <div className="explain-title">Type ansatt</div>
+                                <div className="explain-title">Ansettelsestype</div>
                                 <div className="explain2-subtitle">{selectedAnsettelsestype}</div>
                             </div>
                             <div className="explain-contents">
