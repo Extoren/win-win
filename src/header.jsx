@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from './Bilder/Logo_CC.png';
 
-function Header() {
+function Header({ onClose }) {
     const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
     const headerRef = useRef(null);
     const [isLinkClicked, setLinkClicked] = useState(false);
@@ -31,7 +31,7 @@ function Header() {
 
   return (
     <div className="header" ref={headerRef}>
-      <div className="logo">
+      <div className="logo" onClick={onClose}>
         <Link to="/index.html">
           <img src={logo} alt="logo" id="logo" />
         </Link>
@@ -39,7 +39,7 @@ function Header() {
       </div>
       <div className="header-menu-container">
         <div className="header-menu">
-            <NavLink to="/" activeClassName="active">Finn Jobb</NavLink>
+            <NavLink to="/" activeClassName="active" onClick={onClose}>Finn Jobb</NavLink>
             {/*<NavLink to="/" activeClassName="active">Dinne oppdrag</NavLink>*/}
             <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
             <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">

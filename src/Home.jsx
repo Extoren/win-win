@@ -317,7 +317,7 @@ function Home() {
 
     return (
         <div className="container">
-          <Header />
+          <Header onClose={closeJobDetailView}/>
             <div className="categories">
               <div className="category">
                 <div className="category-menu">
