@@ -30,6 +30,7 @@ const Create = () => {
     const [isFylkeOpen, setIsFylkeOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
     const [isErfaringOpen, setIsErfaringOpen] = useState(false);
+    const [isAnsettelsestypeOpen, setIsAnsettelsestypeOpen] = useState(false);
 
     // Event handler for title input change
     const handleTitleChange = (event) => {
@@ -107,6 +108,10 @@ const Create = () => {
     const toggleErfaringDropdown = () => {
         setIsErfaringOpen(!isErfaringOpen);
     };
+
+    const toggleAnsettelsestypeDropdown = () => {
+        setIsAnsettelsestypeOpen(!isAnsettelsestypeOpen);
+    }
 
     // Event handler for dropdown option click
     const handleOptionClick = (dropdown) => {
@@ -240,10 +245,20 @@ const Create = () => {
                         <div className="flex-container">
                             <div>
                                 <label htmlFor="type" className="form-label">Ansettelsestype</label>
-                                <button id="type" className="form-select" type="button">
+                                <button id="type" className="form-select" type="button" onClick={toggleAnsettelsestypeDropdown}>
                                 Velg Ansettelsestype
                                 {/* SVG icon */}
                                 </button>
+                                {isAnsettelsestypeOpen && (
+                                    <ul ref={erfaringRef}>
+                                        <button onClick={() => handleOptionClick('Heltidsjobber')}>Heltidsjobber</button>
+                                        <button onClick={() => handleOptionClick('Deltidsjobber')}>Deltidsjobber</button>
+                                        <button onClick={() => handleOptionClick('Eksterne jobber')}>Eksterne jobber</button>
+                                        <button onClick={() => handleOptionClick('Seniornivå')}>Seniornivå</button>
+                                        <button onClick={() => handleOptionClick('Kontrakt')}>Kontrakt</button>
+                                        <button onClick={() => handleOptionClick('Små jobber')}>Små jobber</button>
+                                    </ul>
+                                )}
                             </div>
                             <div>
                                 <label htmlFor="price" className="form-label">Pris</label>
@@ -331,7 +346,7 @@ const Create = () => {
                             <div className="explain-bar">
                             <div className="explain-contents">
                                 <div className="explain-title">Erfaring</div>
-                                <div className="explain2-subtitle">(Erfaring)</div>
+                                <div className="explain2-subtitle">{Erfaring}</div>
                             </div>
                             <div className="explain-contents">
                                 <div className="explain-title">Type ansatt</div>
