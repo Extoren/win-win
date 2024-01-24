@@ -21,20 +21,21 @@ function useOutsideClick(ref, callback) {
 
 const Create = () => {
     const job = jobsData[0];
-    const [description, setDescription] = useState('');
-    const [additionalInfo, setAdditionalInfo] = useState('');
+    const [description, setDescription] = useState('Beskrivelse');
+    const [additionalInfo, setAdditionalInfo] = useState('Tilleggsinfo');
     const [price, setPrice] = useState('');
-    const [postalCode, setPostalCode] = useState('');
+    const [arbeidstid, setArbeidstid] = useState('Arbeidstid');
+    const [postalCode, setPostalCode] = useState('Postnummer');
 
     const [isFylkeOpen, setIsFylkeOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
     const [isErfaringOpen, setIsErfaringOpen] = useState(false);
     const [isAnsettelsestypeOpen, setIsAnsettelsestypeOpen] = useState(false);
 
-    const [selectedErfaring, setSelectedErfaring] = useState('Velg Ansiennitetsnivå');
-    const [fylke, setSelectedFylke] = useState('Velg Fylke');
-    const [selectedType, setSelectedType] = useState('Velg Kategori');
-    const [selectedAnsettelsestype, setSelectedAnsettelsestype] = useState('Velg Ansettelsestype');
+    const [selectedErfaring, setSelectedErfaring] = useState('Ansiennitetsnivå');
+    const [fylke, setSelectedFylke] = useState('Fylke');
+    const [selectedType, setSelectedType] = useState('Kategori');
+    const [selectedAnsettelsestype, setSelectedAnsettelsestype] = useState('Ansettelsestype');
 
     const handleDescriptionChange = (event) => {
         let inputValue = event.target.value;
@@ -44,6 +45,10 @@ const Create = () => {
         inputValue = inputValue.replace(/\n/g, "<br />");
         setDescription(inputValue);
       };
+
+    const handleArbeidstidChange = (event) => {
+    setArbeidstid(event.target.value);   
+    };
 
     const handleAdditionalInfoChange = (event) => {
         let inputValue = event.target.value;
@@ -245,6 +250,18 @@ const Create = () => {
                             </div>
                         </div>
                         <div className="flex-container">
+                        <div>
+                                <label htmlFor="price" className="form-label">Arbeidstid</label>
+                                    <textarea
+                                        type="text"
+                                        id="form-textarea"
+                                        className="form-input"
+                                        placeholder="Skriv inn klokke arbeidstid"
+                                        required
+                                        onChange={handleArbeidstidChange}
+                                        maxLength="10"
+                                    />
+                            </div>
                             <div>
                                 <label htmlFor="price" className="form-label">Pris</label>
                                     <input
@@ -349,7 +366,7 @@ const Create = () => {
                             </div>
                             <div className="explain-contents">
                                 <div className="explain-title">Arbeidstid</div>
-                                <div className="explain2-subtitle">(Beregnet arbeidstid)</div>
+                                <div className="explain2-subtitle">{arbeidstid}</div>
                             </div>
                             <div className="explain-contents">
                                 <div className="explain-title">Tilby lønn</div>
