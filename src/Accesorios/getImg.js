@@ -1,5 +1,13 @@
+import logo from '../Bilder/Logo_background.png';
+
 function getImg(imgName) {
     switch (imgName) {
+      case 'default':
+        return (
+          <div className="default">
+            <img src={logo} alt="WinWin Logo"/>
+          </div>
+        );
       case 'gress':
         return (
           <div className="gress">

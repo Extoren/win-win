@@ -21,37 +21,39 @@ function useOutsideClick(ref, callback) {
 
 const Create = () => {
     const job = jobsData[0];
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [additionalInfo, setAdditionalInfo] = useState('');
+    const [description, setDescription] = useState('Beskrivelse');
+    const [additionalInfo, setAdditionalInfo] = useState('Tilleggsinfo');
     const [price, setPrice] = useState('');
-    const [postalCode, setPostalCode] = useState('');
+    const [arbeidstid, setArbeidstid] = useState('Arbeidstid');
+    const [postalCode, setPostalCode] = useState('Postnummer');
 
     const [isFylkeOpen, setIsFylkeOpen] = useState(false);
     const [isTypeOpen, setIsTypeOpen] = useState(false);
     const [isErfaringOpen, setIsErfaringOpen] = useState(false);
+    const [isAnsettelsestypeOpen, setIsAnsettelsestypeOpen] = useState(false);
 
-    // Event handler for title input change
-    const handleTitleChange = (event) => {
-        let inputValue = event.target.value;
-        // Remove any non-alphanumeric characters
-        inputValue = inputValue.replace(/[^a-zA-Z0-9 ]/g, "");
-        setTitle(inputValue);
-    };
+    const [selectedErfaring, setSelectedErfaring] = useState('Ansiennitetsnivå');
+    const [fylke, setSelectedFylke] = useState('Fylke');
+    const [selectedType, setSelectedType] = useState('Kategori');
+    const [selectedAnsettelsestype, setSelectedAnsettelsestype] = useState('Ansettelsestype');
 
     const handleDescriptionChange = (event) => {
         let inputValue = event.target.value;
         // Allow new lines, letters, numbers, and common punctuation.
-        inputValue = inputValue.replace(/[^\w\s,.!?;:()'"-]/g, "");
+        inputValue = inputValue.replace(/[^\w\s,.!?;:æøå()'"-]/g, "");
         // Replace newline characters with <br /> tags
         inputValue = inputValue.replace(/\n/g, "<br />");
         setDescription(inputValue);
       };
 
+    const handleArbeidstidChange = (event) => {
+    setArbeidstid(event.target.value);   
+    };
+
     const handleAdditionalInfoChange = (event) => {
         let inputValue = event.target.value;
         // Modify this line as per your requirement for character filtering
-        inputValue = inputValue.replace(/[^a-zA-Z0-9 ]/g, "");
+        inputValue = inputValue.replace(/[^\w\s,.!?;:æøå()'"-]/g, "");
         setAdditionalInfo(inputValue);
     };
 
@@ -80,6 +82,7 @@ const Create = () => {
     const fylkeRef = useRef(null);
     const typeRef = useRef(null);
     const erfaringRef = useRef(null);
+    const ansettelsestypeRef = useRef(null);
 
 
     // Close dropdown when clicked outside
@@ -95,6 +98,10 @@ const Create = () => {
         if (isErfaringOpen) setIsErfaringOpen(false);
     });
 
+    useOutsideClick(ansettelsestypeRef, () => {
+        if (isAnsettelsestypeOpen) setIsAnsettelsestypeOpen(false);
+    });
+
     // Event handler for dropdown toggle
     const toggleFylkeDropdown = () => {
         setIsFylkeOpen(!isFylkeOpen);
@@ -108,14 +115,24 @@ const Create = () => {
         setIsErfaringOpen(!isErfaringOpen);
     };
 
+    const toggleAnsettelsestypeDropdown = () => {
+        setIsAnsettelsestypeOpen(!isAnsettelsestypeOpen);
+    }
+
     // Event handler for dropdown option click
-    const handleOptionClick = (dropdown) => {
+    const handleOptionClick = (option, dropdown) => {
         if (dropdown === 'fylke') {
             setIsFylkeOpen(false);
-        } else if (dropdown === 'type') {
+            setSelectedFylke(option);
+        } if (dropdown === 'type') {
             setIsTypeOpen(false);
-        } else if (dropdown === 'erfaring') {
+            setSelectedType(option);
+        } if (dropdown === 'erfaring') {
             setIsErfaringOpen(false);
+            setSelectedErfaring(option);
+        } if (dropdown === 'ansettelsestype') {
+            setIsAnsettelsestypeOpen(false);
+            setSelectedAnsettelsestype(option);
         }
     };
     return (
@@ -129,37 +146,57 @@ const Create = () => {
                     </div>
                     <div className="form-body">
                         <div>
-                            <label htmlFor="title" className="form-label">Tittel</label>
-                            <input
-                                maxLength="50"
-                                id="title"
-                                className="form-input"
-                                placeholder="Skriv inn stillingstittel"
-                                required
-                                onChange={handleTitleChange}
-                            />
+                            <label htmlFor="type" className="form-label">Type Jobb</label>
+                            <button id="type" className="form-select" type="button" onClick={toggleTypeDropdown}>
+                            {selectedType}
+                            </button>
+                            {isTypeOpen && (
+                                <ul ref={typeRef}>
+                                    <button onClick={() => handleOptionClick('Barnepass', 'type')}>Barnepass</button>
+                                    <button onClick={() => handleOptionClick('Gressklipping', 'type')}>Gressklipping</button>
+                                    <button onClick={() => handleOptionClick('Løvrydding', 'type')}>Løvrydding</button>
+                                    <button onClick={() => handleOptionClick('Snømåking', 'type')}>Snømåking</button>
+                                    <button onClick={() => handleOptionClick('Hundelufting', 'type')}>Hundelufting</button>
+                                    <button onClick={() => handleOptionClick('Vaske biler', 'type')}>Vaske biler</button>
+                                    <button onClick={() => handleOptionClick('Selge produkter', 'type')}>Selge produkter</button>
+                                    <button onClick={() => handleOptionClick('Lekerengjøring', 'type')}>Lekerengjøring</button>
+                                    <button onClick={() => handleOptionClick('Plantepleie', 'type')}>Plantepleie</button>
+                                    <button onClick={() => handleOptionClick('Bake og selge kaker', 'type')}>Bake og selge kaker</button>
+                                    <button onClick={() => handleOptionClick('Hjemmeorganisering', 'type')}>Hjemmeorganisering</button>
+                                    <button onClick={() => handleOptionClick('Hente posten', 'type')}>Hente posten</button>
+                                    <button onClick={() => handleOptionClick('Babysitting', 'type')}>Babysitting</button>
+                                    <button onClick={() => handleOptionClick('Male gjerder', 'type')}>Male gjerder</button>
+                                    <button onClick={() => handleOptionClick('Småreparasjoner', 'type')}>Småreparasjoner</button>
+                                    <button onClick={() => handleOptionClick('Levere aviser', 'type')}>Levere aviser</button>
+                                    <button onClick={() => handleOptionClick('Organisere garasjesalg', 'type')}>Organisere garasjesalg</button>
+                                    <button onClick={() => handleOptionClick('Datatjenester for eldre', 'type')}>Datatjenester for eldre</button>
+                                    <button onClick={() => handleOptionClick('Hjelpe med hagearbeid', 'type')}>Hjelpe med hagearbeid</button>
+                                    <button onClick={() => handleOptionClick('Vannplanter for naboer', 'type')}>Vannplanter for naboer</button>
+                                    <button onClick={() => handleOptionClick('Hjelpe til med å flytte', 'type')}>Hjelpe til med å flytte</button>
+                                </ul>
+                            )}
                         </div>
                         <div className="flex-container">
                             <div>
                                 <label htmlFor="Fylke" className="form-label">Fylke</label>
                                 <button id="type" className="form-select" type="button" onClick={toggleFylkeDropdown}>
-                                Velg Fylke
+                                {fylke}
                                 {/* SVG icon */}
                                 </button>
                                 {isFylkeOpen && (
                                     <ul ref={fylkeRef}>
-                                        <button onClick={() => handleOptionClick('Agder')}>Agder</button>
-                                        <button onClick={() => handleOptionClick('Innlandet')}>Innlandet</button>
-                                        <button onClick={() => handleOptionClick('Møre og Romsdal')}>Møre og Romsdal</button>
-                                        <button onClick={() => handleOptionClick('Nordland')}>Nordland</button>
-                                        <button onClick={() => handleOptionClick('Oslo')}>Oslo</button>
-                                        <button onClick={() => handleOptionClick('Rogaland')}>Rogaland</button>
-                                        <button onClick={() => handleOptionClick('Svalbard')}>Svalbard</button>
-                                        <button onClick={() => handleOptionClick('Troms og Finnmark')}>Troms og Finnmark</button>
-                                        <button onClick={() => handleOptionClick('Trøndelag')}>Trøndelag</button>
-                                        <button onClick={() => handleOptionClick('Vestfold og Telemark')}>Vestfold og Telemark</button>
-                                        <button onClick={() => handleOptionClick('Vestland')}>Vestland</button>
-                                        <button onClick={() => handleOptionClick('Viken')}>Viken</button>
+                                        <button onClick={() => handleOptionClick('Agder', 'fylke')}>Agder</button>
+                                        <button onClick={() => handleOptionClick('Innlandet', 'fylke')}>Innlandet</button>
+                                        <button onClick={() => handleOptionClick('Møre og Romsdal', 'fylke')}>Møre og Romsdal</button>
+                                        <button onClick={() => handleOptionClick('Nordland', 'fylke')}>Nordland</button>
+                                        <button onClick={() => handleOptionClick('Oslo', 'fylke')}>Oslo</button>
+                                        <button onClick={() => handleOptionClick('Rogaland', 'fylke')}>Rogaland</button>
+                                        <button onClick={() => handleOptionClick('Svalbard', 'fylke')}>Svalbard</button>
+                                        <button onClick={() => handleOptionClick('Troms og Finnmark', 'fylke')}>Troms og Finnmark</button>
+                                        <button onClick={() => handleOptionClick('Trøndelag', 'fylke')}>Trøndelag</button>
+                                        <button onClick={() => handleOptionClick('Vestfold og Telemark', 'fylke')}>Vestfold og Telemark</button>
+                                        <button onClick={() => handleOptionClick('Vestland', 'fylke')}>Vestland</button>
+                                        <button onClick={() => handleOptionClick('Viken', 'fylke')}>Viken</button>
                                     </ul>
                                 )}
                             </div>
@@ -177,73 +214,53 @@ const Create = () => {
                             </div>
                         </div>
                         <div className="flex-container">
-                            <div>
-                                <label htmlFor="type" className="form-label">Type Jobb</label>
-                                <button id="type" className="form-select" type="button" onClick={toggleTypeDropdown}>
-                                Velg Kategori
-                                {/* SVG icon */}
-                                </button>
-                                {isTypeOpen && (
-                                    <ul ref={typeRef}>
-                                        <button onClick={() => handleOptionClick('Barnepass')}>Barnepass</button>
-                                        <button onClick={() => handleOptionClick('Gressklipping')}>Gressklipping</button>
-                                        <button onClick={() => handleOptionClick('Løvrydding')}>Løvrydding</button>
-                                        <button onClick={() => handleOptionClick('Snømåking')}>Snømåking</button>
-                                        <button onClick={() => handleOptionClick('Hundelufting')}>Hundelufting</button>
-                                        <button onClick={() => handleOptionClick('Vaske biler')}>Vaske biler</button>
-                                        <button onClick={() => handleOptionClick('Selge produkter')}>Selge produkter</button>
-                                        <button onClick={() => handleOptionClick('Lekerengjøring')}>Lekerengjøring</button>
-                                        <button onClick={() => handleOptionClick('Plantepleie')}>Plantepleie</button>
-                                        <button onClick={() => handleOptionClick('Bake og selge kaker')}>Bake og selge kaker</button>
-                                        <button onClick={() => handleOptionClick('Hjemmeorganisering')}>Hjemmeorganisering</button>
-                                        <button onClick={() => handleOptionClick('Hente posten')}>Hente posten</button>
-                                        <button onClick={() => handleOptionClick('Babysitting')}>Babysitting</button>
-                                        <button onClick={() => handleOptionClick('Male gjerder')}>Male gjerder</button>
-                                        <button onClick={() => handleOptionClick('Småreparasjoner')}>Småreparasjoner</button>
-                                        <button onClick={() => handleOptionClick('Levere aviser')}>Levere aviser</button>
-                                        <button onClick={() => handleOptionClick('Organisere garasjesalg')}>Organisere garasjesalg</button>
-                                        <button onClick={() => handleOptionClick('Datatjenester for eldre')}>Datatjenester for eldre</button>
-                                        <button onClick={() => handleOptionClick('Hjelpe med hagearbeid')}>Hjelpe med hagearbeid</button>
-                                        <button onClick={() => handleOptionClick('Vannplanter for naboer')}>Vannplanter for naboer</button>
-                                        <button onClick={() => handleOptionClick('Hjelpe til med å flytte')}>Hjelpe til med å flytte</button>
-                                    </ul>
-                                )}
-                            </div>
+                    
                             <div>
                                 <label htmlFor="type" className="form-label">Erfaring</label>
                                 <button id="type" className="form-select" type="button" onClick={toggleErfaringDropdown}>
-                                Velg Ansiennitetsnivå
+                                {selectedErfaring}
                                 {/* SVG icon */}
                                 </button>
                                 {isErfaringOpen && (
                                     <ul ref={erfaringRef}>
-                                        <button onClick={() => handleOptionClick('Studentnivå')}>Studentnivå</button>
-                                        <button onClick={() => handleOptionClick('Inngangsnivå')}>Inngangsnivå</button>
-                                        <button onClick={() => handleOptionClick('Midtnivå')}>Midtnivå</button>
-                                        <button onClick={() => handleOptionClick('Seniornivå')}>Seniornivå</button>
-                                        <button onClick={() => handleOptionClick('Regissører')}>Regissører</button>
-                                        <button onClick={() => handleOptionClick('VP eller over')}>VP eller over</button>
+                                        <button onClick={() => handleOptionClick('Studentnivå', 'erfaring')}>Studentnivå</button>
+                                        <button onClick={() => handleOptionClick('Inngangsnivå', 'erfaring')}>Inngangsnivå</button>
+                                        <button onClick={() => handleOptionClick('Midtnivå', 'erfaring')}>Midtnivå</button>
+                                        <button onClick={() => handleOptionClick('Seniornivå', 'erfaring')}>Seniornivå</button>
+                                        <button onClick={() => handleOptionClick('Regissører', 'erfaring')}>Regissører</button>
+                                        <button onClick={() => handleOptionClick('VP eller over', 'erfaring')}>VP eller over</button>
+                                    </ul>
+                                )}
+                            </div>
+                            <div>
+                                <label htmlFor="type" className="form-label">Ansettelsestype</label>
+                                <button id="type" className="form-select" type="button" onClick={toggleAnsettelsestypeDropdown}>
+                                {selectedAnsettelsestype}
+                                </button>
+                                {isAnsettelsestypeOpen && (
+                                    <ul ref={ansettelsestypeRef}>
+                                        <button onClick={() => handleOptionClick('Heltidsjobber', 'ansettelsestype')}>Heltidsjobber</button>
+                                        <button onClick={() => handleOptionClick('Deltidsjobber', 'ansettelsestype')}>Deltidsjobber</button>
+                                        <button onClick={() => handleOptionClick('Eksterne jobber', 'ansettelsestype')}>Eksterne jobber</button>
+                                        <button onClick={() => handleOptionClick('Seniornivå', 'ansettelsestype')}>Seniornivå</button>
+                                        <button onClick={() => handleOptionClick('Kontrakt', 'ansettelsestype')}>Kontrakt</button>
+                                        <button onClick={() => handleOptionClick('Små jobber', 'ansettelsestype')}>Små jobber</button>
                                     </ul>
                                 )}
                             </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="description" className="form-label">Beskrivelse</label>
-                            <textarea
-                            id="description"
-                            className="form-textarea"
-                            placeholder="Skriv inn beskrivelse"
-                            required
-                            onChange={handleDescriptionChange}
-                            />
-                        </div>
                         <div className="flex-container">
-                            <div>
-                                <label htmlFor="type" className="form-label">Ansettelsestype</label>
-                                <button id="type" className="form-select" type="button">
-                                Velg Ansettelsestype
-                                {/* SVG icon */}
-                                </button>
+                        <div>
+                                <label htmlFor="price" className="form-label">Arbeidstid</label>
+                                    <textarea
+                                        type="text"
+                                        id="form-textarea"
+                                        className="form-input"
+                                        placeholder="Skriv inn klokke arbeidstid"
+                                        required
+                                        onChange={handleArbeidstidChange}
+                                        maxLength="10"
+                                    />
                             </div>
                             <div>
                                 <label htmlFor="price" className="form-label">Pris</label>
@@ -257,6 +274,16 @@ const Create = () => {
                                         max="9999"
                                     />
                             </div>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="description" className="form-label">Beskrivelse</label>
+                            <textarea
+                            id="description"
+                            className="form-textarea"
+                            placeholder="Skriv inn beskrivelse"
+                            required
+                            onChange={handleDescriptionChange}
+                            />
                         </div>
                         <div className="form-group">
                             <label htmlFor="description" className="form-label">Tilleggsinfo (ekstra)</label>
@@ -280,14 +307,14 @@ const Create = () => {
                     <div className="job-overview2">
                         <div className="job-explain2">
                         <div className="job-bg">
-                            {getImg(job.img)}
+                            {getImg('default')}
                         </div>
                         <div className="job-logos">
-                            {getSvg(job.svg)}
+                            {getSvg('default')}
                         </div>
                         <div className="job-explain-content">
                             <div className="job-title-wrapper">
-                            <div className="job-card2-title">{title}</div>
+                            <div className="job-card2-title">{selectedType}</div>
                             <div className="job-action">
                                 <svg
                                 className="heart"
@@ -320,8 +347,8 @@ const Create = () => {
                             </div>
                             <div className="job-subtitle-wrapper">
                             <div className="company-name">
-                                 {job.name}
-                                <span className="comp-location">{/*{job.county},*/}{postalCode}</span>
+                                {job.name}
+                                <span className="comp-location">{fylke} - {postalCode}</span>
                             </div>
                             <div className="posted">
                                 Lagt ut for ANTALL dag(er) siden
@@ -330,16 +357,16 @@ const Create = () => {
                             </div>
                             <div className="explain-bar">
                             <div className="explain-contents">
-                                <div className="explain-title">Erfaring</div>
-                                <div className="explain2-subtitle">(Erfaring)</div>
-                            </div>
-                            <div className="explain-contents">
-                                <div className="explain-title">Type ansatt</div>
-                                <div className="explain2-subtitle">(Ansiennitetsnivå)</div>
+                                <div className="explain-title">Ansiennitetsnivå</div>
+                                <div className="explain2-subtitle">{selectedErfaring}</div>
                             </div>
                             <div className="explain-contents">
                                 <div className="explain-title">Ansettelsestype</div>
-                                <div className="explain2-subtitle">(Ansettelsestype)</div>
+                                <div className="explain2-subtitle">{selectedAnsettelsestype}</div>
+                            </div>
+                            <div className="explain-contents">
+                                <div className="explain-title">Arbeidstid</div>
+                                <div className="explain2-subtitle">{arbeidstid}</div>
                             </div>
                             <div className="explain-contents">
                                 <div className="explain-title">Tilby lønn</div>
