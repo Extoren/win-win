@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import './Login.css';
 import { auth } from '../firebaseConfig';
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import Header from '../header';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
 
 function Login() {
+
+    const { setIsLoggedIn } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const contryCode = '+47';
     const [phoneNumber, setPhoneNumber] = useState(contryCode);
     const [expandForm, setExpandForm] = useState(false);
     const [OTP, setOTP] = useState('');
+
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true);
+        navigate('/'); // Navigate to home page after successful login
+    };
 
     const generateRecaptcha = () => {
         if (!window.recaptchaVerifier && auth) {
@@ -48,8 +58,34 @@ function Login() {
     const confirmOTP = (e) => {
         e.preventDefault();
         console.log("Confirming OTP:", OTP);
-    
-    }
+
+        if (window.confirmationResult) {
+            window.confirmationResult.confirm(OTP).then((result) => {
+                // User signed in successfully.
+                console.log("User signed in successfully.");
+                handleLoginSuccess();
+            }).catch((error) => {
+                // User couldn't sign in (bad verification code?)
+                console.error("Error during OTP confirmation:", error);
+            });
+        } else {
+            console.log("No confirmation result available.");
+        }
+    };
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+          if (user) {
+            // User is signed in.
+            setIsLoggedIn(true);
+          } else {
+            // No user is signed in.
+            setIsLoggedIn(false);
+          }
+        });
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
+      }, [setIsLoggedIn]);
 
 
     // State to track the active form section
