@@ -103,7 +103,7 @@ function Login() {
                         <div className="form-section login">
                             <h2>Logg Inn</h2>
                             <form>
-                                <input type="email" placeholder="Email" required="" />
+                                <input type="tel" placeholder="Telefonnummer" required="" />
                                 <input type="password" placeholder="Passord" required="" />
                                 <a href="#" id="glømt">
                                 Glømt passordet?
@@ -133,7 +133,18 @@ function Login() {
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
                                         <div>
                                             <label htmlFor="phoneNumberInput" className="form-label">Telefonnummer</label>
-                                            <input type="tel" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" value={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)}/>
+                                            <input type="tel" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" value={phoneNumber} onChange={(e) => {
+                                                    // Only update the phone number part, keeping the country code unchanged
+                                                    const newNumber = contryCode + e.target.value.slice(contryCode.length);
+                                                    setPhoneNumber(newNumber);
+
+                                                    // Extract the part of the input that's not the country code
+                                                    const inputNumber = e.target.value.slice(contryCode.length).trim();
+
+                                                    // Update phoneNumber with the country code, a space, and then the input number
+                                                    setPhoneNumber(contryCode + " " + inputNumber);
+                                                }}
+                                            />
                                             <div id="phoneNumberHelp" className="form-text">Skriv inn telefonnummeret ditt</div>
                                             <br></br>
                                         </div>
