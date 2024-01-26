@@ -1,8 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
+import { auth } from './firebaseConfig';
+import { signOut } from 'firebase/auth';
 import logo from './Bilder/Logo_CC.png';
 
 function Header({ onClose }) {
+    const [showDropdown, setShowDropdown] = useState(false);
+    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
     const headerRef = useRef(null);
     const [isLinkClicked, setLinkClicked] = useState(false);
@@ -14,6 +19,17 @@ function Header({ onClose }) {
       setTheme(newTheme);
       localStorage.setItem('theme', newTheme);
     };
+
+    // Function to handle user sign out
+    const handleSignOut = () => {
+      signOut(auth).then(() => {
+          // Sign-out successful.
+          setIsLoggedIn(false); // Update context state
+      }).catch((error) => {
+          // An error happened.
+          console.error('Error signing out:', error);
+      });
+  };
   
     // Load theme from local storage on mount
     useEffect(() => {
@@ -24,6 +40,10 @@ function Header({ onClose }) {
     const handleLinkClick = () => {
       setLinkClicked(true);
     }
+
+    const handleDivClick = () => {
+      setShowDropdown(!showDropdown);
+    };
 
     useEffect(() => {
       setLinkClicked(false);
@@ -90,11 +110,25 @@ function Header({ onClose }) {
             <a href="#">English</a>
           </div>
         </div>
-        {/*<img class="user-profile" src="#" alt="">
-      <button id="sign-out-btn"></button>*/}
-        <Link to="/Login">
-          <div className="user-name">Logg inn</div>
-        </Link>
+          {isLoggedIn ? (
+              <div className="profile-container">
+                <div className="profile" onClick={handleDivClick}>
+                  <img className="user-profile" src="#" alt="" />
+                  <label htmlFor="text">name</label>
+                </div>
+
+                {showDropdown && (
+                  <div className="dropdown-menu2">
+                    <button id="profile-btn">Din profil</button>
+                    <button id="sign-out-btn" onClick={handleSignOut}>Logg ut</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to="/Login">
+                  <div className="user-name">Logg inn</div>
+              </Link>
+            )}
       </div>
     </div>
   );

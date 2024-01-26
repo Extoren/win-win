@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import './Login.css';
 import { auth } from '../firebaseConfig';
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import Header from '../header';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
 
 function Login() {
+
+    const { setIsLoggedIn } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const contryCode = '+47';
     const [phoneNumber, setPhoneNumber] = useState(contryCode);
     const [expandForm, setExpandForm] = useState(false);
     const [OTP, setOTP] = useState('');
+
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true);
+        navigate('/'); // Navigate to home page after successful login
+    };
 
     const generateRecaptcha = () => {
         if (!window.recaptchaVerifier && auth) {
@@ -48,8 +58,34 @@ function Login() {
     const confirmOTP = (e) => {
         e.preventDefault();
         console.log("Confirming OTP:", OTP);
-    
-    }
+
+        if (window.confirmationResult) {
+            window.confirmationResult.confirm(OTP).then((result) => {
+                // User signed in successfully.
+                console.log("User signed in successfully.");
+                handleLoginSuccess();
+            }).catch((error) => {
+                // User couldn't sign in (bad verification code?)
+                console.error("Error during OTP confirmation:", error);
+            });
+        } else {
+            console.log("No confirmation result available.");
+        }
+    };
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+          if (user) {
+            // User is signed in.
+            setIsLoggedIn(true);
+          } else {
+            // No user is signed in.
+            setIsLoggedIn(false);
+          }
+        });
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
+      }, [setIsLoggedIn]);
 
 
     // State to track the active form section
@@ -103,7 +139,7 @@ function Login() {
                         <div className="form-section login">
                             <h2>Logg Inn</h2>
                             <form>
-                                <input type="email" placeholder="Email" required="" />
+                                <input type="tel" placeholder="Telefonnummer" required="" />
                                 <input type="password" placeholder="Passord" required="" />
                                 <a href="#" id="glømt">
                                 Glømt passordet?
@@ -133,7 +169,18 @@ function Login() {
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
                                         <div>
                                             <label htmlFor="phoneNumberInput" className="form-label">Telefonnummer</label>
-                                            <input type="tel" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" value={phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)}/>
+                                            <input type="tel" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" value={phoneNumber} onChange={(e) => {
+                                                    // Only update the phone number part, keeping the country code unchanged
+                                                    const newNumber = contryCode + e.target.value.slice(contryCode.length);
+                                                    setPhoneNumber(newNumber);
+
+                                                    // Extract the part of the input that's not the country code
+                                                    const inputNumber = e.target.value.slice(contryCode.length).trim();
+
+                                                    // Update phoneNumber with the country code, a space, and then the input number
+                                                    setPhoneNumber(contryCode + " " + inputNumber);
+                                                }}
+                                            />
                                             <div id="phoneNumberHelp" className="form-text">Skriv inn telefonnummeret ditt</div>
                                             <br></br>
                                         </div>
