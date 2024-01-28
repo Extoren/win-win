@@ -227,7 +227,7 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
 
 function Home() {
 
-    
+  
     const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
     const wrapperRef = useRef(null);
     const [selectedJob, setSelectedJob] = useState(null);

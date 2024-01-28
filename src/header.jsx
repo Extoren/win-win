@@ -113,14 +113,23 @@ function Header({ onClose }) {
           {isLoggedIn ? (
               <div className="profile-container">
                 <div className="profile" onClick={handleDivClick}>
-                  <img className="user-profile" src="#" alt="" />
-                  <label htmlFor="text">name</label>
+                <div className="user-profile">
+                    <i className="fas fa-user"></i>
+                </div>
+                  <label htmlFor="text">Ny bruker</label>
                 </div>
 
                 {showDropdown && (
                   <div className="dropdown-menu2">
-                    <button id="profile-btn">Din profil</button>
-                    <button id="sign-out-btn" onClick={handleSignOut}>Logg ut</button>
+                    <button id="profile-btn">
+                        <i className="fas fa-user"></i> Din profil
+                    </button>
+                    <button id="settings-btn">
+                      <i className="fas fa-cog"></i> Innstillinger
+                    </button>
+                    <button id="sign-out-btn" onClick={handleSignOut}>
+                        <i className="fas fa-sign-out-alt"></i> Logg ut
+                    </button>
                   </div>
                 )}
               </div>
