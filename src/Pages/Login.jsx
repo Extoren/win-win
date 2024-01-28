@@ -1,16 +1,19 @@
 import { useState, useContext, useEffect } from 'react';
 import './Login.css';
-import { auth } from '../firebaseConfig';
+import { auth, database } from '../firebaseConfig';
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
+
+import { ref, set } from "firebase/database";
 
 
 function Login() {
 
     const { setIsLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [userType, setUserType] = useState('');
 
     const contryCode = '+47';
     const [phoneNumber, setPhoneNumber] = useState(contryCode);
@@ -60,16 +63,21 @@ function Login() {
         console.log("Confirming OTP:", OTP);
 
         if (window.confirmationResult) {
-            window.confirmationResult.confirm(OTP).then((result) => {
-                // User signed in successfully.
-                console.log("User signed in successfully.");
-                handleLoginSuccess();
-            }).catch((error) => {
-                // User couldn't sign in (bad verification code?)
-                console.error("Error during OTP confirmation:", error);
-            });
+        window.confirmationResult.confirm(OTP).then((result) => {
+            // User signed in successfully.
+            console.log("User signed in successfully.");
+            const user = result.user;
+
+            // Update user type in Firebase Database
+            updateDatabaseWithUserType(user.uid, userType);
+
+            handleLoginSuccess();
+        }).catch((error) => {
+            // User couldn't sign in (bad verification code?)
+            console.error("Error during OTP confirmation:", error);
+        });
         } else {
-            console.log("No confirmation result available.");
+        console.log("No confirmation result available.");
         }
     };
 
@@ -87,11 +95,29 @@ function Login() {
         return () => unsubscribe();
       }, [setIsLoggedIn]);
 
+      const updateDatabaseWithUserType = (userId, type) => {
+        if (!userId || !type) {
+          console.error('Invalid user ID or type for database update.');
+          return;
+        }
+      
+        const dbRef = ref(database, 'users/' + userId);
+        console.log('Attempting to update database with user type:', type);
+      
+        set(dbRef, { userType: type })
+          .then(() => {
+            console.log('Database updated successfully!');
+          })
+          .catch((error) => {
+            console.error('Error updating database:', error);
+          });
+      };
+      
+
 
     // State to track the active form section
     const [activeSection, setActiveSection] = useState('login');
     const [showContents, setShowContents] = useState(false);
-    const [userType, setUserType] = useState('');
 
     function toggleActive(id) {
         // Set the active section state

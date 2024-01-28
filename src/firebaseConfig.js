@@ -15,7 +15,8 @@ const firebaseConfig = {
   storageBucket: "win-win-f5bb9.appspot.com",
   messagingSenderId: "658854802310",
   appId: "1:658854802310:web:52924dfff099698a6df207",
-  measurementId: "G-LNGNGE7ESS"
+  measurementId: "G-LNGNGE7ESS",
+  databaseURL: "https://win-win-f5bb9-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 // Initialize Firebase
