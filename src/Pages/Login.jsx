@@ -22,7 +22,7 @@ function Login() {
 
     const handleLoginSuccess = () => {
         setIsLoggedIn(true);
-        navigate('/'); // Navigate to home page after successful login
+        navigate('/makeUser');
     };
 
     const generateRecaptcha = () => {
@@ -95,23 +95,23 @@ function Login() {
         return () => unsubscribe();
       }, [setIsLoggedIn]);
 
-      const updateDatabaseWithUserType = (userId, type) => {
-        if (!userId || !type) {
-          console.error('Invalid user ID or type for database update.');
-          return;
-        }
-      
-        const dbRef = ref(database, 'users/' + userId);
-        console.log('Attempting to update database with user type:', type);
-      
-        set(dbRef, { userType: type })
-          .then(() => {
-            console.log('Database updated successfully!');
-          })
-          .catch((error) => {
-            console.error('Error updating database:', error);
-          });
-      };
+    const updateDatabaseWithUserType = (userId, type) => {
+    if (!userId || !type) {
+        console.error('Invalid user ID or type for database update.');
+        return;
+    }
+    
+    const dbRef = ref(database, 'users/' + userId);
+    console.log('Attempting to update database with user type:', type);
+    
+    set(dbRef, { userType: type })
+        .then(() => {
+        console.log('Database updated successfully!');
+        })
+        .catch((error) => {
+        console.error('Error updating database:', error);
+        });
+    };
       
 
 
@@ -165,7 +165,7 @@ function Login() {
                         <div className="form-section login">
                             <h2>Logg Inn</h2>
                             <form>
-                                <input type="tel" placeholder="Telefonnummer" required="" />
+                                <input type="tel" placeholder="Email" required="" />
                                 <input type="password" placeholder="Passord" required="" />
                                 <a href="#" id="glømt">
                                 Glømt passordet?

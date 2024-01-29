@@ -1,0 +1,131 @@
+:root {
+    --body-bg-color: #e5ecef;
+    --theme-bg-color: #fafafb;
+    --body-font: "Poppins", sans-serif;
+    --body-color: #2f2f33;
+    --active-color: #F79802;
+    --active-light-color: #FBBF77;
+    --header-bg-color: #fff;
+    --search-border-color: #efefef;
+    --border-color: #d8d8d8;
+    --alert-bg-color: #e8f2ff;
+    --subtitle-color: #000;
+    --inactive-color: #f0f0f0;
+    --placeholder-color: #9b9ba5;
+    --time-button: #B7410E;
+    --level-button: #FBBF77;
+    --button-color: #fff; 
+    --Hover-color: #F79802; 
+    --login-color: #F17829;
+    --warning-color: #ff0000;
+  }
+  
+  .dark-mode {
+    --body-bg-color: #1d1d1d;
+    --theme-bg-color: #13131a;
+    --header-bg-color: #1c1c24;
+    --alert-bg-color: #292932;
+    --body-color: #fff;
+    --inactive-color: #292932;
+    --subtitle-color: #c1c1c1;
+    --time-button: #fff;
+    --level-button: #13131a;
+    --active-light-color: #D86E39;
+    --border-color: #26262f;
+    --search-border-color: #26262f; 
+    --login-color: #F17829;
+    --warning-color: #ff0000;
+  }
+
+.make-user {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: var(--body-bg-color);
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#right {
+    margin-left: auto;
+}
+
+.user {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: var(--alert-bg-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    color: var(--body-color);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.radio-wrapper {
+    margin: 0 10px;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+
+
+input[type="text"] #name,
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+@media (max-width: 600px) {
+    .profile {
+        width: 90%;
+        margin: 20px auto;
+    }
+}

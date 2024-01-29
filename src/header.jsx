@@ -4,6 +4,8 @@ import { AuthContext } from './AuthContext';
 import { auth } from './firebaseConfig';
 import { signOut } from 'firebase/auth';
 import logo from './Bilder/Logo_CC.png';
+import { database } from './firebaseConfig';
+import { ref, get } from "firebase/database";
 
 function Header({ onClose }) {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -12,6 +14,7 @@ function Header({ onClose }) {
     const headerRef = useRef(null);
     const [isLinkClicked, setLinkClicked] = useState(false);
     const location = useLocation();
+    const [userName, setUserName] = useState({ firstName: '', lastName: '' });
   
     // Function to toggle the theme
     const toggleTheme = () => {
@@ -48,6 +51,25 @@ function Header({ onClose }) {
     useEffect(() => {
       setLinkClicked(false);
     }, [location]);
+
+    useEffect(() => {
+      if (isLoggedIn && auth.currentUser) {
+          const userId = auth.currentUser.uid;
+          const dbRef = ref(database, 'users/' + userId);
+          
+          get(dbRef).then((snapshot) => {
+              if (snapshot.exists()) {
+                  const userData = snapshot.val();
+                  // Assuming your user data has fields 'name' and 'surname'
+                  setUserName({ firstName: userData.name, lastName: userData.surname });
+              } else {
+                  console.log("No data available");
+              }
+          }).catch((error) => {
+              console.error(error);
+          });
+      }
+  }, [isLoggedIn]);
 
   return (
     <div className="header" ref={headerRef}>
@@ -116,7 +138,7 @@ function Header({ onClose }) {
                 <div className="user-profile">
                     <i className="fas fa-user"></i>
                 </div>
-                  <label htmlFor="text">Ny bruker</label>
+                  <label htmlFor="text">{isLoggedIn ? `${userName.firstName} ${userName.lastName}` : 'Ny bruker'}</label>
                 </div>
 
                 {showDropdown && (
