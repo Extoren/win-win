@@ -1,412 +1,47 @@
 import './App.css';
 import { simulateTyping } from './simulateTyping';
 import React, { useState, useRef, useEffect  } from 'react';
+import jobsData from './jobsData';
+import Header from './header';
+import getSvg  from './Accesorios/getSvg';
+import getImg  from './Accesorios/getImg';
+import { useParams, useNavigate } from 'react-router-dom';
 
-function getSvg(svgName) {
-    switch (svgName) {
-      case 'gress':
-        return (
-          <div className="grass">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-leaf" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );
-      case 'Løvrydding':
-        return (
-          <div className="Løvrydding">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-wind" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );
-      case 'Snømåking':
-        return (
-          <div className="Snømåking">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-snowflake" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );
-      case 'Hundelufting':
-        return (
-          <div className="Snømåking">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-dog" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );
-      case 'biler':
-        return (
-          <div className="biler">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-car" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );
-      case 'Selge produkter':
-        return (
-          <div className="Selge produkter">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-cookie-bite" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );
-      case 'Lekerengjøring':
-        return (
-          <div className="Lekerengjøring">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-broom" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                
-      case 'Plantepleie':
-        return (
-          <div className="Lekerengjøring">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-seedling" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        ); 
-      case 'Bake og selge kaker':
-        return (
-          <div className="Bake og selge kaker">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-birthday-cake" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                 
-      case 'Hjemmeorganisering':
-        return (
-          <div className="Lekerengjøring">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-home" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );   
-      case 'Hente posten':
-        return (
-          <div className="Hente posten">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-mail-bulk" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                  
-      case 'Babysitting':
-        return (
-          <div className="Hente posten">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-baby-carriage" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                    
-      case 'Male gjerder':
-        return (
-          <div className="Hente posten">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-paint-roller" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                  
-      case 'Småreparasjoner':
-        return (
-          <div className="Hente posten">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-tools" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                   
-      case 'Levere aviser':
-        return (
-          <div className="Levere aviser">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-newspaper" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                        
-      case 'Organisere garasjesalg':
-        return (
-          <div className="Organisere garasjesalg">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-tags" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                              
-      case 'Datatjenester for eldre':
-        return (
-          <div className="Datatjenester for eldre">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-laptop" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                                   
-      case 'Plantepleie':
-        return (
-          <div className="Plantepleie">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-seedling" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                                
-      case 'Vannplanter for naboer':
-        return (
-          <div className="Vannplanter for naboer">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-tint" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );                         
-      case 'Hjelpe til med å flytte':
-        return (
-          <div className="Hjelpe til med å flytte">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                  <rect width="100%" height="100%" fill="#fff" />
-                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                    }}
-                  >
-                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                      }}
-                    >
-                      <i className="fas fa-truck" style={{ color: "#ffae00", fontSize: 24 }}
-                      />
-                    </div>
-                  </foreignObject>
-                </svg>
-        </div>
-        );               
-  
-  
-      default:
-        return null;
-    }
-  }
-  
-function getImg(imgName) {
-  switch (imgName) {
-    case 'gress':
-      return (
-        <div className="gress">
-          <img src="https://www.deere.no/assets/images/region-2/products/commercial-mowing/front-rotary-mowers/1600t-wide-area-rotary-mower-r2c010728-hero.jpg" alt="Gressklipping" />
-        </div>
-      );
-    case 'Løvrydding':
-      return (
-        <div className="Løvrydding">
-          <img src="https://www.thegrassmaster.com/wp-content/uploads/2019/03/leaf-clean-up1453-1-1024x683.jpg" alt="Løvrydding" />
-        </div>
-      );
-    case 'Snømåking':
-    return (
-      <div className="Snømåking">
-        <img src="https://yardworx.ca/wp-content/uploads/2021/11/snow-removal-calgary-edmonton.jpg" alt="Snømåking" />
-      </div>
-    );
-    case 'Hundelufting':
-    return (
-      <div className="Hundelufting">
-        <img src="https://img.freepik.com/premium-photo/bernese-mountain-dog-great-outdoors_969097-634.jpg" alt="Hundelufting" />
-      </div>
-    );
-  }
-}
 
-  const JobCard = ({ job, onClick }) => (
+const JobCard = ({ job, onClick }) => {
+  const [showMenu, setShowMenu] = useState(false);
+
+  const toggleMenu = (event) => {
+    event.stopPropagation();
+    setShowMenu(!showMenu);
+  }
+
+  const hideMenu = () => {
+    setShowMenu(false);
+  }
+
+  return (
     <div className="job-card" onClick={() => onClick(job)}>
       {/* Start here */}
-      <div className="job-card">
+      <div className="job-card" onMouseLeave={hideMenu}>
         <div className="job-card-header">
             {getSvg(job.svg)}
-          <div className="menu-dot" />
+            <div className="menu-holder" onClick={toggleMenu}>
+              <div className="menu-dot">
+            </div>
+            </div>
+            {showMenu && (
+              <div className="menu"  onMouseLeave={hideMenu}>
+                <div className="menu-item">
+                  <i className="fas fa-heart" style={{ marginRight: '8px' }}></i>
+                  Favoritt
+                </div>
+                <div className="menu-item">
+                  <i className="fas fa-flag" style={{ marginRight: '8px' }}></i>
+                    Anmeld
+                </div>
+              </div>
+            )}
         </div>
         <div className="job-card-county"><span>{job.date}</span> <br></br>{job.county}</div>
         <div className="job-card-title">{job.title}</div>
@@ -432,60 +67,44 @@ function getImg(imgName) {
       </div>
     </div>
   );
-
-  const OverviewCard = ({ job, onClick  }) => {
-    return (
-      <div className="job-card overview-card" onClick={() => onClick(job)}>
-        <div className="overview-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-            <rect width="100%" height="100%" fill="#fff" />
-            <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff",display: "flex",justifyContent: "center",alignItems: "center"}}>
-              <div
-                style={{display: "flex",justifyContent: "center",alignItems: "center",height: "100%"}}>
-                {getSvg(job.svg)}
-              </div>
-            </foreignObject>
-          </svg>
-          <div className="overview-detail">
-            <div className="job-card-title">{job.title}</div>
-            <div className="job-card-subtitle">{job.county}, {job.postalCode}</div>
-          </div>
-          <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
-            <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
-          </svg>
-        </div>
-        <div className="job-overview-buttons">
-          <div className="search-buttons time-button">
-            (Ansettelsestype)
-          </div>
-          <div className="search-buttons level-button">
-            (Ansiennitetsnivå)
-          </div>
-          <div className="job-stat">Ny</div>
-          <div className="job-day">1d</div>
-        </div>
-      </div>
-    );
-  };
+}
   
+const OverviewCard = ({ job, onClick  }) => {
+  return (
+    <div className="job-card overview-card" onClick={() => onClick(job)}>
+      <div className="overview-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+          <rect width="100%" height="100%" fill="#fff" />
+          <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff",display: "flex",justifyContent: "center",alignItems: "center"}}>
+            <div
+              style={{display: "flex",justifyContent: "center",alignItems: "center",height: "100%"}}>
+              {getSvg(job.svg)}
+            </div>
+          </foreignObject>
+        </svg>
+        <div className="overview-detail">
+          <div className="job-card-title">{job.title}</div>
+          <div className="job-card-subtitle">{job.county}, {job.postalCode}</div>
+        </div>
+        <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
+          <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
+        </svg>
+      </div>
+      <div className="job-overview-buttons">
+        <div className="search-buttons time-button">
+          (Ansettelsestype)
+        </div>
+        <div className="search-buttons level-button">
+          (Ansiennitetsnivå)
+        </div>
+        <div className="job-stat">Ny</div>
+        <div className="job-day">1d</div>
+      </div>
+    </div>
+  );
+};
 
-  // Example jobs data
-  const jobsData = [
-    { id: 1, date: 'Ny', name: 'navn person', county: 'Oslo', postalCode: '0010', img: 'gress', svg: 'gress', title: 'Gressklipping', description: 'Description for Job 1', price: '100' },
-    { id: 2, date: 'Ny', name: 'navn person', county: 'Viken', postalCode: '3530', img: 'Løvrydding', svg: 'Løvrydding', title: 'Løvrydding', description: 'Description for Job 2', price: '200' },
-    { id: 3, date: 'Ny', name: 'navn person', county: 'Agder', postalCode: '4438', img: 'Snømåking', svg: 'Snømåking', title: 'Snømåking', description: 'Description for Job 3', price: '50' },
-    { id: 4, date: 'Ny', name: 'navn person', county: 'Rogaland', postalCode: '4011', img: 'Hundelufting', svg: 'Hundelufting', title: 'Hundelufting', description: 'Description for Job 4', price: '30' },
-    // Add more job objects here...
-  ];
-
-  const countJobsByCounty = (jobs) => {
-    return jobs.reduce((acc, job) => {
-      acc[job.county] = (acc[job.county] || 0) + 1;
-      return acc;
-    }, {});
-  };
-
-  const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
+const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
     if (!job) return null;
 
     return (
@@ -591,6 +210,14 @@ function getImg(imgName) {
     );
   };
 
+
+  const countJobsByCounty = (jobs) => {
+    return jobs.reduce((acc, job) => {
+      acc[job.county] = (acc[job.county] || 0) + 1;
+      return acc;
+    }, {});
+  };
+
 function Home() {
 
     
@@ -607,9 +234,12 @@ function Home() {
         'Male gjerder' , 'Småreparasjoner', 'Levere aviser', 'Organisere garasjesalg', 'Datatjenester for eldre',
         'Hjelpe med hagearbeid', 'Vannplanter for naboer', 'Hjelpe til med å flytte'
     ];
+    const navigate = useNavigate();
+    const { jobId } = useParams();
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
+      navigate(`/${job.id}`);
   };
 
   const handleLocationSelection = (location, event) => {
@@ -622,11 +252,12 @@ function Home() {
   };  
 
     const handleJobClick = (job) => {
-        setSelectedJob(job);
+      navigate(`/${job.id}`);
     };
 
     const closeJobDetailView = () => {
-    setSelectedJob(null);
+      setSelectedJob(null);
+      navigate('/');
   };
 
     const handleCategorySelection = (categoryName) => {
@@ -654,9 +285,39 @@ function Home() {
         setJobCounts(countJobsByCounty(jobsData));
     }, [jobsData]);
 
+    useEffect(() => {
+      if (jobId) {
+        const jobDetail = jobsData.find(job => job.id === parseInt(jobId, 10));
+        if (jobDetail) {
+          setSelectedJob(jobDetail);
+        } else {
+          // Handle case where job is not found
+          navigate('/'); // Redirect to home if job ID is invalid
+        }
+      }
+    }, [jobId, navigate]);
+
+    useEffect(() => {
+      // Update job count based on selected location
+      const filteredJobs = jobsData.filter(job => 
+          selectedLocation === '' || job.county === selectedLocation
+      );
+      setJobCount(filteredJobs.length);
+  }, [selectedLocation]); // Dependency array includes selectedLocation
+
+  useEffect(() => {
+    // Apply the overflow: hidden; style to the body when the component is mounted
+    document.body.style.overflow = 'hidden';
+
+    // Remove the overflow: hidden; style from the body when the component is unmounted
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
     return (
         <div className="container">
+          <Header onClose={closeJobDetailView}/>
             <div className="categories">
               <div className="category">
                 <div className="category-menu">
@@ -783,11 +444,11 @@ function Home() {
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                     <circle cx={12} cy={10} r={3} />
                   </svg>
-                  Norge, <span className="Change"> Velg Fylke</span>
+                    <span className="placeholder"> Fylke</span>
                   <i className="fas fa-chevron-down" style={{ position: "absolute", right: 10 }} />
                 {showLocations && (
                   <div className="other-locations">
-                    <p className="selected-location">Velg Fylke</p>
+                    {/*<p className="selected-location">Velg Fylke</p>*/}
                     <p>Agder</p>
                     <p>Innlandet</p>
                     <p>Møre og Romsdal</p>
