@@ -83,6 +83,7 @@ const Create = () => {
     const typeRef = useRef(null);
     const erfaringRef = useRef(null);
     const ansettelsestypeRef = useRef(null);
+    const typeToggleButtonRef = useRef(null);
 
 
     // Close dropdown when clicked outside
@@ -92,7 +93,7 @@ const Create = () => {
 
     useOutsideClick(typeRef, () => {
         if (isTypeOpen) setIsTypeOpen(false);
-    });
+    }, typeToggleButtonRef);
 
     useOutsideClick(erfaringRef, () => {
         if (isErfaringOpen) setIsErfaringOpen(false);
@@ -147,7 +148,7 @@ const Create = () => {
                     <div className="form-body">
                         <div>
                             <label htmlFor="type" className="form-label">Type Jobb</label>
-                            <button id="type" className="form-select" type="button" onClick={toggleTypeDropdown}>
+                            <button ref={typeToggleButtonRef} id="type" className="form-select" type="button" onClick={toggleTypeDropdown}>
                             {selectedType}
                             </button>
                             {isTypeOpen && (

@@ -101,6 +101,15 @@
     padding: 0px;
   }
 
+  ul {
+    position: relative;
+    padding: 20px;
+    background: var(--header-bg-color);
+    z-index: 1;
+    border-radius: 20px;
+    border: 2px solid var(--active-light-color);
+  }
+
   ul button {
     margin-top: 10px;
     margin-left: 10px;
