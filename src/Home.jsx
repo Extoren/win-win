@@ -218,23 +218,14 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
     }, {});
   };
 
-  const countJobsByPrice = (jobs) => {
-    return jobs.reduce((acc, job) => {
-      acc[job.price] = (acc[job.price] || 0) + 1;
-      return acc;
-    }, {});
-  }
-
 function Home() {
 
-  
+    
     const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
     const wrapperRef = useRef(null);
     const [selectedJob, setSelectedJob] = useState(null);
     const [showLocations, setShowLocations] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState('');
-    const [selectedAnsettelsestype, setSelectedAnsettelsestype] = useState('');
-    const [selectedPrice, setSelectedPrice] = useState('');
     const [jobFilter, setJobFilter] = useState('');
     const inputRef = useRef(null);
     const categories = [
@@ -259,24 +250,6 @@ function Home() {
       setSelectedLocation(location);
     }
   };  
-
-  const handleAsettelsestypeSelection = (ansettelsestype, event) => {
-    if (selectedAnsettelsestype = ansettelsestype) {
-      setSelectedAnsettelsestype('');
-      event.currentTarget.checked = false;
-    } else {
-      setSelectedAnsettelsestype(ansettelsestype);
-    }
-  }
-
-  const handlePriceSelection = (price, event) => {
-    if (selectedPrice = price) {
-      setSelectedPrice('');
-      event.currentTarget.checked = false;
-    } else {
-      setSelectedPrice(price);
-    }
-  }
 
     const handleJobClick = (job) => {
       navigate(`/${job.id}`);
@@ -310,7 +283,6 @@ function Home() {
     useEffect(() => {
         setJobCount(jobsData.length);
         setJobCounts(countJobsByCounty(jobsData));
-        setJobCounts(countJobsByPrice(jobsData));
     }, [jobsData]);
 
     useEffect(() => {
@@ -328,7 +300,7 @@ function Home() {
     useEffect(() => {
       // Update job count based on selected location
       const filteredJobs = jobsData.filter(job => 
-          selectedLocation === '' || job.county === selectedLocation,
+          selectedLocation === '' || job.county === selectedLocation
       );
       setJobCount(filteredJobs.length);
   }, [selectedLocation]); // Dependency array includes selectedLocation
@@ -641,27 +613,32 @@ function Home() {
                     <div className="job-time-title">Ansettelsestype</div>
                     <div className="job-wrapper">
                       <div className="type-container">
-                        <input type="checkbox" id="job13" className="job-style" onClick={(e) => handleAsettelsestypeSelection('Heltidsjobber', e)}/>
+                        <input type="checkbox" id="job13" className="job-style" />
                         <label htmlFor="job13">Heltidsjobber</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job14" className="job-style" onClick={(e) => handleAsettelsestypeSelection('Deltidsjobber', e)}/>
+                        <input type="checkbox" id="job14" className="job-style" />
                         <label htmlFor="job14">Deltidsjobber</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job15" className="job-style" onClick={(e) => handleAsettelsestypeSelection('Eksterne jobber', e)}/>
+                        <input type="checkbox" id="job15" className="job-style" />
                         <label htmlFor="job15">Eksterne jobber</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job16" className="job-style" onClick={(e) => handleAsettelsestypeSelection('Kontrakt', e)}/>
+                        <input type="checkbox" id="job16" className="job-style" />
                         <label htmlFor="job16">Kontrakt</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job17" className="job-style" onClick={(e) => handleAsettelsestypeSelection('Små jobber', e)}/>
+                        <input
+                          type="checkbox"
+                          id="job17"
+                          className="job-style"
+                          defaultChecked=""
+                        />
                         <label htmlFor="job17">Små jobber</label>
                         <span className="job-number">1</span>
                       </div>
@@ -711,38 +688,38 @@ function Home() {
                     <div className="job-time-title">Lønnsområde</div>
                     <div className="job-wrapper">
                       <div className="type-container">
-                        <input type="checkbox" id="job24" className="job-style" onClick={(e) => handlePriceSelection('0kr - 100kr', e)}/>
+                        <input type="checkbox" id="job24" className="job-style"defaultChecked=""/>
                         <label htmlFor="job24">0kr - 100kr</label>
                         <span className="job-number">1</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job25" className="job-style" onClick={(e) => handlePriceSelection('100kr - 200kr', e)}/>
+                        <input type="checkbox" id="job25" className="job-style" />
                         <label htmlFor="job25">100kr - 200kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job26" className="job-style" onClick={(e) => handlePriceSelection('200kr - 500kr', e)}/>
+                        <input type="checkbox" id="job26" className="job-style" />
                         <label htmlFor="job26">200kr - 500kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job27" className="job-style" onClick={(e) => handlePriceSelection('500kr - 1500kr', e)}/>
+                        <input type="checkbox" id="job27" className="job-style" />
                         <label htmlFor="job27">500kr - 1500kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job28" className="job-style" onClick={(e) => handlePriceSelection('1500kr - 3000kr', e)}/>
+                        <input type="checkbox" id="job28" className="job-style" />
                         <label htmlFor="job28">1500kr - 3000kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job29" className="job-style" onClick={(e) => handlePriceSelection('3000kr - 4000kr', e)}/>
+                        <input type="checkbox" id="job29" className="job-style" />
                         <label htmlFor="job29">3000kr - 4000kr</label>
                         <span className="job-number">0</span>
                       </div>
                       <div className="type-container">
-                        <input type="checkbox" id="job30" className="job-style" onClick={(e) => handlePriceSelection('4000kr - 9999kr', e)}/>
-                        <label htmlFor="job30">4000kr - 9999kr</label>
+                        <input type="checkbox" id="job30" className="job-style" />
+                        <label htmlFor="job30">4000kr - 5000kr</label>
                         <span className="job-number">0</span>
                       </div>
                     </div>
