@@ -40,15 +40,21 @@ function MakeUser() {
 
     const handleSubmit = () => {
         const user = auth.currentUser;
-        if (user) {
-            updateDatabaseWithUserData(user.uid, formData);
-            // After successful data submission, set isLoggedIn to true
-            setIsLoggedIn(true); // Assuming you've brought setIsLoggedIn into scope
-            navigate('/'); // Navigate to the desired page after setting login state
+        // Verify that all steps are complete and the necessary data is available
+        if (user && currentStep === 1 && formData.name && formData.surname) {
+            const updatedFormData = {
+                ...formData,
+                isSetupComplete: true // Set flag to true only when all data is present
+            };
+    
+            updateDatabaseWithUserData(user.uid, updatedFormData);
+            setIsLoggedIn(true); // Assuming this will set the context state for loggedIn
+            navigate('/'); // Redirect to home only after data is written
         } else {
-            console.error("User is not authenticated");
+            console.error("User is not authenticated or required information is missing");
         }
     };
+    
 
     const handleRadioChange = (e) => {
         setSelectedOption(e.target.id);

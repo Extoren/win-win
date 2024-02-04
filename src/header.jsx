@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, useLocation, NavLink } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import { auth } from './firebaseConfig';
 import { signOut } from 'firebase/auth';

@@ -5,6 +5,7 @@ import { signInWithPopup } from "firebase/auth";
 import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
+import { getDatabase, ref, set, onValue } from "firebase/database";
 
 function Login() {
 
@@ -12,38 +13,63 @@ function Login() {
     const navigate = useNavigate();
     const [userType, setUserType] = useState('');
 
-    const handleLoginSuccess = () => {
-        navigate('/makeUser');
-    };
-
-    const signInWithGoogle = async () => {
+    const signInWithGoogle = async (e) => {
+        e.preventDefault();
         try {
-          await signInWithPopup(auth, googleAuthProvider);
+            const result = await signInWithPopup(auth, googleAuthProvider);
+            const user = result.user;
+            const db = getDatabase();
+            const userRef = ref(db, 'users/' + user.uid);
+    
+            // Check if user data already exists and is setup complete
+            onValue(userRef, (snapshot) => {
+                const userData = snapshot.val();
+                if (userData && userData.isSetupComplete) {
+                    // User data exists and setup is complete, so just log the user in
+                    setIsLoggedIn(true);
+                    navigate('/');
+                } else {
+                    // User data does not exist, so set the user data
+                    set(userRef, {
+                        userType: userType,
+                        // Set any other user info you need to initialize
+                    }).catch((error) => {
+                        console.error("Error setting user data: ", error);
+                    });
+                }
+            }, {
+                onlyOnce: true
+            });
         } catch (error) {
-          console.error("Error signing in with Google", error);
-        }
-      };
-
-    const handleSubmit = () => {
-        const user = auth.currentUser;
-        if (user) {
-            // After successful data submission, set isLoggedIn to true
-            setIsLoggedIn(true); // Assuming you've brought setIsLoggedIn into scope
-            navigate('/'); // Navigate to the desired page after setting login state
-        } else {
-            console.error("User is not authenticated");
+            console.error("Error signing in with Google: ", error);
         }
     };
+    
 
     useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        setIsLoggedIn(true);
-        navigate('/makeUser'); // Optionally redirect the user after auto-sign-in
-      }
-    });
-    return () => unsubscribe();
-  }, [setIsLoggedIn, navigate]);
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            if (user) {
+                const db = getDatabase();
+                const userRef = ref(db, 'users/' + user.uid);
+                onValue(userRef, (snapshot) => {
+                    const userData = snapshot.val();
+                    // Check if userData exists and the isSetupComplete flag is true
+                    if (userData && userData.isSetupComplete) {
+                        setIsLoggedIn(true);
+                        navigate('/');
+                    } else {
+                        // If userData does not exist or isSetupComplete is not true
+                        navigate('/makeUser');
+                    }
+                }, {
+                    onlyOnce: true
+                });
+            }
+        });
+        return () => unsubscribe();
+    }, [setIsLoggedIn, navigate]);
+    
+    
       
 
 
