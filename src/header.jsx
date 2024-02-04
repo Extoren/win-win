@@ -15,6 +15,8 @@ function Header({ onClose }) {
     const [isLinkClicked, setLinkClicked] = useState(false);
     const location = useLocation();
     const [userName, setUserName] = useState({ firstName: '', lastName: '' });
+    const isMakeUserRoute = location.pathname === "/makeUser";
+    const [userType, setUserType] = useState(null);
   
     // Function to toggle the theme
     const toggleTheme = () => {
@@ -40,10 +42,6 @@ function Header({ onClose }) {
   
     }, [theme]);
 
-    const handleLinkClick = () => {
-      setLinkClicked(true);
-    }
-
     const handleDivClick = () => {
       setShowDropdown(!showDropdown);
     };
@@ -60,8 +58,10 @@ function Header({ onClose }) {
           get(dbRef).then((snapshot) => {
               if (snapshot.exists()) {
                   const userData = snapshot.val();
-                  // Assuming your user data has fields 'name' and 'surname'
+                  // Update the state for the user's name and surname.
                   setUserName({ firstName: userData.name, lastName: userData.surname });
+                  // Also update the state for the user's type.
+                  setUserType(userData.userType || ''); // use empty string as default if userType is not set
               } else {
                   console.log("No data available");
               }
@@ -69,7 +69,7 @@ function Header({ onClose }) {
               console.error(error);
           });
       }
-  }, [isLoggedIn]);
+    }, [isLoggedIn]);
 
   return (
     <div className="header" ref={headerRef}>
@@ -84,9 +84,11 @@ function Header({ onClose }) {
             <NavLink to="/" activeClassName="active" onClick={onClose}>Finn Jobb</NavLink>
             {/*<NavLink to="/" activeClassName="active">Dinne oppdrag</NavLink>*/}
             <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
-            <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
-              <i className="fas fa-plus-circle"></i> Lag Jobb
-            </NavLink>
+            {userType === 'Offentlig' && (
+              <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
+                  <i className="fas fa-plus-circle"></i> Lag Jobb
+              </NavLink>
+            )}
         </div>
       </div>
       <div className="user-settings">
@@ -132,13 +134,13 @@ function Header({ onClose }) {
             <a href="#">English</a>
           </div>
         </div>
-          {isLoggedIn ? (
+        {isLoggedIn && !isMakeUserRoute ? ( // Check if logged in AND not on makeUser route
               <div className="profile-container">
                 <div className="profile" onClick={handleDivClick}>
                 <div className="user-profile">
                     <i className="fas fa-user"></i>
                 </div>
-                  <label htmlFor="text">{isLoggedIn ? `${userName.firstName} ${userName.lastName}` : 'Ny bruker'}</label>
+                  <label htmlFor="text">{isLoggedIn ? `${userName.firstName} ${userName.lastName}` : <div className="placeholder-text">Laster...</div>}</label>
                 </div>
 
                 {showDropdown && (
