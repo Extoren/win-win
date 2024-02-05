@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import './Login.css';
 import { googleAuthProvider, auth } from '../firebaseConfig';
 import { signInWithPopup } from "firebase/auth";
@@ -12,30 +12,37 @@ function Login() {
     const { setIsLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
     const [userType, setUserType] = useState('');
+      // State to track the active form section
+    const [activeSection, setActiveSection] = useState('login');
+    const [showContents, setShowContents] = useState(false);
+    const activeSectionRef = useRef(activeSection);
+    activeSectionRef.current = activeSection;
 
     const signInWithGoogle = async (e) => {
         e.preventDefault();
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
             const user = result.user;
+            // User is authenticated at this point and added to Firebase Auth
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
     
-            // Check if user data already exists and is setup complete
-            onValue(userRef, (snapshot) => {
+            onValue(userRef, async (snapshot) => {
                 const userData = snapshot.val();
                 if (userData && userData.isSetupComplete) {
-                    // User data exists and setup is complete, so just log the user in
+                    // Proceed with login
                     setIsLoggedIn(true);
                     navigate('/');
                 } else {
-                    // User data does not exist, so set the user data
-                    set(userRef, {
-                        userType: userType,
-                        // Set any other user info you need to initialize
-                    }).catch((error) => {
-                        console.error("Error setting user data: ", error);
-                    });
+                    // User does not exist in database or setup is not complete
+                    if (activeSection === 'login') {
+                        alert('Du er ikke registrert. Registrer deg først ;)');
+                        // Log out the user
+                        await auth.signOut();
+                        // Optionally, redirect to a different page or show a message
+                    } else if (activeSection === 'register') {
+                        // Handle registration logic here
+                    }
                 }
             }, {
                 onlyOnce: true
@@ -58,8 +65,14 @@ function Login() {
                         setIsLoggedIn(true);
                         navigate('/');
                     } else {
-                        // If userData does not exist or isSetupComplete is not true
-                        navigate('/makeUser');
+                        // Now we check the ref's current value to decide
+                        if (activeSectionRef.current === 'register') {
+                            navigate('/makeUser');
+                        } else {
+                            // If not in register section, do not redirect
+                            // Optionally, handle this case, e.g., show an error or log out the user
+                            console.log('User data incomplete or missing, and not in the register section.');
+                        }
                     }
                 }, {
                     onlyOnce: true
@@ -67,15 +80,8 @@ function Login() {
             }
         });
         return () => unsubscribe();
-    }, [setIsLoggedIn, navigate]);
+    }, [setIsLoggedIn, navigate]); // Removed activeSection from dependencies to avoid re-running the effect unnecessarily
     
-    
-      
-
-
-    // State to track the active form section
-    const [activeSection, setActiveSection] = useState('login');
-    const [showContents, setShowContents] = useState(false);
 
     function toggleActive(id) {
         // Set the active section state

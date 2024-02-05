@@ -136,6 +136,8 @@ body {
     
 
 .header {
+  position: fixed;
+  top: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -147,6 +149,7 @@ body {
   height: 60px;
   width: 100%;
   font-size: 14px; 
+  z-index: 1000;
 }
   .header-menu a {
     text-decoration: none;
@@ -337,7 +340,9 @@ body {
   }
   
   .categories {
-    position: relative;
+    position: fixed;
+    top: 60px;
+    z-index: 1000;
     height: 56px;
     white-space: nowrap;
     display: flex;
@@ -417,15 +422,16 @@ body {
   font-weight: 600;
 }
 
-
 .wrapper {
+  position: relative;
+  height: 100vh; /* Maintain the height for scrolling */
   width: 100%;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   scroll-behavior: smooth;
-  padding: 30px 40px;
-  overflow: auto; 
+  padding: 156px 40px 0; /* Add top padding to push the content down */
+  overflow: auto;
+  box-sizing: border-box; /* Include padding in the height calculation */
 }
 
 .search-menu {
@@ -1272,8 +1278,6 @@ a {
   }
 
 @media screen and (max-width: 800px) {
-  .user-profile {
-    margin-right: 0; }
   .job-explain {
     margin-left: 0; 
     margin-top: 107vh;
@@ -1299,6 +1303,12 @@ a {
     grid-template-columns: repeat(1, 1fr); }
   .header-menu a:not(:first-child) {
     margin-left: 10px; } }
+
+@media screen and (max-width: 601px) {
+  .user-profile {
+    border: none; 
+  display: none; }
+}
 
 @media screen and (max-width: 590px) {
   .header-menu {
