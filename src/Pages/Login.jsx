@@ -141,11 +141,11 @@ function Login() {
                         {!showContents && (
                             <div className="choose">
                                 <button className="box official" onClick={() => {setShowContents(true); setUserType('Offentlig')}}>
-                                    <h1>Offentlig bruker</h1>
+                                    <h1 id="official">Offentlig bruker</h1>
                                     <p>Uforsk eller lag offentlig oppdrag rundt hele Norge.</p>
                                 </button>
                                 <button className="box family" onClick={() => {setShowContents(true); setUserType('Familie')}}>
-                                    <h1>Familie bruker</h1>
+                                    <h1 id="official">Familie bruker</h1>
                                     <p>Uforsk eller lag ulike familie oppdrag.</p>
                                 </button>
                             </div>

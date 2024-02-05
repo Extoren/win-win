@@ -280,6 +280,11 @@ button:hover {
 .contents h1 span {
     color: var(--active-color);
 }
+
+#official {
+    color: var(--header-bg-color);
+}
+
 .button-holder {
     display: flex;
     justify-content: center;
