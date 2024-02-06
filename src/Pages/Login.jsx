@@ -6,6 +6,7 @@ import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import { getDatabase, ref, set, onValue } from "firebase/database";
+import NavigationBar from '../NavigationBar';
 
 function Login() {
 
@@ -183,7 +184,8 @@ function Login() {
                 </div>
                 </div>
             </div>
-            </div>
+            <NavigationBar />
+        </div>
 
     
     );
