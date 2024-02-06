@@ -315,11 +315,44 @@ function Home() {
     };
   }, []);
 
+  const [hoverIndex, setHoverIndex] = useState(null);
+
+  const selectCategories = [
+    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
+    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
+    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
+    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
+    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
+    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
+  ];
+
     return (
         <div className="container">
           <Header onClose={closeJobDetailView}/>
-
             <div className={`wrapper ${theme}`} ref={wrapperRef}>
+            <div className="select-category">
+        <div className="category-wrapper">
+          {selectCategories.map((category, index) => (
+            <p
+              key={index}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+              style={{ 
+                backgroundColor: hoverIndex === index ? 'var(--level-button)' : 'var(--alert-bg-color)',
+                color: hoverIndex === index ? 'var(--body-color)' : 'inherit', // Change text color on hover
+              }}
+            >
+              <i className={category.icon} style={{ color: hoverIndex === index ? 'white' : 'var(--active-color)' }}></i>
+              <span style={{
+                textDecorationColor: hoverIndex === index && theme !== 'dark-mode' ? 'white' : 'var(--active-color)'
+              }}>
+                {category.label}
+              </span>
+              <br /> {category.sublabel}
+            </p>
+          ))}
+        </div>
+      </div>
               <div className="search-menu">
                 {/*<div className="search-bar">
                   <div id="Color">
@@ -342,6 +375,7 @@ function Home() {
                     </svg>
                   </div>
                 </div>*/}
+                {/*
                 <div className="search-location" onClick={toggleLocations}>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-map-pin">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
@@ -351,7 +385,6 @@ function Home() {
                   <i className="fas fa-chevron-down" style={{ position: "absolute", right: 10 }} />
                 {showLocations && (
                   <div className="other-locations">
-                    {/*<p className="selected-location">Velg Fylke</p>*/}
                     <p>Uteoppdrag</p>
                     <p>Inneoppdrag</p>
                     <p>Kreative Oppdrag</p>
@@ -360,8 +393,8 @@ function Home() {
                     <p>Miljøoppdrag</p>
                     <p>Sosiale Oppdrag</p>
                   </div>
-                  )}
-                </div>
+                )}
+                </div>*/}
                 <div className="search-job">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -381,7 +414,7 @@ function Home() {
                       ref={inputRef}
                       type="text"
                       id="search-input"
-                      placeholder="Type job"
+                      placeholder="Søk etter spesifikk jobb..."
                       onChange={e => setJobFilter(e.target.value)}
                     />
                     <div className="Categories-nav">
@@ -394,6 +427,7 @@ function Home() {
                       )}
                     </div>
                   </div>
+                  <button className="search-button">Finn Jobb</button>
                 </div>
                   {/*<div className="search-salary">
                   <svg
@@ -422,7 +456,7 @@ function Home() {
                   </svg>
                   <input type="text" placeholder="Lønnsområde" />
                 </div>*/}
-                <button className="search-button">Finn Jobb</button>
+                
               </div>
               <div className="main-container">
                   <div className="search-type">

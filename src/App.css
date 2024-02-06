@@ -115,6 +115,95 @@ body {
   overflow: hidden;
   background-color: var(--theme-bg-color); }
 
+  .category-wrapper {
+    display: flex;
+    flex-wrap: nowrap; 
+    padding: 0px 0px 50px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    max-width: 100%;
+    justify-content: center;
+  }
+  
+  @media (max-width: 1200px) {
+    .category-wrapper {
+      width: 1200px;
+      padding: 0;
+      margin-bottom: 30px;
+      justify-content: left;
+    }
+  }
+
+  .category-wrapper span {
+    text-decoration: 2px solid var(--active-color)underline;
+    font-size: 1.2em;
+    font-weight: 600;
+  }
+  
+  .category-wrapper i {
+    color: var(--active-color);
+    font-size: 2em;
+    margin-right: 20px;
+  }
+
+  @keyframes moving-border {
+    0%, 100% {
+      border-color: var(--body-bg-color);
+    }
+    25% {
+      border-top-color: var(--active-light-color);
+    }
+    50% {
+      border-right-color: var(--active-light-color);
+      border-top-color: var(--body-bg-color);
+    }
+    75% {
+      border-bottom-color: var(--active-light-color);
+      border-right-color: var(--body-bg-color);
+    }
+    87.5% {
+      border-left-color: var(--active-light-color);
+      border-bottom-color: var(--active-color);
+    }
+    93.75% {
+      border-left-color: var(--active-light-color);
+    }
+  }
+  
+  .category-wrapper p {
+    font-size: 0.8em;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15%;
+    height: 100px;
+    background-color: var(--alert-bg-color);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin-right: 10px;
+    border: 2px solid transparent;
+  }
+  
+  .category-wrapper p:hover {
+    background-color: var(--level-button);
+    color: var(--Hover-color);
+    animation: moving-border 5s infinite linear;
+  }
+  
+
+  .hover-effect i {
+    color: var(--hover-color); /* Define --hover-color in your :root or specific element */
+  }
+  
+  @media (max-width: 1200px) {
+    .category-wrapper p {
+      width: 200px;
+      padding: 20px 20px;
+    }
+  }
+
 .logo {
   display: flex;
   align-items: center;
@@ -359,50 +448,55 @@ body {
 
   .search-categories {
     position: relative; /* Add position relative to the parent container */
-  }
-  
-  .Categories-nav {
-    margin-top: 15px;
-    position: absolute;
-    top: 100%;
-    right: -150px;
-    left: -50px;
-    max-height: 400px;
-    text-align: left;
-    font-size: 10pt;
-    background-color: var(--header-bg-color);
-    z-index: 1;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    border-bottom: 1px solid var(--Hover-color);
-    opacity: 0;
-    transition: visibility 0s, opacity 0.5s linear;
-  }
+    width: 100%;
+}
 
-  input:focus + .Categories-nav {
+.Categories-nav {
+  /* existing styles */
+  margin-top: 15px;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  height: 300px;
+  text-align: left;
+  font-size: 10pt;
+  background-color: var(--header-bg-color);
+  z-index: 1;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom: 1px solid var(--Hover-color);
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s linear;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 20px 40px;
+}
+
+input:focus + .Categories-nav {
     max-height: auto; /* Set the reduced height when the input is focused */
     visibility: none;
     opacity: 1;
-    display: block;
-  }
-  
-  input:not(:focus) + .Categories-nav {
+    display: flex;
+}
+
+input:not(:focus) + .Categories-nav {
     display: none;
-  }
-  
-  .Categories-nav p {
+}
+
+.Categories-nav p {
     display: block;
     padding: 10px;
     background-color: transparent;
-  }
+}
 
-  .Categories-nav p:hover {
+.Categories-nav p:hover {
     background-color: var(--alert-bg-color);
     cursor: pointer;
-  }
+}
   
   input:focus + #category-menu .category-menu-item {
     display: block;
@@ -504,10 +598,9 @@ body {
 .search-salary {
   display: flex;
   align-items: center;
-  width: 50%;
+  width: 100%;
   font-size: 14px;
   font-weight: 500;
-  padding: 0 25px;
   height: 100%; }
   .search-location input,
   .search-job input,
