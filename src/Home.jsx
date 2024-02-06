@@ -315,108 +315,44 @@ function Home() {
     };
   }, []);
 
+  const [hoverIndex, setHoverIndex] = useState(null);
+
+  const selectCategories = [
+    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
+    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
+    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
+    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
+    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
+    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
+  ];
+
     return (
         <div className="container">
           <Header onClose={closeJobDetailView}/>
-            <div className="categories">
-              <div className="category">
-                <div className="category-menu">
-                  <div className="category-menu">
-                    <div className="category-item">
-                      <i className="fas fa-baby" style={{ color: "#ffae00" }} />{" "}
-                      Barnepass
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-leaf" style={{ color: "#ffae00" }} />{" "}
-                      Gressklipping
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-wind" style={{ color: "#ffae00" }} />{" "}
-                      Løvrydding
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-snowflake" style={{ color: "#ffae00" }} />{" "}
-                      Snømåking
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-dog" style={{ color: "#ffae00" }} />{" "}
-                      Hundelufting
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-car" style={{ color: "#ffae00" }} /> Vaske
-                      biler
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-cookie-bite" style={{ color: "#ffae00" }} />{" "}
-                      Selge produkter
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-broom" style={{ color: "#ffae00" }} />{" "}
-                      Lekerengjøring
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-seedling" style={{ color: "#ffae00" }} />{" "}
-                      Plantepleie
-                    </div>
-                    <div className="category-item">
-                      <i
-                        className="fas fa-birthday-cake"
-                        style={{ color: "#ffae00" }}
-                      />{" "}
-                      Bake og selge kaker
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-home" style={{ color: "#ffae00" }} />{" "}
-                      Hjemmeorganisering
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-mail-bulk" style={{ color: "#ffae00" }} />
-                      Hente posten
-                    </div>
-                    <div className="category-item">
-                      <i
-                        className="fas fa-baby-carriage"
-                        style={{ color: "#ffae00" }}
-                      />{" "}
-                      Babysitting
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-paint-roller" style={{ color: "#ffae00" }} />{" "}
-                      Male gjerder
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-tools" style={{ color: "#ffae00" }} />
-                      Småreparasjoner
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-newspaper" style={{ color: "#ffae00" }} />{" "}
-                      Levere aviser
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-tags" style={{ color: "#ffae00" }} />{" "}
-                      Organisere garasjesalg
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-laptop" style={{ color: "#ffae00" }} />
-                      Datatjenester for eldre
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-seedling" style={{ color: "#ffae00" }} />{" "}
-                      Hjelpe med hagearbeid
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-tint" style={{ color: "#ffae00" }} />{" "}
-                      Vannplanter for naboer
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-truck" style={{ color: "#ffae00" }} /> Hjelpe
-                      til med å flytte
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div className={`wrapper ${theme}`} ref={wrapperRef}>
+            <div className="select-category">
+        <div className="category-wrapper">
+          {selectCategories.map((category, index) => (
+            <p
+              key={index}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+              style={{ 
+                backgroundColor: hoverIndex === index ? 'var(--level-button)' : 'var(--alert-bg-color)',
+                color: hoverIndex === index ? 'var(--body-color)' : 'inherit', // Change text color on hover
+              }}
+            >
+              <i className={category.icon} style={{ color: hoverIndex === index ? 'white' : 'var(--active-color)' }}></i>
+              <span style={{
+                textDecorationColor: hoverIndex === index && theme !== 'dark-mode' ? 'white' : 'var(--active-color)'
+              }}>
+                {category.label}
+              </span>
+              <br /> {category.sublabel}
+            </p>
+          ))}
+        </div>
+      </div>
               <div className="search-menu">
                 {/*<div className="search-bar">
                   <div id="Color">
@@ -439,31 +375,26 @@ function Home() {
                     </svg>
                   </div>
                 </div>*/}
+                {/*
                 <div className="search-location" onClick={toggleLocations}>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-map-pin">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
                     <circle cx={12} cy={10} r={3} />
                   </svg>
-                    <span className="placeholder"> Fylke</span>
+                    <span className="placeholder"> Kategori</span>
                   <i className="fas fa-chevron-down" style={{ position: "absolute", right: 10 }} />
                 {showLocations && (
                   <div className="other-locations">
-                    {/*<p className="selected-location">Velg Fylke</p>*/}
-                    <p>Agder</p>
-                    <p>Innlandet</p>
-                    <p>Møre og Romsdal</p>
-                    <p>Nordland</p>
-                    <p>Oslo</p>
-                    <p>Rogaland</p>
-                    <p>Svalbard</p>
-                    <p>Troms og Finnmark</p>
-                    <p>Trøndelag</p>
-                    <p>Vestfold og Telemark</p>
-                    <p>Vestland</p>
-                    <p>Viken</p>
+                    <p>Uteoppdrag</p>
+                    <p>Inneoppdrag</p>
+                    <p>Kreative Oppdrag</p>
+                    <p>Læringsoppdrag</p>
+                    <p>Vitenskapsoppdrag</p>
+                    <p>Miljøoppdrag</p>
+                    <p>Sosiale Oppdrag</p>
                   </div>
-                  )}
-                </div>
+                )}
+                </div>*/}
                 <div className="search-job">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -483,7 +414,7 @@ function Home() {
                       ref={inputRef}
                       type="text"
                       id="search-input"
-                      placeholder="Type job"
+                      placeholder="Søk etter spesifikk jobb..."
                       onChange={e => setJobFilter(e.target.value)}
                     />
                     <div className="Categories-nav">
@@ -496,8 +427,9 @@ function Home() {
                       )}
                     </div>
                   </div>
+                  <button className="search-button">Finn Jobb</button>
                 </div>
-                 {/*<div className="search-salary">
+                  {/*<div className="search-salary">
                   <svg
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
@@ -524,28 +456,12 @@ function Home() {
                   </svg>
                   <input type="text" placeholder="Lønnsområde" />
                 </div>*/}
-                <button className="search-button">Finn Jobb</button>
+                
               </div>
               <div className="main-container">
                   <div className="search-type">
                   <div className="job-time">
-                    <div className="job-time">
-                      <p>Område i kart</p>
-                      <input
-                        id="search-box"
-                        type="text"
-                        placeholder="Søk etter sted eller postnummer"
-                      />
-                      <div id="map" />
-                    </div>
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2243492.267531465!2d8.46894576840826!3d60.47202389999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46110e5b1a4a57e7%3A0x3624d96eae8f78f1!2sNorway!5e0!3m2!1sen!2s!4v1633965196208!5m2!1sen!2s"
-                      allowFullScreen=""
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="job-time">
-                    <div className="job-time-title">Område</div>
+                    <div className="job-time-title">Fylke</div>
                     <div className="job-wrapper">
                       <div className="type-container">
                         <input type="radio" name="location" id="job1" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
@@ -608,6 +524,22 @@ function Home() {
                         <span className="job-number">{jobCounts['Viken'] || 0}</span>
                       </div>
                     </div>
+                  </div>
+                  <div className="job-time">
+                    <div className="job-time">
+                      <p>Område i kart</p>
+                      <input
+                        id="search-box"
+                        type="text"
+                        placeholder="Søk etter sted eller postnummer"
+                      />
+                      <div id="map" />
+                    </div>
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2243492.267531465!2d8.46894576840826!3d60.47202389999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46110e5b1a4a57e7%3A0x3624d96eae8f78f1!2sNorway!5e0!3m2!1sen!2s!4v1633965196208!5m2!1sen!2s"
+                      allowFullScreen=""
+                      loading="lazy"
+                    />
                   </div>
                   <div className="job-time">
                     <div className="job-time-title">Ansettelsestype</div>

@@ -96,7 +96,33 @@ input[type="radio"] {
     margin-right: 5px;
 }
 
+.email-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
+.app-link-button3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 40px;
+    color: var(--body-color);
+    border: none;
+    border-radius: 4px;
+    border: 2px solid var(--login-color);
+    background-color: none;
+    background: var(--search-border-color);
+    margin-bottom: 20px;
+}
+
+.app-link-button3 img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
 
 input[type="text"] #name,
 input[type="email"],
@@ -104,7 +130,6 @@ input[type="password"] {
     width: 100%;
     padding: 8px;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
 }
