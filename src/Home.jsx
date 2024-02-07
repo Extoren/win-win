@@ -237,6 +237,8 @@ function Home() {
     ];
     const navigate = useNavigate();
     const { jobId } = useParams();
+    const [filteredJobs, setFilteredJobs] = useState(jobsData);
+    const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -250,7 +252,7 @@ function Home() {
     } else {
       setSelectedLocation(location);
     }
-  };  
+  };   
 
     const handleJobClick = (job) => {
       navigate(`/${job.id}`);
@@ -298,13 +300,20 @@ function Home() {
       }
     }, [jobId, navigate]);
 
+    // Update the filteredJobs state whenever the selectedLocation or priceRange changes
     useEffect(() => {
-      // Update job count based on selected location
-      const filteredJobs = jobsData.filter(job => 
-          selectedLocation === '' || job.county === selectedLocation
-      );
-      setJobCount(filteredJobs.length);
-  }, [selectedLocation]); // Dependency array includes selectedLocation
+      const updatedFilteredJobs = jobsData.filter(job => {
+        const jobPrice = Number(job.price.replace(/\D/g, '')); // Assuming job.price is a string with currency symbol
+        // Remove the upper limit on price when max is set to 5000
+        const matchesPrice = priceRange.max === 1000 || jobPrice <= priceRange.max;
+        return (!selectedLocation || job.county === selectedLocation) && matchesPrice;
+      });
+    
+      setFilteredJobs(updatedFilteredJobs);
+      setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
+    }, [selectedLocation, priceRange, jobsData]);
+    
+
 
   useEffect(() => {
     // Apply the overflow: hidden; style to the body when the component is mounted
@@ -461,6 +470,23 @@ function Home() {
             </div>
             <div className="main-container">
                 <div className="search-type">
+                <div className="job-time" id="background-change">
+                  <div className="job-time-title">Lønnsområde</div>
+                  <div className="slider-container">
+                    <input 
+                      id='range-min'
+                      type="range" 
+                      min="0" 
+                      max="1000" // Adjust according to your needs
+                      value={priceRange.max} 
+                      onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) })} 
+                      className="slider" 
+                    />
+                    <span className="slider-value">
+                      {priceRange.max === 1000 ? 'Alle prisklasser' : `${priceRange.max} kr`}
+                    </span>
+                  </div>
+                </div>
                 <div className="job-time">
                   <div className="job-time-title">Fylke</div>
                   <div className="job-wrapper">
@@ -617,46 +643,7 @@ function Home() {
                     </div>
                   </div>
                 </div>
-                <div className="job-time">
-                  <div className="job-time-title">Lønnsområde</div>
-                  <div className="job-wrapper">
-                    <div className="type-container">
-                      <input type="checkbox" id="job24" className="job-style"defaultChecked=""/>
-                      <label htmlFor="job24">0kr - 100kr</label>
-                      <span className="job-number">1</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job25" className="job-style" />
-                      <label htmlFor="job25">100kr - 200kr</label>
-                      <span className="job-number">0</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job26" className="job-style" />
-                      <label htmlFor="job26">200kr - 500kr</label>
-                      <span className="job-number">0</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job27" className="job-style" />
-                      <label htmlFor="job27">500kr - 1500kr</label>
-                      <span className="job-number">0</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job28" className="job-style" />
-                      <label htmlFor="job28">1500kr - 3000kr</label>
-                      <span className="job-number">0</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job29" className="job-style" />
-                      <label htmlFor="job29">3000kr - 4000kr</label>
-                      <span className="job-number">0</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job30" className="job-style" />
-                      <label htmlFor="job30">4000kr - 5000kr</label>
-                      <span className="job-number">0</span>
-                    </div>
-                  </div>
-                </div>
+
               </div>
               <div className="searched-jobs">
                 <div className={`searched-bar ${selectedJob ? "hide-searched-bar" : ""}`}>
@@ -667,11 +654,11 @@ function Home() {
                     </div>
                 </div>
                 <div className="job-cards">
-                {selectedJob == null && jobsData
-                  .filter(job => selectedLocation === '' || job.county === selectedLocation)
-                  .map(job => (
-                    <JobCard key={job.id} job={job} onClick={handleJobClick} />
-                ))}
+                  {selectedJob == null && filteredJobs
+                    .filter(job => selectedLocation === '' || job.county === selectedLocation)
+                    .map(job => (
+                      <JobCard key={job.id} job={job} onClick={handleJobClick} />
+                  ))}
                 </div>
                 {selectedJob && (
                   <JobDetailView 

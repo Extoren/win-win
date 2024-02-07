@@ -33,9 +33,10 @@
   --search-border-color: #efefef;
   --border-color: #d8d8d8;
   --alert-bg-color: #e8f2ff;
+  --alert-bg-color-part-two: #f2f5fc;
   --subtitle-color: #000;
   --inactive-color: #f0f0f0;
-  --placeholder-color: #9b9ba5;
+  --placeholder-color: #f5f5ff;
   --time-button: #B7410E;
   --level-button: #FBBF77;
   --button-color: #fff; 
@@ -49,6 +50,7 @@
   --theme-bg-color: #13131a;
   --header-bg-color: #1c1c24;
   --alert-bg-color: #292932;
+  --alert-bg-color-part-two: #292930;
   --body-color: #fff;
   --inactive-color: #292932;
   --subtitle-color: #c1c1c1;
@@ -1595,4 +1597,17 @@ a {
 .nav-link.active::before {
   transform: translateY(12px) scale(1);
   opacity: 1;
+}
+
+#range-min {
+  color: var(--active-color) !important;
+  background: var(--active-color) !important;
+  border-radius: 10px;
+  padding: 2px;
+}
+
+#background-change {
+  background: var(--alert-bg-color-part-two);
+  padding: 10px;
+  border-radius: 5px;
 }

@@ -136,6 +136,17 @@ const Create = () => {
             setSelectedAnsettelsestype(option);
         }
     };
+
+    useEffect(() => {
+        // Apply the overflow: hidden; style to the body when the component is mounted
+        document.body.style.overflow = 'hidden';
+    
+        // Remove the overflow: hidden; style from the body when the component is unmounted
+        return () => {
+          document.body.style.overflow = 'unset';
+        };
+      }, []);
+
     return (
         <div className="container">
             <Header />
@@ -387,9 +398,9 @@ const Create = () => {
                             <div className="overview2-text-item">{additionalInfo}</div>
                             <br></br>
                             </div>
-                            <button className="search-buttons card-buttons">
+                            {/*<button className="search-buttons card-buttons">
                             Søk Nå
-                            </button>
+                            </button>*/}
                         </div>
                         </div>
                     </div>
