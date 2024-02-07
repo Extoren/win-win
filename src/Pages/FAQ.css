@@ -1,5 +1,7 @@
 
-
+html {
+    overflow: hidden;
+}
 
 .faqs-container {
     display: flex;

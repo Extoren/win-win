@@ -22,7 +22,7 @@
   background-color: var(--body-bg-color); /* Set the color of the scrollbar thumb on hover */
 }
 
-:root {
+:root, .light-mode {
   --body-bg-color: #e5ecef;
   --theme-bg-color: #fafafb;
   --body-font: "Poppins", sans-serif;
@@ -530,6 +530,7 @@ input:not(:focus) + .Categories-nav {
   scroll-behavior: smooth;
   padding: 40px 20px; /* Add top padding to push the content down */
   overflow: scroll;
+  overflow-x: hidden;
   box-sizing: border-box; /* Include padding in the height calculation */
 }
 
@@ -662,6 +663,7 @@ input:not(:focus) + .Categories-nav {
   display: flex;
   flex-grow: 1;
   padding-top: 30px; 
+  margin-bottom: 100px;
 }
 
 .search-type {
@@ -1603,11 +1605,120 @@ a {
   color: var(--active-color) !important;
   background: var(--active-color) !important;
   border-radius: 10px;
-  padding: 2px;
+  padding: 1px;
+  height: 5px;
+  -webkit-appearance: none;
 }
+
+/* Chrome, Safari, etc. */
+#range-min::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default styling */
+  appearance: none;
+  background: var(--placeholder-color); /* Your custom handle color */
+  width: 15px; /* Width and height can be adjusted */
+  height: 15px;
+  border-radius: 50%; /* Makes it circular */
+}
+
+/* Firefox */
+#range-min::-moz-range-thumb {
+  background: var(--placeholder-color); /* Your custom handle color */
+  width: 15px; /* Width and height can be adjusted */
+  height: 15px;
+  border-radius: 50%; /* Makes it circular */
+}
+
+/* IE and others */
+#range-min::-ms-thumb {
+  background: var(--placeholder-color); /* Your custom handle color */
+  width: 15px; /* Width and height can be adjusted */
+  height: 15px;
+  border-radius: 50%; /* Makes it circular */
+}
+
 
 #background-change {
   background: var(--alert-bg-color-part-two);
   padding: 10px;
   border-radius: 5px;
+}
+
+
+
+
+.site-footer {
+  background-color: var(--header-bg-color);
+  color: var(--active-color);
+  padding: 20px 0;
+
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-logo svg {
+  width: 100px; /* Adjust based on your logo's size */
+  fill: var(--active-color);
+}
+
+.footer-social-media a {
+  margin: 0 10px;
+  color: var(--placeholder-color);
+  font-size: 24px; /* Adjust the size of the icons */
+}
+
+.footer-social-media a:hover {
+  color: var(--active-color);
+}
+
+.footer-links a {
+  display: block;
+  margin: 10px 0;
+  color: var(--placeholder-color);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--active-color);
+}
+
+.footer-newsletter form {
+  display: flex;
+  margin-top: 20px;
+}
+
+.footer-newsletter input,
+.footer-newsletter button {
+  padding: 10px;
+  margin: 5px;
+}
+
+.footer-newsletter input {
+  flex-grow: 1;
+}
+
+.footer-newsletter button {
+  background-color: var(--active-light-color);
+  border: none;
+  color: var(--body-color);
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+      flex-direction: column;
+  }
 }

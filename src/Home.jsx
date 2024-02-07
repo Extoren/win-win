@@ -7,6 +7,7 @@ import getSvg  from './Accesorios/getSvg';
 import getImg  from './Accesorios/getImg';
 import { useParams, useNavigate } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 
 
 const JobCard = ({ job, onClick }) => {
@@ -46,7 +47,11 @@ const JobCard = ({ job, onClick }) => {
         </div>
         <div className="job-card-county"><span>{job.date}</span> <br></br>{job.county}</div>
         <div className="job-card-title">{job.title}</div>
-        <div className="job-card-subtitle">{job.description}</div>
+        <div className="job-card-subtitle">
+          {job.description.length > 30 
+            ? `${job.description.substring(0, 30)}...` 
+            : job.description}
+        </div>
         <div className="job-card-price"><br></br>{job.price} kr</div>
         <div className="job-detail-buttons">
           <button className="search-buttons detail-button">
@@ -222,7 +227,7 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
 function Home() {
 
     
-    const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
+    const [theme ] = useState(localStorage.getItem('theme') || '');
     const wrapperRef = useRef(null);
     const [selectedJob, setSelectedJob] = useState(null);
     const [showLocations, setShowLocations] = useState(false);
@@ -670,6 +675,7 @@ function Home() {
                 )}
               </div>
             </div>
+            <Footer />
           </div>
           <NavigationBar />
         </div>

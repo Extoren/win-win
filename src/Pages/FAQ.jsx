@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './FAQ.css';
 import Header from '../header';
 import NavigationBar from '../NavigationBar';
+import Footer from '../Footer';
 
 function FAQ() {
     // State to keep track of the active FAQ
@@ -65,6 +66,7 @@ function FAQ() {
                 </div>
             </div>
             <NavigationBar />
+            <Footer />
         </div>
     );
 }
