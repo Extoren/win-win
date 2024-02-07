@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './makeUser.css';
 import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { ref, update } from "firebase/database";
-
-import { googleAuthProvider, auth, database } from '../firebaseConfig';
-import { signInWithPopup } from "firebase/auth";
+import { AuthContext } from '../AuthContext';
+import { auth, database } from '../firebaseConfig';
 
 const updateDatabaseWithUserData = (userId, formData) => {
     if (!userId || !formData) {
@@ -29,6 +28,7 @@ const updateDatabaseWithUserData = (userId, formData) => {
 
 
 function MakeUser() {
+    const { setIsLoggedIn } = useContext(AuthContext);
     const [currentStep, setCurrentStep] = useState(0);
     const navigate = useNavigate();
     const [selectedOption, setSelectedOption] = useState('');
@@ -39,15 +39,22 @@ function MakeUser() {
     });
 
     const handleSubmit = () => {
-        // Assuming you have a way to get the authenticated user's ID
-        const userId = auth.currentUser?.uid;
-        if (userId) {
-            updateDatabaseWithUserData(userId, formData);
-            navigate('/');
+        const user = auth.currentUser;
+        // Verify that all steps are complete and the necessary data is available
+        if (user && currentStep === 1 && formData.name && formData.surname) {
+            const updatedFormData = {
+                ...formData,
+                isSetupComplete: true // Set flag to true only when all data is present
+            };
+    
+            updateDatabaseWithUserData(user.uid, updatedFormData);
+            setIsLoggedIn(true); // Assuming this will set the context state for loggedIn
+            navigate('/'); // Redirect to home only after data is written
         } else {
-            console.error("User is not authenticated");
+            console.error("User is not authenticated or required information is missing");
         }
     };
+    
 
     const handleRadioChange = (e) => {
         setSelectedOption(e.target.id);
@@ -58,9 +65,9 @@ function MakeUser() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleEmailChange = (e) => {
+    {/*const handleEmailChange = (e) => {
         setFormData(prev => ({ ...prev, email: e.target.value }));
-    };
+    };*/}
 
     const canProceedToNextStep = () => {
         if (currentStep === 0 && selectedOption) {
@@ -86,14 +93,14 @@ function MakeUser() {
     };
 
 
-    const signInWithGoogle = async (event) => {
+    {/*const signInWithGoogle = async (event) => {
         event.preventDefault();
         try {
             await signInWithPopup(auth, googleAuthProvider);
         } catch (error) {
             console.error("Error signing in with Google", error);
         }
-    };
+    };*/}
 
     return (
         <div className="container">
@@ -125,24 +132,27 @@ function MakeUser() {
                             </>
                         )}
 
-                        {currentStep === 2 && (
+                        {/*{currentStep === 2 && (
                             <>
-                                <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">
-                                    <img src="google.png" alt="Google logo" />
-                                    Google
-                                </button>
+                                <div className='email-container'>
+                                    <p>Legg til din epost:</p>
+                                    <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">
+                                        <img src="google.png" alt="Google logo" />
+                                        Google
+                                    </button>
+                                </div>
                             </>
-                        )}
+                        )})*/}
 
                         <div className="button-container">
                             {currentStep > 0 && (
                                 <button type="button" onClick={handleBack}>Tilbake</button>
                             )}
 
-                            {currentStep < 3 && (
+                            {currentStep < 1 && (
                                 <button type="button" id="right" onClick={handleNext} disabled={!canProceedToNextStep()}>Neste</button>
                             )}
-                            {currentStep === 3 && (
+                            {currentStep === 1 && (
                                 <button type="button" onClick={handleSubmit}>Submit</button>
                             )}
                         </div>

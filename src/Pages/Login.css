@@ -1,42 +1,4 @@
-:root {
-    --body-bg-color: #e5ecef;
-    --theme-bg-color: #fafafb;
-    --body-font: "Poppins", sans-serif;
-    --body-color: #2f2f33;
-    --active-color: #F79802;
-    --active-light-color: #FBBF77;
-    --header-bg-color: #fff;
-    --search-border-color: #efefef;
-    --border-color: #d8d8d8;
-    --alert-bg-color: #e8f2ff;
-    --subtitle-color: #000;
-    --inactive-color: #f0f0f0;
-    --placeholder-color: #9b9ba5;
-    --time-button: #B7410E;
-    --level-button: #FBBF77;
-    --button-color: #fff; 
-    --Hover-color: #F79802; 
-    --login-color: #F17829;
-    --warning-color: #ff0000;
-  }
-  
-  .dark-mode {
-    --body-bg-color: #1d1d1d;
-    --theme-bg-color: #13131a;
-    --header-bg-color: #1c1c24;
-    --alert-bg-color: #292932;
-    --body-color: #fff;
-    --inactive-color: #292932;
-    --subtitle-color: #c1c1c1;
-    --time-button: #fff;
-    --level-button: #13131a;
-    --active-light-color: #D86E39;
-    --border-color: #26262f;
-    --search-border-color: #26262f; 
-    --login-color: #F17829;
-    --warning-color: #ff0000;
-  }
-  
+
   body {
     margin: 0;
     background-color: var(--body-bg-color);
@@ -81,12 +43,12 @@
     height: 100vh;
     padding: 20px;
     margin-bottom: 50px;
+    margin-top: 100px;
 }
 
 @media (max-width: 1000px) {
     .form-container {
         margin-top: 150px;
-        margin-bottom: 150px;
     }
 }
 
@@ -108,6 +70,30 @@
     width: 300px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-section.login h3, .contents form h3 {
+    color: var(--placeholder-color); /* Tomato color */
+    font-size: 0.85em; /* 1.5 times the size of the normal text */
+    text-align: center; /* Center the text */
+    text-transform: uppercase; /* Make the text uppercase */
+    letter-spacing: 2px; /* Increase the space between letters */
+    padding: 10px 0; /* Add some padding to the top and bottom */
+    margin: 20px 0; /* Add some margin to the top and bottom */
+    display: flex; /* Use flexbox */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+}
+
+.form-section.login h3::before,
+.form-section.login h3::after,
+.contents form h3::before,
+.contents form h3::after {
+    content: ""; /* Empty content */
+    flex-grow: 1; /* Allow the lines to grow */
+    background: var(--placeholder-color); /* Tomato color */
+    height: 2px; /* Height of the line */
+    margin: 0 10px; /* Space from the text */
 }
 
 .form-section.info p {
@@ -280,6 +266,11 @@ button:hover {
 .contents h1 span {
     color: var(--active-color);
 }
+
+#official {
+    color: var(--header-bg-color);
+}
+
 .button-holder {
     display: flex;
     justify-content: center;

@@ -6,6 +6,8 @@ import Header from './header';
 import getSvg  from './Accesorios/getSvg';
 import getImg  from './Accesorios/getImg';
 import { useParams, useNavigate } from 'react-router-dom';
+import NavigationBar from './NavigationBar';
+import Footer from './Footer';
 
 
 const JobCard = ({ job, onClick }) => {
@@ -45,7 +47,11 @@ const JobCard = ({ job, onClick }) => {
         </div>
         <div className="job-card-county"><span>{job.date}</span> <br></br>{job.county}</div>
         <div className="job-card-title">{job.title}</div>
-        <div className="job-card-subtitle">{job.description}</div>
+        <div className="job-card-subtitle">
+          {job.description.length > 30 
+            ? `${job.description.substring(0, 30)}...` 
+            : job.description}
+        </div>
         <div className="job-card-price"><br></br>{job.price} kr</div>
         <div className="job-detail-buttons">
           <button className="search-buttons detail-button">
@@ -221,7 +227,7 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
 function Home() {
 
     
-    const [theme, setTheme] = useState(localStorage.getItem('theme') || '');
+    const [theme ] = useState(localStorage.getItem('theme') || '');
     const wrapperRef = useRef(null);
     const [selectedJob, setSelectedJob] = useState(null);
     const [showLocations, setShowLocations] = useState(false);
@@ -236,6 +242,8 @@ function Home() {
     ];
     const navigate = useNavigate();
     const { jobId } = useParams();
+    const [filteredJobs, setFilteredJobs] = useState(jobsData);
+    const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -249,7 +257,7 @@ function Home() {
     } else {
       setSelectedLocation(location);
     }
-  };  
+  };   
 
     const handleJobClick = (job) => {
       navigate(`/${job.id}`);
@@ -297,13 +305,20 @@ function Home() {
       }
     }, [jobId, navigate]);
 
+    // Update the filteredJobs state whenever the selectedLocation or priceRange changes
     useEffect(() => {
-      // Update job count based on selected location
-      const filteredJobs = jobsData.filter(job => 
-          selectedLocation === '' || job.county === selectedLocation
-      );
-      setJobCount(filteredJobs.length);
-  }, [selectedLocation]); // Dependency array includes selectedLocation
+      const updatedFilteredJobs = jobsData.filter(job => {
+        const jobPrice = Number(job.price.replace(/\D/g, '')); // Assuming job.price is a string with currency symbol
+        // Remove the upper limit on price when max is set to 5000
+        const matchesPrice = priceRange.max === 1000 || jobPrice <= priceRange.max;
+        return (!selectedLocation || job.county === selectedLocation) && matchesPrice;
+      });
+    
+      setFilteredJobs(updatedFilteredJobs);
+      setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
+    }, [selectedLocation, priceRange, jobsData]);
+    
+
 
   useEffect(() => {
     // Apply the overflow: hidden; style to the body when the component is mounted
@@ -315,443 +330,355 @@ function Home() {
     };
   }, []);
 
+  const [hoverIndex, setHoverIndex] = useState(null);
+
+  const selectCategories = [
+    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
+    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
+    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
+    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
+    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
+    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
+  ];
+
     return (
         <div className="container">
           <Header onClose={closeJobDetailView}/>
-            <div className="categories">
-              <div className="category">
-                <div className="category-menu">
-                  <div className="category-menu">
-                    <div className="category-item">
-                      <i className="fas fa-baby" style={{ color: "#ffae00" }} />{" "}
-                      Barnepass
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-leaf" style={{ color: "#ffae00" }} />{" "}
-                      Gressklipping
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-wind" style={{ color: "#ffae00" }} />{" "}
-                      Løvrydding
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-snowflake" style={{ color: "#ffae00" }} />{" "}
-                      Snømåking
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-dog" style={{ color: "#ffae00" }} />{" "}
-                      Hundelufting
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-car" style={{ color: "#ffae00" }} /> Vaske
-                      biler
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-cookie-bite" style={{ color: "#ffae00" }} />{" "}
-                      Selge produkter
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-broom" style={{ color: "#ffae00" }} />{" "}
-                      Lekerengjøring
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-seedling" style={{ color: "#ffae00" }} />{" "}
-                      Plantepleie
-                    </div>
-                    <div className="category-item">
-                      <i
-                        className="fas fa-birthday-cake"
-                        style={{ color: "#ffae00" }}
-                      />{" "}
-                      Bake og selge kaker
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-home" style={{ color: "#ffae00" }} />{" "}
-                      Hjemmeorganisering
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-mail-bulk" style={{ color: "#ffae00" }} />
-                      Hente posten
-                    </div>
-                    <div className="category-item">
-                      <i
-                        className="fas fa-baby-carriage"
-                        style={{ color: "#ffae00" }}
-                      />{" "}
-                      Babysitting
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-paint-roller" style={{ color: "#ffae00" }} />{" "}
-                      Male gjerder
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-tools" style={{ color: "#ffae00" }} />
-                      Småreparasjoner
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-newspaper" style={{ color: "#ffae00" }} />{" "}
-                      Levere aviser
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-tags" style={{ color: "#ffae00" }} />{" "}
-                      Organisere garasjesalg
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-laptop" style={{ color: "#ffae00" }} />
-                      Datatjenester for eldre
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-seedling" style={{ color: "#ffae00" }} />{" "}
-                      Hjelpe med hagearbeid
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-tint" style={{ color: "#ffae00" }} />{" "}
-                      Vannplanter for naboer
-                    </div>
-                    <div className="category-item">
-                      <i className="fas fa-truck" style={{ color: "#ffae00" }} /> Hjelpe
-                      til med å flytte
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div className={`wrapper ${theme}`} ref={wrapperRef}>
-              <div className="search-menu">
-                {/*<div className="search-bar">
-                  <div id="Color">
-                    <span className="full-text">Velg en kategori ↑</span>
-                    <span className="short-text">Velg ↑</span>
-                  </div>
-                  <div className="search item">
-                    Gressklipping
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={3}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="feather feather-x"
-                    >
-                      <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                  </div>
-                </div>*/}
-                <div className="search-location" onClick={toggleLocations}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-map-pin">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                    <circle cx={12} cy={10} r={3} />
-                  </svg>
-                    <span className="placeholder"> Fylke</span>
-                  <i className="fas fa-chevron-down" style={{ position: "absolute", right: 10 }} />
-                {showLocations && (
-                  <div className="other-locations">
-                    {/*<p className="selected-location">Velg Fylke</p>*/}
-                    <p>Agder</p>
-                    <p>Innlandet</p>
-                    <p>Møre og Romsdal</p>
-                    <p>Nordland</p>
-                    <p>Oslo</p>
-                    <p>Rogaland</p>
-                    <p>Svalbard</p>
-                    <p>Troms og Finnmark</p>
-                    <p>Trøndelag</p>
-                    <p>Vestfold og Telemark</p>
-                    <p>Vestland</p>
-                    <p>Viken</p>
-                  </div>
-                  )}
+            <div className="select-category">
+              <div className="category-wrapper">
+            {selectCategories.map((category, index) => (
+              <p
+                key={index}
+                onMouseEnter={() => setHoverIndex(index)}
+                onMouseLeave={() => setHoverIndex(null)}
+                style={{ 
+                  backgroundColor: hoverIndex === index ? 'var(--level-button)' : 'var(--alert-bg-color)',
+                  color: hoverIndex === index ? 'var(--body-color)' : 'inherit', // Change text color on hover
+                }}
+              >
+                <i className={category.icon} style={{ color: hoverIndex === index ? 'white' : 'var(--active-color)' }}></i>
+                <span style={{
+                  textDecorationColor: hoverIndex === index && theme !== 'dark-mode' ? 'white' : 'var(--active-color)'
+                }}>
+                  {category.label}
+                </span>
+                <br /> {category.sublabel}
+              </p>
+            ))}
+            </div>
+          </div>
+            <div className="search-menu">
+              {/*<div className="search-bar">
+                <div id="Color">
+                  <span className="full-text">Velg en kategori ↑</span>
+                  <span className="short-text">Velg ↑</span>
                 </div>
-                <div className="search-job">
+                <div className="search item">
+                  Gressklipping
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth={2}
+                    strokeWidth={3}
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="feather feather-briefcase"
+                    className="feather feather-x"
                   >
-                    <rect x={2} y={7} width={20} height={14} rx={2} ry={2} />
-                    <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+                    <path d="M18 6L6 18M6 6l12 12" />
                   </svg>
-                  <div className="search-categories">
-                    <input 
-                      ref={inputRef}
-                      type="text"
-                      id="search-input"
-                      placeholder="Type job"
-                      onChange={e => setJobFilter(e.target.value)}
-                    />
-                    <div className="Categories-nav">
-                      {filteredCategories.length > 0 ? (
-                        filteredCategories.map((category, index) => (
-                          <p key={index} onClick={() => handleCategorySelection(category)}>{category}</p>
-                        ))
-                      ) : (
-                        <p>Ingen kategorier funnet.</p>
-                      )}
-                    </div>
+                </div>
+              </div>*/}
+              {/*
+              <div className="search-location" onClick={toggleLocations}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-map-pin">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                  <circle cx={12} cy={10} r={3} />
+                </svg>
+                  <span className="placeholder"> Kategori</span>
+                <i className="fas fa-chevron-down" style={{ position: "absolute", right: 10 }} />
+              {showLocations && (
+                <div className="other-locations">
+                  <p>Uteoppdrag</p>
+                  <p>Inneoppdrag</p>
+                  <p>Kreative Oppdrag</p>
+                  <p>Læringsoppdrag</p>
+                  <p>Vitenskapsoppdrag</p>
+                  <p>Miljøoppdrag</p>
+                  <p>Sosiale Oppdrag</p>
+                </div>
+              )}
+              </div>*/}
+              <div className="search-job">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-briefcase"
+                >
+                  <rect x={2} y={7} width={20} height={14} rx={2} ry={2} />
+                  <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+                </svg>
+                <div className="search-categories">
+                  <input 
+                    ref={inputRef}
+                    type="text"
+                    id="search-input"
+                    placeholder="Søk spesifikk jobb..."
+                    onChange={e => setJobFilter(e.target.value)}
+                  />
+                  <div className="Categories-nav">
+                    {filteredCategories.length > 0 ? (
+                      filteredCategories.map((category, index) => (
+                        <p key={index} onClick={() => handleCategorySelection(category)}>{category}</p>
+                      ))
+                    ) : (
+                      <p>Ingen kategorier funnet.</p>
+                    )}
                   </div>
                 </div>
-                 {/*<div className="search-salary">
-                  <svg
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    stroke="currentColor"
-                    fill="currentColor"
-                    strokeWidth=".4"
-                  >
-                    <path
-                      d="M12.6 18H9.8a.8.8 0 010-1.5h2.8a.9.9 0 000-1.8h-1.2a2.4 2.4 0 010-4.7h2.8a.8.8 0 010 1.5h-2.8a.9.9 0 000 1.8h1.2a2.4 2.4 0 010 4.7z"
-                      stroke="currentColor"
-                    />
-                    <path
-                      d="M12 20a.8.8 0 01-.8-.8v-2a.8.8 0 011.6 0v2c0 .5-.4.8-.8.8zM12 11.5a.8.8 0 01-.8-.8v-2a.8.8 0 011.6 0v2c0 .5-.4.8-.8.8z"
-                      stroke="currentColor"
-                    />
-                    <path
-                      d="M21.3 23H2.6A2.8 2.8 0 010 20.2V3.9C0 2.1 1.2 1 2.8 1h18.4C22.9 1 24 2.2 24 3.8v16.4c0 1.6-1.2 2.8-2.8 2.8zM2.6 2.5c-.6 0-1.2.6-1.2 1.3v16.4c0 .7.6 1.3 1.3 1.3h18.4c.7 0 1.3-.6 1.3-1.3V3.9c0-.7-.6-1.3-1.3-1.3z"
-                      stroke="currentColor"
-                    />
-                    <path
-                      d="M23.3 6H.6a.8.8 0 010-1.5h22.6a.8.8 0 010 1.5z"
-                      stroke="currentColor"
-                    />
-                  </svg>
-                  <input type="text" placeholder="Lønnsområde" />
-                </div>*/}
                 <button className="search-button">Finn Jobb</button>
               </div>
-              <div className="main-container">
-                  <div className="search-type">
-                  <div className="job-time">
-                    <div className="job-time">
-                      <p>Område i kart</p>
-                      <input
-                        id="search-box"
-                        type="text"
-                        placeholder="Søk etter sted eller postnummer"
-                      />
-                      <div id="map" />
-                    </div>
-                    <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2243492.267531465!2d8.46894576840826!3d60.47202389999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46110e5b1a4a57e7%3A0x3624d96eae8f78f1!2sNorway!5e0!3m2!1sen!2s!4v1633965196208!5m2!1sen!2s"
-                      allowFullScreen=""
-                      loading="lazy"
+                {/*<div className="search-salary">
+                <svg
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  stroke="currentColor"
+                  fill="currentColor"
+                  strokeWidth=".4"
+                >
+                  <path
+                    d="M12.6 18H9.8a.8.8 0 010-1.5h2.8a.9.9 0 000-1.8h-1.2a2.4 2.4 0 010-4.7h2.8a.8.8 0 010 1.5h-2.8a.9.9 0 000 1.8h1.2a2.4 2.4 0 010 4.7z"
+                    stroke="currentColor"
+                  />
+                  <path
+                    d="M12 20a.8.8 0 01-.8-.8v-2a.8.8 0 011.6 0v2c0 .5-.4.8-.8.8zM12 11.5a.8.8 0 01-.8-.8v-2a.8.8 0 011.6 0v2c0 .5-.4.8-.8.8z"
+                    stroke="currentColor"
+                  />
+                  <path
+                    d="M21.3 23H2.6A2.8 2.8 0 010 20.2V3.9C0 2.1 1.2 1 2.8 1h18.4C22.9 1 24 2.2 24 3.8v16.4c0 1.6-1.2 2.8-2.8 2.8zM2.6 2.5c-.6 0-1.2.6-1.2 1.3v16.4c0 .7.6 1.3 1.3 1.3h18.4c.7 0 1.3-.6 1.3-1.3V3.9c0-.7-.6-1.3-1.3-1.3z"
+                    stroke="currentColor"
+                  />
+                  <path
+                    d="M23.3 6H.6a.8.8 0 010-1.5h22.6a.8.8 0 010 1.5z"
+                    stroke="currentColor"
+                  />
+                </svg>
+                <input type="text" placeholder="Lønnsområde" />
+              </div>*/}
+              
+            </div>
+            <div className="main-container">
+                <div className="search-type">
+                <div className="job-time" id="background-change">
+                  <div className="job-time-title">Lønnsområde</div>
+                  <div className="slider-container">
+                    <input 
+                      id='range-min'
+                      type="range" 
+                      min="0" 
+                      max="1000" // Adjust according to your needs
+                      value={priceRange.max} 
+                      onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) })} 
+                      className="slider" 
                     />
+                    <span className="slider-value">
+                      {priceRange.max === 1000 ? 'Alle prisklasser' : `${priceRange.max} kr`}
+                    </span>
                   </div>
-                  <div className="job-time">
-                    <div className="job-time-title">Område</div>
-                    <div className="job-wrapper">
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job1" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
-                        <label htmlFor="job1">Agder</label>
-                        <span className="job-number">{jobCounts['Agder'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job2" className="job-style" onClick={(e) => handleLocationSelection('Innlandet', e)}/>
-                        <label htmlFor="job2">Innlandet</label>
-                        <span className="job-number">{jobCounts['Innlandet'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                      <input type="radio" name="location" id="job3" className="job-style" onClick={(e) => handleLocationSelection('Møre og Romsdal', e)}/>
-                        <label htmlFor="job3">Møre og Romsdal</label>
-                        <span className="job-number">{jobCounts['Møre og Romsdal'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                      <input type="radio" name="location" id="job4" className="job-style" onClick={(e) => handleLocationSelection('Nordland', e)}/>
-                        <label htmlFor="job4">Nordland</label>
-                        <span className="job-number">{jobCounts['Nordland'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job5" className="job-style" onClick={(e) => handleLocationSelection('Oslo', e)}/>
-                        <label htmlFor="job5">Oslo</label>
-                        <span className="job-number">{jobCounts['Oslo'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job6" className="job-style" onClick={(e) => handleLocationSelection('Rogaland', e)}/>
-                        <label htmlFor="job6">Rogaland</label>
-                        <span className="job-number">{jobCounts['Rogaland'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job7" className="job-style" onClick={(e) => handleLocationSelection('Svalbard', e)}/>
-                        <label htmlFor="job7">Svalbard</label>
-                        <span className="job-number">{jobCounts['Svalbard'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job8" className="job-style" onClick={(e) => handleLocationSelection('Troms og Finnmark', e)}/>
-                        <label htmlFor="job8">Troms og Finnmark</label>
-                        <span className="job-number">{jobCounts['Troms og Finnmark'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job9" className="job-style" onClick={(e) => handleLocationSelection('Trøndelag', e)}/>
-                        <label htmlFor="job9">Trøndelag</label>
-                        <span className="job-number">{jobCounts['Trøndelag'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job10" className="job-style" onClick={(e) => handleLocationSelection('Vestfold og Telemark', e)}/>
-                        <label htmlFor="job10">Vestfold og Telemark</label>
-                        <span className="job-number">{jobCounts['Vestfold og Telemark'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job11" className="job-style" onClick={(e) => handleLocationSelection('Vestland', e)}/>
-                        <label htmlFor="job11">Vestland</label>
-                        <span className="job-number">{jobCounts['Vestland'] || 0}</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="radio" name="location" id="job12" className="job-style" onClick={(e) => handleLocationSelection('Viken', e)}/>
-                        <label htmlFor="job12">Viken</label>
-                        <span className="job-number">{jobCounts['Viken'] || 0}</span>
-                      </div>
+                </div>
+                <div className="job-time">
+                  <div className="job-time-title">Fylke</div>
+                  <div className="job-wrapper">
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job1" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
+                      <label htmlFor="job1">Agder</label>
+                      <span className="job-number">{jobCounts['Agder'] || 0}</span>
                     </div>
-                  </div>
-                  <div className="job-time">
-                    <div className="job-time-title">Ansettelsestype</div>
-                    <div className="job-wrapper">
-                      <div className="type-container">
-                        <input type="checkbox" id="job13" className="job-style" />
-                        <label htmlFor="job13">Heltidsjobber</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job14" className="job-style" />
-                        <label htmlFor="job14">Deltidsjobber</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job15" className="job-style" />
-                        <label htmlFor="job15">Eksterne jobber</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job16" className="job-style" />
-                        <label htmlFor="job16">Kontrakt</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input
-                          type="checkbox"
-                          id="job17"
-                          className="job-style"
-                          defaultChecked=""
-                        />
-                        <label htmlFor="job17">Små jobber</label>
-                        <span className="job-number">1</span>
-                      </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job2" className="job-style" onClick={(e) => handleLocationSelection('Innlandet', e)}/>
+                      <label htmlFor="job2">Innlandet</label>
+                      <span className="job-number">{jobCounts['Innlandet'] || 0}</span>
                     </div>
-                  </div>
-                  <div className="job-time">
-                    <div className="job-time-title">Ansiennitetsnivå</div>
-                    <div className="job-wrapper">
-                      <div className="type-container">
-                        <input
-                          type="checkbox"
-                          id="job18"
-                          className="job-style"
-                          defaultChecked=""
-                        />
-                        <label htmlFor="job18">Studentnivå</label>
-                        <span className="job-number">1</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job19" className="job-style" />
-                        <label htmlFor="job19">Inngangsnivå</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job20" className="job-style" />
-                        <label htmlFor="job20">Midtnivå</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job21" className="job-style" />
-                        <label htmlFor="job21">Seniornivå</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job22" className="job-style" />
-                        <label htmlFor="job22">Regissører</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job23" className="job-style" />
-                        <label htmlFor="job23">VP eller over</label>
-                        <span className="job-number">0</span>
-                      </div>
+                    <div className="type-container">
+                    <input type="radio" name="location" id="job3" className="job-style" onClick={(e) => handleLocationSelection('Møre og Romsdal', e)}/>
+                      <label htmlFor="job3">Møre og Romsdal</label>
+                      <span className="job-number">{jobCounts['Møre og Romsdal'] || 0}</span>
                     </div>
-                  </div>
-                  <div className="job-time">
-                    <div className="job-time-title">Lønnsområde</div>
-                    <div className="job-wrapper">
-                      <div className="type-container">
-                        <input type="checkbox" id="job24" className="job-style"defaultChecked=""/>
-                        <label htmlFor="job24">0kr - 100kr</label>
-                        <span className="job-number">1</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job25" className="job-style" />
-                        <label htmlFor="job25">100kr - 200kr</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job26" className="job-style" />
-                        <label htmlFor="job26">200kr - 500kr</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job27" className="job-style" />
-                        <label htmlFor="job27">500kr - 1500kr</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job28" className="job-style" />
-                        <label htmlFor="job28">1500kr - 3000kr</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job29" className="job-style" />
-                        <label htmlFor="job29">3000kr - 4000kr</label>
-                        <span className="job-number">0</span>
-                      </div>
-                      <div className="type-container">
-                        <input type="checkbox" id="job30" className="job-style" />
-                        <label htmlFor="job30">4000kr - 5000kr</label>
-                        <span className="job-number">0</span>
-                      </div>
+                    <div className="type-container">
+                    <input type="radio" name="location" id="job4" className="job-style" onClick={(e) => handleLocationSelection('Nordland', e)}/>
+                      <label htmlFor="job4">Nordland</label>
+                      <span className="job-number">{jobCounts['Nordland'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job5" className="job-style" onClick={(e) => handleLocationSelection('Oslo', e)}/>
+                      <label htmlFor="job5">Oslo</label>
+                      <span className="job-number">{jobCounts['Oslo'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job6" className="job-style" onClick={(e) => handleLocationSelection('Rogaland', e)}/>
+                      <label htmlFor="job6">Rogaland</label>
+                      <span className="job-number">{jobCounts['Rogaland'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job7" className="job-style" onClick={(e) => handleLocationSelection('Svalbard', e)}/>
+                      <label htmlFor="job7">Svalbard</label>
+                      <span className="job-number">{jobCounts['Svalbard'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job8" className="job-style" onClick={(e) => handleLocationSelection('Troms og Finnmark', e)}/>
+                      <label htmlFor="job8">Troms og Finnmark</label>
+                      <span className="job-number">{jobCounts['Troms og Finnmark'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job9" className="job-style" onClick={(e) => handleLocationSelection('Trøndelag', e)}/>
+                      <label htmlFor="job9">Trøndelag</label>
+                      <span className="job-number">{jobCounts['Trøndelag'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job10" className="job-style" onClick={(e) => handleLocationSelection('Vestfold og Telemark', e)}/>
+                      <label htmlFor="job10">Vestfold og Telemark</label>
+                      <span className="job-number">{jobCounts['Vestfold og Telemark'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job11" className="job-style" onClick={(e) => handleLocationSelection('Vestland', e)}/>
+                      <label htmlFor="job11">Vestland</label>
+                      <span className="job-number">{jobCounts['Vestland'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job12" className="job-style" onClick={(e) => handleLocationSelection('Viken', e)}/>
+                      <label htmlFor="job12">Viken</label>
+                      <span className="job-number">{jobCounts['Viken'] || 0}</span>
                     </div>
                   </div>
                 </div>
-                <div className="searched-jobs">
-                  <div className={`searched-bar ${selectedJob ? "hide-searched-bar" : ""}`}>
-                    <div className="searched-show">Viser {jobCount} jobber</div>
-                      <div className="searched-sort">
-                        Sorter etter: <span className="post-time">Nyeste Post </span>
-                        <span className="menu-icon">▼</span>
-                      </div>
+                <div className="job-time">
+                  <div className="job-time">
+                    <p>Område i kart</p>
+                    <input
+                      id="search-box"
+                      type="text"
+                      placeholder="Søk etter sted eller postnummer"
+                    />
+                    <div id="map" />
                   </div>
-                  <div className="job-cards">
-                  {selectedJob == null && jobsData
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2243492.267531465!2d8.46894576840826!3d60.47202389999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46110e5b1a4a57e7%3A0x3624d96eae8f78f1!2sNorway!5e0!3m2!1sen!2s!4v1633965196208!5m2!1sen!2s"
+                    allowFullScreen=""
+                    loading="lazy"
+                  />
+                </div>
+                <div className="job-time">
+                  <div className="job-time-title">Ansettelsestype</div>
+                  <div className="job-wrapper">
+                    <div className="type-container">
+                      <input type="checkbox" id="job13" className="job-style" />
+                      <label htmlFor="job13">Heltidsjobber</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job14" className="job-style" />
+                      <label htmlFor="job14">Deltidsjobber</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job15" className="job-style" />
+                      <label htmlFor="job15">Eksterne jobber</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job16" className="job-style" />
+                      <label htmlFor="job16">Kontrakt</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input
+                        type="checkbox"
+                        id="job17"
+                        className="job-style"
+                        defaultChecked=""
+                      />
+                      <label htmlFor="job17">Små jobber</label>
+                      <span className="job-number">1</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="job-time">
+                  <div className="job-time-title">Ansiennitetsnivå</div>
+                  <div className="job-wrapper">
+                    <div className="type-container">
+                      <input
+                        type="checkbox"
+                        id="job18"
+                        className="job-style"
+                        defaultChecked=""
+                      />
+                      <label htmlFor="job18">Studentnivå</label>
+                      <span className="job-number">1</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job19" className="job-style" />
+                      <label htmlFor="job19">Inngangsnivå</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job20" className="job-style" />
+                      <label htmlFor="job20">Midtnivå</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job21" className="job-style" />
+                      <label htmlFor="job21">Seniornivå</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job22" className="job-style" />
+                      <label htmlFor="job22">Regissører</label>
+                      <span className="job-number">0</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="checkbox" id="job23" className="job-style" />
+                      <label htmlFor="job23">VP eller over</label>
+                      <span className="job-number">0</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div className="searched-jobs">
+                <div className={`searched-bar ${selectedJob ? "hide-searched-bar" : ""}`}>
+                  <div className="searched-show">Viser {jobCount} jobber</div>
+                    <div className="searched-sort">
+                      Sorter etter: <span className="post-time">Nyeste Post </span>
+                      <span className="menu-icon">▼</span>
+                    </div>
+                </div>
+                <div className="job-cards">
+                  {selectedJob == null && filteredJobs
                     .filter(job => selectedLocation === '' || job.county === selectedLocation)
                     .map(job => (
                       <JobCard key={job.id} job={job} onClick={handleJobClick} />
                   ))}
-                  </div>
-                  {selectedJob && (
-                    <JobDetailView 
-                        job={selectedJob} 
-                        onOverviewClick={handleOverviewClick} 
-                        onClose={closeJobDetailView} 
-                        selectedLocation={selectedLocation}
-                    />
-                  )}
                 </div>
+                {selectedJob && (
+                  <JobDetailView 
+                      job={selectedJob} 
+                      onOverviewClick={handleOverviewClick} 
+                      onClose={closeJobDetailView} 
+                      selectedLocation={selectedLocation}
+                  />
+                )}
               </div>
             </div>
+            <Footer />
           </div>
+          <NavigationBar />
+        </div>
 
     );
 }
