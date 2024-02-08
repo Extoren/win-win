@@ -37,6 +37,7 @@
   --subtitle-color: #000;
   --inactive-color: #f0f0f0;
   --placeholder-color: #f5f5ff;
+  --placeholder-input: #727277;
   --time-button: #B7410E;
   --level-button: #FBBF77;
   --button-color: #fff; 
@@ -58,6 +59,7 @@
   --level-button: #13131a;
   --active-light-color: #D86E39;
   --border-color: #26262f;
+  --placeholder-input: #b7b7bd;
   --search-border-color: #26262f; 
   --login-color: #F17829;
   --warning-color: #ff0000;
@@ -130,6 +132,7 @@ body {
     overflow-x: auto;
     max-width: 100%;
     justify-content: center;
+    overflow-y: hidden;
   }
   
   @media (max-width: 1200px) {
@@ -178,6 +181,7 @@ body {
   }
   
   .category-wrapper p {
+    position: relative;
     font-size: 0.8em;
     font-weight: 400;
     display: flex;
@@ -191,14 +195,22 @@ body {
     text-align: center;
     margin-right: 10px;
     border: 2px solid transparent;
+    z-index: 2;
   }
   
   .category-wrapper p:hover {
     background-color: var(--level-button);
-    color: var(--Hover-color);
     animation: moving-border 5s infinite linear;
+    z-index: 2;
   }
   
+  .activate-underbox {
+    padding: 10px;
+    margin-left: 10px;
+    width: 100px;
+    height: 10px;
+    background: var(--active-color);
+  }
 
   .hover-effect i {
     color: var(--hover-color); /* Define --hover-color in your :root or specific element */
@@ -468,7 +480,6 @@ body {
   text-align: left;
   font-size: 10pt;
   background-color: var(--header-bg-color);
-  z-index: 1;
   padding: 20px;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -535,6 +546,7 @@ input:not(:focus) + .Categories-nav {
 }
 
 .search-menu {
+  z-index: 2;
   height: 56px;
   white-space: nowrap;
   display: flex;
@@ -1057,7 +1069,6 @@ a {
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 100; /* Higher than other elements */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1676,7 +1687,7 @@ a {
 
 .footer-social-media a {
   margin: 0 10px;
-  color: var(--placeholder-color);
+  color: var(--placeholder-input);
   font-size: 24px; /* Adjust the size of the icons */
 }
 
@@ -1687,7 +1698,7 @@ a {
 .footer-links a {
   display: block;
   margin: 10px 0;
-  color: var(--placeholder-color);
+  color: var(--placeholder-input);
   text-decoration: none;
 }
 
@@ -1717,8 +1728,15 @@ a {
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .footer-container {
       flex-direction: column;
+  }
+}*/
+
+@media (max-width: 1000px) {
+  .site-footer  {
+      margin-top: 100px;
+      margin-bottom: 100px;
   }
 }

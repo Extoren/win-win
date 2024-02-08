@@ -107,7 +107,7 @@ function Login() {
 
         <div className="container">
             <Header />
-            <div className="wrapper">
+            <div className="wrapper2">
                 <div className="form-container">
                 <div className="form-wrapper">
                     <div className="form-menu">

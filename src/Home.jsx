@@ -55,13 +55,10 @@ const JobCard = ({ job, onClick }) => {
         <div className="job-card-price"><br></br>{job.price} kr</div>
         <div className="job-detail-buttons">
           <button className="search-buttons detail-button">
-            Små jobber
+            {job.Ansiennitetsnivå}
           </button>
           <button className="search-buttons detail-button">
-            Null erfaring
-          </button>
-          <button className="search-buttons detail-button">
-            Studentnivå
+            {job.ansettelsestype}
           </button>
           <div className="job-card-buttons">
             <button className="search-buttons card-buttons">
@@ -224,6 +221,15 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
     }, {});
   };
 
+  export const selectCategories = [
+    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
+    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
+    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
+    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
+    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
+    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
+  ];
+
 function Home() {
 
     
@@ -244,6 +250,7 @@ function Home() {
     const { jobId } = useParams();
     const [filteredJobs, setFilteredJobs] = useState(jobsData);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
+
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -317,8 +324,8 @@ function Home() {
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
     }, [selectedLocation, priceRange, jobsData]);
-    
 
+    
 
   useEffect(() => {
     // Apply the overflow: hidden; style to the body when the component is mounted
@@ -331,15 +338,6 @@ function Home() {
   }, []);
 
   const [hoverIndex, setHoverIndex] = useState(null);
-
-  const selectCategories = [
-    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
-    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
-    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
-    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
-    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
-    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
-  ];
 
     return (
         <div className="container">
@@ -634,16 +632,6 @@ function Home() {
                     <div className="type-container">
                       <input type="checkbox" id="job21" className="job-style" />
                       <label htmlFor="job21">Seniornivå</label>
-                      <span className="job-number">0</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job22" className="job-style" />
-                      <label htmlFor="job22">Regissører</label>
-                      <span className="job-number">0</span>
-                    </div>
-                    <div className="type-container">
-                      <input type="checkbox" id="job23" className="job-style" />
-                      <label htmlFor="job23">VP eller over</label>
                       <span className="job-number">0</span>
                     </div>
                   </div>
