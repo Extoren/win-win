@@ -37,6 +37,7 @@
   --subtitle-color: #000;
   --inactive-color: #f0f0f0;
   --placeholder-color: #f5f5ff;
+  --placeholder-input: #727277;
   --time-button: #B7410E;
   --level-button: #FBBF77;
   --button-color: #fff; 
@@ -58,6 +59,7 @@
   --level-button: #13131a;
   --active-light-color: #D86E39;
   --border-color: #26262f;
+  --placeholder-input: #b7b7bd;
   --search-border-color: #26262f; 
   --login-color: #F17829;
   --warning-color: #ff0000;
@@ -1676,7 +1678,7 @@ a {
 
 .footer-social-media a {
   margin: 0 10px;
-  color: var(--placeholder-color);
+  color: var(--placeholder-input);
   font-size: 24px; /* Adjust the size of the icons */
 }
 
@@ -1687,7 +1689,7 @@ a {
 .footer-links a {
   display: block;
   margin: 10px 0;
-  color: var(--placeholder-color);
+  color: var(--placeholder-input);
   text-decoration: none;
 }
 
@@ -1717,8 +1719,15 @@ a {
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
+/*@media (max-width: 768px) {
   .footer-container {
       flex-direction: column;
+  }
+}*/
+
+@media (max-width: 1000px) {
+  .site-footer  {
+      margin-top: 100px;
+      margin-bottom: 100px;
   }
 }
