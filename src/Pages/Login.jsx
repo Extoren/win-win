@@ -6,6 +6,8 @@ import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import { getDatabase, ref, set, onValue } from "firebase/database";
+import NavigationBar from '../NavigationBar';
+import Footer from '../Footer';
 
 function Login() {
 
@@ -105,7 +107,7 @@ function Login() {
 
         <div className="container">
             <Header />
-            <div className="wrapper">
+            <div className="wrapper2">
                 <div className="form-container">
                 <div className="form-wrapper">
                     <div className="form-menu">
@@ -128,6 +130,17 @@ function Login() {
                     {activeSection === 'login' && (
                             <div className="form-section login">
                                 <h2>Log In</h2>
+                                <form>
+                                    <input type="tel" placeholder="Email" required="" />
+                                    <input type="password" placeholder="Passord" required="" />
+                                    <a href="#" id="glømt">
+                                    Glemt passordet?
+                                    </a>
+                                    <button type="submit">Logg Inn</button>
+                                </form>
+
+                                <h3>eller</h3>
+
                                 <div className='email-container'>
                                     <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">
                                         <img src="google.png" alt="Google logo" />
@@ -155,6 +168,10 @@ function Login() {
                                     <div className="arrow-left" onClick={() => setShowContents(false)}>Tilbake</div>
                                     <form>
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
+                                            <label htmlFor="phoneNumberInput" className="form-label">Skriv inn</label>
+                                            <input type="email" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" placeholder='Email'/>
+                                            <input type="password" className="form-control" id="passwordInput" placeholder='Passord'/>
+                                        <h3>eller</h3>
                                         <div className='email-container'>
                                             <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">
                                                 <img src="google.png" alt="Google logo" />
@@ -181,9 +198,11 @@ function Login() {
                     </p>
                     </div>
                 </div>
-                </div>
+                </div>              
             </div>
-            </div>
+            <NavigationBar />
+            <Footer />  
+        </div>
 
     
     );

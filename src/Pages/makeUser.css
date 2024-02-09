@@ -1,41 +1,4 @@
-:root {
-    --body-bg-color: #e5ecef;
-    --theme-bg-color: #fafafb;
-    --body-font: "Poppins", sans-serif;
-    --body-color: #2f2f33;
-    --active-color: #F79802;
-    --active-light-color: #FBBF77;
-    --header-bg-color: #fff;
-    --search-border-color: #efefef;
-    --border-color: #d8d8d8;
-    --alert-bg-color: #e8f2ff;
-    --subtitle-color: #000;
-    --inactive-color: #f0f0f0;
-    --placeholder-color: #9b9ba5;
-    --time-button: #B7410E;
-    --level-button: #FBBF77;
-    --button-color: #fff; 
-    --Hover-color: #F79802; 
-    --login-color: #F17829;
-    --warning-color: #ff0000;
-  }
-  
-  .dark-mode {
-    --body-bg-color: #1d1d1d;
-    --theme-bg-color: #13131a;
-    --header-bg-color: #1c1c24;
-    --alert-bg-color: #292932;
-    --body-color: #fff;
-    --inactive-color: #292932;
-    --subtitle-color: #c1c1c1;
-    --time-button: #fff;
-    --level-button: #13131a;
-    --active-light-color: #D86E39;
-    --border-color: #26262f;
-    --search-border-color: #26262f; 
-    --login-color: #F17829;
-    --warning-color: #ff0000;
-  }
+
 
 .make-user {
     display: flex;
