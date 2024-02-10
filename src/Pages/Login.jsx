@@ -54,6 +54,12 @@ function Login() {
             // User is authenticated at this point and added to Firebase Auth
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
+
+            set(userRef, {
+                email: user.email,
+                userType: userType, // Make sure this is correctly captured
+                // other user data...
+            });
     
             onValue(userRef, async (snapshot) => {
                 const userData = snapshot.val();

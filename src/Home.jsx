@@ -374,6 +374,23 @@ function Home() {
       setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
     }, [selectedLocation, priceRange, jobsData]);
     
+    useEffect(() => {
+      const filteredJobs = jobsData.filter(job => {
+        const matchesLocation = !selectedLocation || job.county === selectedLocation;
+        const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
+        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå);
+        return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+      });
+    
+      // Update employment type counts based on filtered jobs
+      const newEmploymentTypeCounts = countJobsByEmploymentType(filteredJobs);
+      setEmploymentTypeCounts(newEmploymentTypeCounts);
+    
+      // Update county counts based on filtered jobs
+      const newCountyCounts = countJobsByCounty(filteredJobs);
+      setJobCounts(newCountyCounts);
+    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobsData]);
+    
 
     useEffect(() => {
       const updatedFilteredJobs = jobsData.filter(job => {
