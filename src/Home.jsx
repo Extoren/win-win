@@ -239,6 +239,7 @@ function Home() {
     const [showLocations, setShowLocations] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState('');
     const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState([]);
+    const [selectedSeniorityLevels, setSelectedSeniorityLevels] = useState([]);
     const [jobFilter, setJobFilter] = useState('');
     const inputRef = useRef(null);
     const categories = [
@@ -253,9 +254,11 @@ function Home() {
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
 
     const [employmentTypeCounts, setEmploymentTypeCounts] = useState({});
+    const [seniorityLevelCounts, setSeniorityLevelCounts] = useState({});
 
     useEffect(() => {
       setEmploymentTypeCounts(countJobsByEmploymentType(jobsData));
+      setSeniorityLevelCounts(countJobsBySeniorityLevel(jobsData));
     }, [jobsData]);
 
     const handleOverviewClick = (job) => {
@@ -278,6 +281,16 @@ function Home() {
         return prev.filter(type => type !== employmentType);
       } else {
         return [...prev, employmentType];
+      }
+    });
+  };
+  
+  const handleSeniorityLevelSelection = (seniorityLevel) => {
+    setSelectedSeniorityLevels(prev => {
+      if (prev.includes(seniorityLevel)) {
+        return prev.filter(level => level !== seniorityLevel);
+      } else {
+        return [...prev, seniorityLevel];
       }
     });
   };
@@ -305,6 +318,15 @@ function Home() {
       }, {});
     };
     
+    const countJobsBySeniorityLevel = (jobs) => {
+      return jobs.reduce((acc, job) => {
+        const level = job.Ansiennitetsnivå; // Assuming 'Ansiennitetsnivå' is the field for seniority level
+        if(level) { // Check if the job has a seniority level defined
+          acc[level] = (acc[level] || 0) + 1;
+        }
+        return acc;
+      }, {});
+    };
     
 
     // Filter categories based on input
@@ -358,12 +380,14 @@ function Home() {
         const matchesPrice = !priceRange.max || Number(job.price.replace(/\D/g, '')) <= priceRange.max;
         const matchesLocation = !selectedLocation || job.county === selectedLocation;
         const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
-        return matchesPrice && matchesLocation && matchesEmploymentType;
+        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå);
+        return matchesPrice && matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length);
-    }, [selectedLocation, priceRange, jobsData, selectedEmploymentTypes]);
+    }, [selectedLocation, priceRange, jobsData, selectedEmploymentTypes, selectedSeniorityLevels]);
+    
     
 
   useEffect(() => {
@@ -644,24 +668,24 @@ function Home() {
                   <div className="job-time-title">Ansiennitetsnivå</div>
                   <div className="job-wrapper">
                     <div className="type-container">
-                      <input type="checkbox" id="job18" className="job-style" defaultChecked=""/>
+                      <input type="checkbox" id="job18" className="job-style" checked={selectedSeniorityLevels.includes("Studentnivå")} onChange={() => handleSeniorityLevelSelection("Studentnivå")}/>
                       <label htmlFor="job18">Studentnivå</label>
-                      <span className="job-number">1</span>
+                      <span className="job-number">{seniorityLevelCounts["Studentnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job19" className="job-style" />
+                      <input type="checkbox" id="job19" className="job-style" checked={selectedSeniorityLevels.includes("Inngangsnivå")} onChange={() => handleSeniorityLevelSelection("Inngangsnivå")}/>
                       <label htmlFor="job19">Inngangsnivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Inngangsnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job20" className="job-style" />
+                      <input type="checkbox" id="job20" className="job-style" checked={selectedSeniorityLevels.includes("Midtnivå")} onChange={() => handleSeniorityLevelSelection("Midtnivå")}/>
                       <label htmlFor="job20">Midtnivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Midtnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job21" className="job-style" />
+                      <input type="checkbox" id="job21" className="job-style" checked={selectedSeniorityLevels.includes("Seniornivå")} onChange={() => handleSeniorityLevelSelection("Seniornivå")}/>
                       <label htmlFor="job21">Seniornivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Seniornivå"] || 0}</span>
                     </div>
                   </div>
                 </div>

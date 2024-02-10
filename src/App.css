@@ -932,7 +932,7 @@ a {
 
     .job-card-county {
       float: right;
-      color: var(--placeholder-color);
+      color: var(--placeholder-input);
     }
     .job-card-county span {
       /* make it be on the right*/
@@ -1002,6 +1002,7 @@ a {
   cursor: pointer; 
   margin-top: -20px;
   position: relative;
+  color: var(--placeholder-input);
 }
 
 .menu-holder:hover > .menu-dot {
@@ -1010,8 +1011,8 @@ a {
 }
 
 .menu-dot {
-  background-color: var(--placeholder-color);
-  box-shadow: -6px 0 0 0 var(--placeholder-color), 6px 0 0 0 var(--placeholder-color);
+  background-color: var(--placeholder-input);
+  box-shadow: -6px 0 0 0 var(--placeholder-input), 6px 0 0 0 var(--placeholder-input);
   width: 4px;
   height: 4px;
   border: 0;
@@ -1467,9 +1468,6 @@ a {
     margin-top: 5px; }
   .main-container {
     padding-top: 20px; }
-  .logo p {
-    display: none;
-  }
   #Color {
     float: right;
   }
@@ -1498,7 +1496,11 @@ a {
   .header {
     padding: 0 20px; } }
 
-
+@media (max-width:350px) {
+  .logo p {
+    display: none;
+  }
+}
 
 
 
@@ -1553,8 +1555,16 @@ a {
   padding: 0;
 }
 
+#bigger-stronger {
+  font-size: 30pt;
+}
+
 .nav-item {
   perspective: 100px;
+}
+
+.nav-item i:hover {
+  color: var(--active-light-color);
 }
 
 .nav-link {
@@ -1736,7 +1746,6 @@ a {
 
 @media (max-width: 1000px) {
   .site-footer  {
-      margin-top: 100px;
-      margin-bottom: 100px;
+
   }
 }
