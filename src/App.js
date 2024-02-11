@@ -13,6 +13,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 NProgress.configure({ speed: 200 }); // Adjust the speed as needed
 
@@ -44,6 +45,7 @@ const RouteChangeTracker = () => {
 function App() {
   return (
     <AuthProvider>
+      <SpeedInsights/>
       <Router>
         <RouteChangeTracker />
         <Routes>
