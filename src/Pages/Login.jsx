@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from 'react';
 import './Login.css';
 import { googleAuthProvider, auth } from '../firebaseConfig';
 import { signInWithPopup, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
@@ -19,30 +20,55 @@ function Login() {
     const [showContents, setShowContents] = useState(false);
     const activeSectionRef = useRef(activeSection);
     activeSectionRef.current = activeSection;
+    const [justRegistered, setJustRegistered] = useState(false);
+
     
     const [email, setEmail] = useState('');
 
-    const sendSignInLink = async (e) => {
-        e.preventDefault();
-        const actionCodeSettings = {
-            // URL you want to redirect back to. The domain (www.example.com) for this
-            // URL must be whitelisted in the Firebase Console.
-            url: 'http://localhost:3000/makeUser', // This is where the user will be redirected after clicking the link
-            handleCodeInApp: true,
-            // Add any additional settings if necessary
-        };
-    
+    // New function to create a temporary account
+    const createTemporaryAccountAndSendSignInLink = async (email) => {
+        const temporaryPassword = "someRandomP@ssw0rd"; // Generate a secure, random password
         try {
+            // Create a temporary account with the email and a placeholder password
+            await createUserWithEmailAndPassword(auth, email, temporaryPassword);
+            // Then, send the sign-in link to the email
+            const actionCodeSettings = {
+                url: 'http://localhost:3000/makeUser',
+                handleCodeInApp: true,
+            };
             await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-            // Save the email locally so you don't need to ask the user for it again
-            // if they click on the link in the same device
             window.localStorage.setItem('emailForSignIn', email);
-            alert('Link sent! Check your email for the sign-in link.');
         } catch (error) {
-            console.error("Error sending sign-in link: ", error);
+            console.error("Error creating account or sending sign-in link: ", error);
             alert(error.message);
         }
     };
+
+    const handleRegisterSubmit = async (e) => {
+        e.preventDefault(); // Prevent the default form submission behavior
+        if (email) {
+            const actionCodeSettings = {
+                // URL you want to redirect back to. The domain for this URL must be in the Firebase Console list of authorized domains.
+                url: 'http://localhost:3000/makeUser', // Adjust as per your deployment
+                handleCodeInApp: true, // Ensures that we can handle the sign-in after email verification in-app
+            };
+    
+            sendSignInLinkToEmail(auth, email, actionCodeSettings)
+                .then(() => {
+                    // Inform the user to check their email
+                    window.localStorage.setItem('emailForSignIn', email); // Save the email locally to use it later for sign-in
+                    alert("Check your email for the sign-in link.");
+                    setJustRegistered(true); // Optionally flag that registration has initiated
+                })
+                .catch((error) => {
+                    console.error("Error sending sign-in link to email:", error);
+                    alert(error.message);
+                });
+        } else {
+            alert('Please enter a valid email address.');
+        }
+    };
+    
     
 
     const signInWithGoogle = async (e) => {
@@ -120,19 +146,18 @@ function Login() {
         }
     };
 
-    // Check if the current URL is a sign-in link and handle it
     useEffect(() => {
-        if (isSignInWithEmailLink(auth, window.location.href)) {
+        if (isSignInWithEmailLink(auth, window.location.href) && !justRegistered) {
             let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) {
-                email = window.prompt('Please provide your email for confirmation');
-                if (!email) return; // Handle the case where email is not provided
+            if (email) {
+                handleSignInWithEmailLink(email).catch(console.error);
+            } else {
+                // Optionally, prompt for email or handle the case differently
             }
-            handleSignInWithEmailLink(email);
         }
-    }, [auth, navigate, setIsLoggedIn]);
-
-
+        // Reset justRegistered at a point where it's safe to assume the user is not directly navigating post-registration
+    }, [auth, justRegistered]);
+    
     
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -244,11 +269,11 @@ function Login() {
                             {showContents && (
                                 <div className="contents">
                                     <div className="arrow-left" onClick={() => setShowContents(false)}>Tilbake</div>
-                                    <form>
+                                    <form onSubmit={handleRegisterSubmit}>
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
                                             <label htmlFor="phoneNumberInput" className="form-label">Skriv inn</label>
                                              <input type="email" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required />
-                                             <button type="submit" onClick={sendSignInLink}>Registrer</button>
+                                             <button type="submit">Registrer</button>
                                         <h3>eller</h3>
                                         <div className='email-container'>
                                             <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">
