@@ -45,8 +45,8 @@ const RouteChangeTracker = () => {
 function App() {
   return (
     <AuthProvider>
-      <SpeedInsights/>
       <Router>
+        <SpeedInsights/>
         <RouteChangeTracker />
         <Routes>
           <Route path="/makeUser" element={<MakeUser />} />
