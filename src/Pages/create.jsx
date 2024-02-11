@@ -4,8 +4,9 @@ import Header from '../header';
 import getSvg  from '../Accesorios/getSvg';
 import getImg  from '../Accesorios/getImg';
 import jobsData from '../jobsData';
-import { selectCategories } from '../Home';
+import { selectCategories } from '../selectCategories';
 import NavigationBar from '../NavigationBar';
+import { jobTypeCategoryMapping } from '../jobTypeCategoryMapping';
 
 function useOutsideClick(ref, callback) {
     useEffect(() => {
@@ -93,12 +94,20 @@ const Create = () => {
 
     const [hoverIndex, setHoverIndex] = useState(null);
 
+    const [selectedCategory, setSelectedCategory] = useState('');
+
     const handleInitialSelection = (category) => {
-        console.log("Selection made:", category.label); // Example action
+        console.log("Selection made:", category.label);
         setInitialSelectionMade(true);
-        // Any other logic you need to handle the selection
+        setSelectedCategory(category.label);
+        // Reset selected job type if the category changes
+        setSelectedType('Kategori');
     };
 
+    // Function to handle the "Go Back" action
+    const handleGoBack = () => {
+        setInitialSelectionMade(false);
+    };
 
     // Close dropdown when clicked outside
     useOutsideClick(fylkeRef, () => {
@@ -186,9 +195,12 @@ const Create = () => {
                 ) : (
                     <>
                         
-                        <div className="form-container2">
+                    <div className="form-container2">
+                        <button className="go-back-button" onClick={handleGoBack}>Gå tilbake</button>
                         <div className="form-header">
-                            <h1 className="form-title">Lag jobboppføring</h1>
+                            <h1 className="form-title">Lag jobboppføring for<br></br>
+                                 <span>{selectedCategory}</span> oppdrag  
+                            </h1>
                             <p className="form-subtitle">Skriv inn detaljene for stillingsannonsen</p>
                         </div>
                         <div className="form-body">
@@ -199,27 +211,13 @@ const Create = () => {
                                 </button>
                                 {isTypeOpen && (
                                     <ul ref={typeRef}>
-                                        <button onClick={() => handleOptionClick('Barnepass', 'type')}>Barnepass</button>
-                                        <button onClick={() => handleOptionClick('Gressklipping', 'type')}>Gressklipping</button>
-                                        <button onClick={() => handleOptionClick('Løvrydding', 'type')}>Løvrydding</button>
-                                        <button onClick={() => handleOptionClick('Snømåking', 'type')}>Snømåking</button>
-                                        <button onClick={() => handleOptionClick('Hundelufting', 'type')}>Hundelufting</button>
-                                        <button onClick={() => handleOptionClick('Vaske biler', 'type')}>Vaske biler</button>
-                                        <button onClick={() => handleOptionClick('Selge produkter', 'type')}>Selge produkter</button>
-                                        <button onClick={() => handleOptionClick('Lekerengjøring', 'type')}>Lekerengjøring</button>
-                                        <button onClick={() => handleOptionClick('Plantepleie', 'type')}>Plantepleie</button>
-                                        <button onClick={() => handleOptionClick('Bake og selge kaker', 'type')}>Bake og selge kaker</button>
-                                        <button onClick={() => handleOptionClick('Hjemmeorganisering', 'type')}>Hjemmeorganisering</button>
-                                        <button onClick={() => handleOptionClick('Hente posten', 'type')}>Hente posten</button>
-                                        <button onClick={() => handleOptionClick('Babysitting', 'type')}>Babysitting</button>
-                                        <button onClick={() => handleOptionClick('Male gjerder', 'type')}>Male gjerder</button>
-                                        <button onClick={() => handleOptionClick('Småreparasjoner', 'type')}>Småreparasjoner</button>
-                                        <button onClick={() => handleOptionClick('Levere aviser', 'type')}>Levere aviser</button>
-                                        <button onClick={() => handleOptionClick('Organisere garasjesalg', 'type')}>Organisere garasjesalg</button>
-                                        <button onClick={() => handleOptionClick('Datatjenester for eldre', 'type')}>Datatjenester for eldre</button>
-                                        <button onClick={() => handleOptionClick('Hjelpe med hagearbeid', 'type')}>Hjelpe med hagearbeid</button>
-                                        <button onClick={() => handleOptionClick('Vannplanter for naboer', 'type')}>Vannplanter for naboer</button>
-                                        <button onClick={() => handleOptionClick('Hjelpe til med å flytte', 'type')}>Hjelpe til med å flytte</button>
+                                        {Object.entries(jobTypeCategoryMapping).length > 0 &&
+                                        selectedCategory &&
+                                        jobTypeCategoryMapping[selectedCategory]?.map((jobType) => (
+                                            <button key={jobType} onClick={() => handleOptionClick(jobType, 'type')}>
+                                            {jobType}
+                                            </button>
+                                        ))}
                                     </ul>
                                 )}
                             </div>
@@ -429,10 +427,10 @@ const Create = () => {
                                     </div>
                                     </div>
                                     <div className="overview2-text">
-                                    <div className="overview2-text-header">
-                                        Stillingsbeskrivelse
-                                    </div>
-                                    <div className="overview2-text-item">{additionalInfo}</div>
+                                        <div className="overview2-text-header">
+                                            Stillingsbeskrivelse
+                                        </div>
+                                        <div className="overview2-text-item">{additionalInfo}</div>
                                     <br></br>
                                     </div>
                                     {/*<button className="search-buttons card-buttons">

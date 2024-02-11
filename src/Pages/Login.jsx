@@ -22,7 +22,6 @@ function Login() {
     
     const [email, setEmail] = useState('');
 
-    // Call this function when the user submits their email
     const sendSignInLink = async (e) => {
         e.preventDefault();
         const actionCodeSettings = {
@@ -51,31 +50,35 @@ function Login() {
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
             const user = result.user;
-            // User is authenticated at this point and added to Firebase Auth
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
-
-            set(userRef, {
-                email: user.email,
-                userType: userType, // Make sure this is correctly captured
-                // other user data...
-            });
     
+            // First, check if the user already exists
             onValue(userRef, async (snapshot) => {
                 const userData = snapshot.val();
-                if (userData && userData.isSetupComplete) {
-                    // Proceed with login
-                    setIsLoggedIn(true);
-                    navigate('/');
-                } else {
-                    // User does not exist in database or setup is not complete
-                    if (activeSection === 'login') {
+                if (userData) {
+                    // User exists, proceed with login
+                    if (userData.isSetupComplete) {
+                        setIsLoggedIn(true);
+                        navigate('/');
+                    } else {
                         alert('Du er ikke registrert. Registrer deg først ;)');
-                        // Log out the user
                         await auth.signOut();
-                        // Optionally, redirect to a different page or show a message
-                    } else if (activeSection === 'register') {
-                        // Handle registration logic here
+                    }
+                } else {
+                    // New user, proceed with registration
+                    if (activeSection === 'register') {
+                        set(userRef, {
+                            email: user.email,
+                            userType: userType,
+                            // other user data...
+                            isSetupComplete: true, // Ensure this is set correctly during registration
+                        });
+                        setIsLoggedIn(true);
+                        navigate('/');
+                    } else {
+                        alert('Please register before logging in.');
+                        await auth.signOut();
                     }
                 }
             }, {
@@ -86,7 +89,51 @@ function Login() {
         }
     };
     
+    // Function to handle the sign-in process after the user clicks on the link
+    const handleSignInWithEmailLink = async (email) => {
+        try {
+            const result = await signInWithEmailLink(auth, email, window.location.href);
+            const user = result.user;
+            // Update or set user data in the database
+            const db = getDatabase();
+            const userRef = ref(db, 'users/' + user.uid);
+            onValue(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    // User exists, update as necessary
+                    console.log("User already exists in the database.");
+                } else {
+                    // New user, set initial data
+                    set(userRef, {
+                        email: user.email,
+                        userType: 'DefaultType', // Modify as necessary
+                        isSetupComplete: false, // Set to false until the user completes their profile
+                    });
+                }
+            }, {
+                onlyOnce: true
+            });
+            setIsLoggedIn(true);
+            navigate('/makeUser'); // Redirect to account setup or profile page
+        } catch (error) {
+            console.error("Error signing in with email link: ", error);
+            // Handle errors, such as showing an alert to the user
+        }
+    };
 
+    // Check if the current URL is a sign-in link and handle it
+    useEffect(() => {
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                email = window.prompt('Please provide your email for confirmation');
+                if (!email) return; // Handle the case where email is not provided
+            }
+            handleSignInWithEmailLink(email);
+        }
+    }, [auth, navigate, setIsLoggedIn]);
+
+
+    
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
@@ -116,32 +163,8 @@ function Login() {
         return () => unsubscribe();
     }, [setIsLoggedIn, navigate]); // Removed activeSection from dependencies to avoid re-running the effect unnecessarily
     
-    useEffect(() => {
-        // Confirm the link is a sign-in with email link.
-        if (isSignInWithEmailLink(auth, window.location.href)) {
-            let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) {
-                // User opened the link on a different device. To prevent session fixation
-                // attacks, ask the user to provide the associated email again. For example:
-                email = window.prompt('Please provide your email for confirmation');
-            }
-            signInWithEmailLink(auth, email, window.location.href)
-                .then((result) => {
-                    // Clear email from storage.
-                    window.localStorage.removeItem('emailForSignIn');
-                    // You can access the new user via result.user
-                    // Additional user info profile not available via:
-                    // result.additionalUserInfo.profile == null
-                    // You can check if the user is new or existing:
-                    // result.additionalUserInfo.isNewUser
-                    setIsLoggedIn(true);
-                    navigate('/makeUser'); // Redirect to makeUser after successful sign-in
-                })
-                .catch((error) => {
-                    console.error("Error signing in with email link: ", error);
-                });
-        }
-    }, [auth, navigate, setIsLoggedIn]);    
+    
+     
     
 
     function toggleActive(id) {
@@ -221,11 +244,11 @@ function Login() {
                             {showContents && (
                                 <div className="contents">
                                     <div className="arrow-left" onClick={() => setShowContents(false)}>Tilbake</div>
-                                    <form onSubmit={sendSignInLink}>
+                                    <form>
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
                                             <label htmlFor="phoneNumberInput" className="form-label">Skriv inn</label>
                                              <input type="email" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required />
-                                             <button type="submit">Registrer</button>
+                                             <button type="submit" onClick={sendSignInLink}>Registrer</button>
                                         <h3>eller</h3>
                                         <div className='email-container'>
                                             <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">

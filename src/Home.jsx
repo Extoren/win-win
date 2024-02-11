@@ -8,6 +8,7 @@ import getImg  from './Accesorios/getImg';
 import { useParams, useNavigate } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
+import { selectCategories } from './selectCategories';
 
 
 const JobCard = ({ job, onClick }) => {
@@ -221,15 +222,6 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
     }, {});
   };
 
-  export const selectCategories = [
-    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
-    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
-    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
-    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
-    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
-    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
-  ];
-
 function Home() {
 
     
@@ -365,30 +357,45 @@ function Home() {
     useEffect(() => {
       const updatedFilteredJobs = jobsData.filter(job => {
         const jobPrice = Number(job.price.replace(/\D/g, '')); // Assuming job.price is a string with currency symbol
-        // Remove the upper limit on price when max is set to 5000
-        const matchesPrice = priceRange.max === 1000 || jobPrice <= priceRange.max;
-        return (!selectedLocation || job.county === selectedLocation) && matchesPrice;
+        
+        // Modify this condition to return false when priceRange.max is 0, meaning no jobs should be shown
+        const matchesPrice = priceRange.max > 1 ? jobPrice <= priceRange.max : false;
+    
+        return matchesPrice;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
     }, [selectedLocation, priceRange, jobsData]);
     
-    useEffect(() => {
-      const filteredJobs = jobsData.filter(job => {
-        const matchesLocation = !selectedLocation || job.county === selectedLocation;
-        const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
-        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå);
-        return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
-      });
     
-      // Update employment type counts based on filtered jobs
-      const newEmploymentTypeCounts = countJobsByEmploymentType(filteredJobs);
+    useEffect(() => {
+      // Filter jobs based on all selected criteria except for the criteria of the category being counted
+      const filterJobs = (excludeCategory) => {
+        return jobsData.filter(job => {
+          const matchesLocation = excludeCategory !== 'Fylke' ? (!selectedLocation || job.county === selectedLocation) : true;
+          const matchesEmploymentType = excludeCategory !== 'Ansettelsestype' ? (!selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype)) : true;
+          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå)) : true;
+          return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+        });
+      };
+    
+      // Update employment type counts without considering current employment type selections
+      const newEmploymentTypeCounts = countJobsByEmploymentType(filterJobs('Ansettelsestype'));
       setEmploymentTypeCounts(newEmploymentTypeCounts);
     
-      // Update county counts based on filtered jobs
-      const newCountyCounts = countJobsByCounty(filteredJobs);
+      // Update seniority level counts without considering current seniority level selections
+      const newSeniorityLevelCounts = countJobsBySeniorityLevel(filterJobs('Ansiennitetsnivå'));
+      setSeniorityLevelCounts(newSeniorityLevelCounts);
+    
+      // Update Fylke counts without considering current Fylke selections
+      const newCountyCounts = countJobsByCounty(filterJobs('Fylke'));
       setJobCounts(newCountyCounts);
+    
+      // Apply all filters for displaying jobs
+      const filteredJobs = filterJobs(null); // Apply all filters
+      setFilteredJobs(filteredJobs);
+      setJobCount(filteredJobs.length);
     }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobsData]);
     
 
@@ -559,7 +566,7 @@ function Home() {
                     <input 
                       id='range-min'
                       type="range" 
-                      min="0" 
+                      min="1" 
                       max="1000" // Adjust according to your needs
                       value={priceRange.max} 
                       onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) })} 
