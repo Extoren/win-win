@@ -31,7 +31,7 @@ function FAQ() {
                     itemScope=""
                     itemType="https://schema.org/FAQPage"
                 >
-                    {[...Array(4)].map((_, index) => (
+                    {[...Array(8)].map((_, index) => (
                         <div
                             key={index}
                             className={`faq-singular ${activeIndex === index ? 'active' : ''}`}
@@ -44,7 +44,7 @@ function FAQ() {
                                 itemProp="name"
                                 onClick={() => handleFaqClick(index)}
                             >
-                                {['Hva', 'Hvorfor', 'Hvordan', 'Hvor'][index]}
+                                {['Hva', 'Hvorfor', 'Hvordan', 'Hvor', 'Hva', 'Hvorfor', 'Hvordan', 'Hvor'][index]}
                             </h2>
                             {activeIndex === index && (
                                 <div

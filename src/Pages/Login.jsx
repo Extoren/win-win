@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useRef } from 'react';
 import './Login.css';
 import { googleAuthProvider, auth } from '../firebaseConfig';
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
 import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
@@ -19,31 +19,66 @@ function Login() {
     const [showContents, setShowContents] = useState(false);
     const activeSectionRef = useRef(activeSection);
     activeSectionRef.current = activeSection;
+    
+    const [email, setEmail] = useState('');
+
+    const sendSignInLink = async (e) => {
+        e.preventDefault();
+        const actionCodeSettings = {
+            // URL you want to redirect back to. The domain (www.example.com) for this
+            // URL must be whitelisted in the Firebase Console.
+            url: 'http://localhost:3000/makeUser', // This is where the user will be redirected after clicking the link
+            handleCodeInApp: true,
+            // Add any additional settings if necessary
+        };
+    
+        try {
+            await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+            // Save the email locally so you don't need to ask the user for it again
+            // if they click on the link in the same device
+            window.localStorage.setItem('emailForSignIn', email);
+            alert('Link sent! Check your email for the sign-in link.');
+        } catch (error) {
+            console.error("Error sending sign-in link: ", error);
+            alert(error.message);
+        }
+    };
+    
 
     const signInWithGoogle = async (e) => {
         e.preventDefault();
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
             const user = result.user;
-            // User is authenticated at this point and added to Firebase Auth
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
     
+            // First, check if the user already exists
             onValue(userRef, async (snapshot) => {
                 const userData = snapshot.val();
-                if (userData && userData.isSetupComplete) {
-                    // Proceed with login
-                    setIsLoggedIn(true);
-                    navigate('/');
-                } else {
-                    // User does not exist in database or setup is not complete
-                    if (activeSection === 'login') {
+                if (userData) {
+                    // User exists, proceed with login
+                    if (userData.isSetupComplete) {
+                        setIsLoggedIn(true);
+                        navigate('/');
+                    } else {
                         alert('Du er ikke registrert. Registrer deg først ;)');
-                        // Log out the user
                         await auth.signOut();
-                        // Optionally, redirect to a different page or show a message
-                    } else if (activeSection === 'register') {
-                        // Handle registration logic here
+                    }
+                } else {
+                    // New user, proceed with registration
+                    if (activeSection === 'register') {
+                        set(userRef, {
+                            email: user.email,
+                            userType: userType,
+                            // other user data...
+                            isSetupComplete: true, // Ensure this is set correctly during registration
+                        });
+                        setIsLoggedIn(true);
+                        navigate('/');
+                    } else {
+                        alert('Please register before logging in.');
+                        await auth.signOut();
                     }
                 }
             }, {
@@ -54,7 +89,51 @@ function Login() {
         }
     };
     
+    // Function to handle the sign-in process after the user clicks on the link
+    const handleSignInWithEmailLink = async (email) => {
+        try {
+            const result = await signInWithEmailLink(auth, email, window.location.href);
+            const user = result.user;
+            // Update or set user data in the database
+            const db = getDatabase();
+            const userRef = ref(db, 'users/' + user.uid);
+            onValue(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    // User exists, update as necessary
+                    console.log("User already exists in the database.");
+                } else {
+                    // New user, set initial data
+                    set(userRef, {
+                        email: user.email,
+                        userType: 'DefaultType', // Modify as necessary
+                        isSetupComplete: false, // Set to false until the user completes their profile
+                    });
+                }
+            }, {
+                onlyOnce: true
+            });
+            setIsLoggedIn(true);
+            navigate('/makeUser'); // Redirect to account setup or profile page
+        } catch (error) {
+            console.error("Error signing in with email link: ", error);
+            // Handle errors, such as showing an alert to the user
+        }
+    };
 
+    // Check if the current URL is a sign-in link and handle it
+    useEffect(() => {
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                email = window.prompt('Please provide your email for confirmation');
+                if (!email) return; // Handle the case where email is not provided
+            }
+            handleSignInWithEmailLink(email);
+        }
+    }, [auth, navigate, setIsLoggedIn]);
+
+
+    
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
@@ -83,6 +162,9 @@ function Login() {
         });
         return () => unsubscribe();
     }, [setIsLoggedIn, navigate]); // Removed activeSection from dependencies to avoid re-running the effect unnecessarily
+    
+    
+     
     
 
     function toggleActive(id) {
@@ -132,10 +214,6 @@ function Login() {
                                 <h2>Log In</h2>
                                 <form>
                                     <input type="tel" placeholder="Email" required="" />
-                                    <input type="password" placeholder="Passord" required="" />
-                                    <a href="#" id="glømt">
-                                    Glemt passordet?
-                                    </a>
                                     <button type="submit">Logg Inn</button>
                                 </form>
 
@@ -169,8 +247,8 @@ function Login() {
                                     <form>
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
                                             <label htmlFor="phoneNumberInput" className="form-label">Skriv inn</label>
-                                            <input type="email" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" placeholder='Email'/>
-                                            <input type="password" className="form-control" id="passwordInput" placeholder='Passord'/>
+                                             <input type="email" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required />
+                                             <button type="submit" onClick={sendSignInLink}>Registrer</button>
                                         <h3>eller</h3>
                                         <div className='email-container'>
                                             <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">

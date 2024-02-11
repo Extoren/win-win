@@ -8,6 +8,7 @@ import getImg  from './Accesorios/getImg';
 import { useParams, useNavigate } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
+import { selectCategories } from './selectCategories';
 
 
 const JobCard = ({ job, onClick }) => {
@@ -221,15 +222,6 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
     }, {});
   };
 
-  export const selectCategories = [
-    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
-    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
-    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
-    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
-    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
-    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
-  ];
-
 function Home() {
 
     
@@ -238,6 +230,8 @@ function Home() {
     const [selectedJob, setSelectedJob] = useState(null);
     const [showLocations, setShowLocations] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState('');
+    const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState([]);
+    const [selectedSeniorityLevels, setSelectedSeniorityLevels] = useState([]);
     const [jobFilter, setJobFilter] = useState('');
     const inputRef = useRef(null);
     const categories = [
@@ -251,6 +245,13 @@ function Home() {
     const [filteredJobs, setFilteredJobs] = useState(jobsData);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
 
+    const [employmentTypeCounts, setEmploymentTypeCounts] = useState({});
+    const [seniorityLevelCounts, setSeniorityLevelCounts] = useState({});
+
+    useEffect(() => {
+      setEmploymentTypeCounts(countJobsByEmploymentType(jobsData));
+      setSeniorityLevelCounts(countJobsBySeniorityLevel(jobsData));
+    }, [jobsData]);
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -266,6 +267,27 @@ function Home() {
     }
   };   
 
+  const handleEmploymentTypeSelection = (employmentType) => {
+    setSelectedEmploymentTypes(prev => {
+      if (prev.includes(employmentType)) {
+        return prev.filter(type => type !== employmentType);
+      } else {
+        return [...prev, employmentType];
+      }
+    });
+  };
+  
+  const handleSeniorityLevelSelection = (seniorityLevel) => {
+    setSelectedSeniorityLevels(prev => {
+      if (prev.includes(seniorityLevel)) {
+        return prev.filter(level => level !== seniorityLevel);
+      } else {
+        return [...prev, seniorityLevel];
+      }
+    });
+  };
+  
+
     const handleJobClick = (job) => {
       navigate(`/${job.id}`);
     };
@@ -279,6 +301,25 @@ function Home() {
         setJobFilter(categoryName);
         simulateTyping(inputRef, categoryName);
     };
+
+    const countJobsByEmploymentType = (jobs) => {
+      return jobs.reduce((acc, job) => {
+        const type = job.ansettelsestype; // Assuming 'ansettelsestype' is the correct field for employment type
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+      }, {});
+    };
+    
+    const countJobsBySeniorityLevel = (jobs) => {
+      return jobs.reduce((acc, job) => {
+        const level = job.Ansiennitetsnivå; // Assuming 'Ansiennitetsnivå' is the field for seniority level
+        if(level) { // Check if the job has a seniority level defined
+          acc[level] = (acc[level] || 0) + 1;
+        }
+        return acc;
+      }, {});
+    };
+    
 
     // Filter categories based on input
     const filteredCategories = categories.filter(category => 
@@ -316,15 +357,61 @@ function Home() {
     useEffect(() => {
       const updatedFilteredJobs = jobsData.filter(job => {
         const jobPrice = Number(job.price.replace(/\D/g, '')); // Assuming job.price is a string with currency symbol
-        // Remove the upper limit on price when max is set to 5000
-        const matchesPrice = priceRange.max === 1000 || jobPrice <= priceRange.max;
-        return (!selectedLocation || job.county === selectedLocation) && matchesPrice;
+        
+        // Modify this condition to return false when priceRange.max is 0, meaning no jobs should be shown
+        const matchesPrice = priceRange.max > 1 ? jobPrice <= priceRange.max : false;
+    
+        return matchesPrice;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
     }, [selectedLocation, priceRange, jobsData]);
+    
+    
+    useEffect(() => {
+      // Filter jobs based on all selected criteria except for the criteria of the category being counted
+      const filterJobs = (excludeCategory) => {
+        return jobsData.filter(job => {
+          const matchesLocation = excludeCategory !== 'Fylke' ? (!selectedLocation || job.county === selectedLocation) : true;
+          const matchesEmploymentType = excludeCategory !== 'Ansettelsestype' ? (!selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype)) : true;
+          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå)) : true;
+          return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+        });
+      };
+    
+      // Update employment type counts without considering current employment type selections
+      const newEmploymentTypeCounts = countJobsByEmploymentType(filterJobs('Ansettelsestype'));
+      setEmploymentTypeCounts(newEmploymentTypeCounts);
+    
+      // Update seniority level counts without considering current seniority level selections
+      const newSeniorityLevelCounts = countJobsBySeniorityLevel(filterJobs('Ansiennitetsnivå'));
+      setSeniorityLevelCounts(newSeniorityLevelCounts);
+    
+      // Update Fylke counts without considering current Fylke selections
+      const newCountyCounts = countJobsByCounty(filterJobs('Fylke'));
+      setJobCounts(newCountyCounts);
+    
+      // Apply all filters for displaying jobs
+      const filteredJobs = filterJobs(null); // Apply all filters
+      setFilteredJobs(filteredJobs);
+      setJobCount(filteredJobs.length);
+    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobsData]);
+    
 
+    useEffect(() => {
+      const updatedFilteredJobs = jobsData.filter(job => {
+        const matchesPrice = !priceRange.max || Number(job.price.replace(/\D/g, '')) <= priceRange.max;
+        const matchesLocation = !selectedLocation || job.county === selectedLocation;
+        const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
+        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå);
+        return matchesPrice && matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+      });
+    
+      setFilteredJobs(updatedFilteredJobs);
+      setJobCount(updatedFilteredJobs.length);
+    }, [selectedLocation, priceRange, jobsData, selectedEmploymentTypes, selectedSeniorityLevels]);
+    
     
 
   useEffect(() => {
@@ -479,7 +566,7 @@ function Home() {
                     <input 
                       id='range-min'
                       type="range" 
-                      min="0" 
+                      min="1" 
                       max="1000" // Adjust according to your needs
                       value={priceRange.max} 
                       onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) })} 
@@ -556,7 +643,7 @@ function Home() {
                   </div>
                 </div>
                 <div className="job-time">
-                  <div className="job-time">
+                  {/*<div className="job-time">
                     <p>Område i kart</p>
                     <input
                       id="search-box"
@@ -569,40 +656,35 @@ function Home() {
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2243492.267531465!2d8.46894576840826!3d60.47202389999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46110e5b1a4a57e7%3A0x3624d96eae8f78f1!2sNorway!5e0!3m2!1sen!2s!4v1633965196208!5m2!1sen!2s"
                     allowFullScreen=""
                     loading="lazy"
-                  />
+                  />*/}
                 </div>
                 <div className="job-time">
                   <div className="job-time-title">Ansettelsestype</div>
                   <div className="job-wrapper">
                     <div className="type-container">
-                      <input type="checkbox" id="job13" className="job-style" />
+                      <input type="checkbox" id="job13" className="job-style" checked={selectedEmploymentTypes.includes("Heltidsjobber")} onChange={() => handleEmploymentTypeSelection("Heltidsjobber")}/>
                       <label htmlFor="job13">Heltidsjobber</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Heltidsjobber"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job14" className="job-style" />
+                      <input type="checkbox" id="job14" className="job-style" checked={selectedEmploymentTypes.includes("Deltidsjobber")} onChange={() => handleEmploymentTypeSelection("Deltidsjobber")}/>
                       <label htmlFor="job14">Deltidsjobber</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Deltidsjobber"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job15" className="job-style" />
+                      <input type="checkbox" id="job15" className="job-style" checked={selectedEmploymentTypes.includes("Eksterne jobber")} onChange={() => handleEmploymentTypeSelection("Eksterne jobber")}/>
                       <label htmlFor="job15">Eksterne jobber</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Eksterne jobber"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job16" className="job-style" />
+                      <input type="checkbox" id="job16" className="job-style" checked={selectedEmploymentTypes.includes("Kontrakt")} onChange={() => handleEmploymentTypeSelection("Kontrakt")}/>
                       <label htmlFor="job16">Kontrakt</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Kontrakt"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input
-                        type="checkbox"
-                        id="job17"
-                        className="job-style"
-                        defaultChecked=""
-                      />
+                      <input type="checkbox" id="job17" className="job-style" checked={selectedEmploymentTypes.includes("Små jobber")} onChange={() => handleEmploymentTypeSelection("Små jobber")}/>
                       <label htmlFor="job17">Små jobber</label>
-                      <span className="job-number">1</span>
+                      <span className="job-number">{employmentTypeCounts["Små jobber"] || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -610,29 +692,24 @@ function Home() {
                   <div className="job-time-title">Ansiennitetsnivå</div>
                   <div className="job-wrapper">
                     <div className="type-container">
-                      <input
-                        type="checkbox"
-                        id="job18"
-                        className="job-style"
-                        defaultChecked=""
-                      />
+                      <input type="checkbox" id="job18" className="job-style" checked={selectedSeniorityLevels.includes("Studentnivå")} onChange={() => handleSeniorityLevelSelection("Studentnivå")}/>
                       <label htmlFor="job18">Studentnivå</label>
-                      <span className="job-number">1</span>
+                      <span className="job-number">{seniorityLevelCounts["Studentnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job19" className="job-style" />
+                      <input type="checkbox" id="job19" className="job-style" checked={selectedSeniorityLevels.includes("Inngangsnivå")} onChange={() => handleSeniorityLevelSelection("Inngangsnivå")}/>
                       <label htmlFor="job19">Inngangsnivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Inngangsnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job20" className="job-style" />
+                      <input type="checkbox" id="job20" className="job-style" checked={selectedSeniorityLevels.includes("Midtnivå")} onChange={() => handleSeniorityLevelSelection("Midtnivå")}/>
                       <label htmlFor="job20">Midtnivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Midtnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job21" className="job-style" />
+                      <input type="checkbox" id="job21" className="job-style" checked={selectedSeniorityLevels.includes("Seniornivå")} onChange={() => handleSeniorityLevelSelection("Seniornivå")}/>
                       <label htmlFor="job21">Seniornivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Seniornivå"] || 0}</span>
                     </div>
                   </div>
                 </div>

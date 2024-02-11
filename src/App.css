@@ -22,6 +22,20 @@
   background-color: var(--body-bg-color); /* Set the color of the scrollbar thumb on hover */
 }
 
+#nprogress .bar {
+  background: var(--active-color) !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--active-color), 0 0 5px var(--active-color) !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: var(--active-color) !important;
+  border-left-color: var(--active-color) !important;
+}
+
 :root, .light-mode {
   --body-bg-color: #e5ecef;
   --theme-bg-color: #fafafb;
@@ -349,6 +363,19 @@ body {
 
 .profile label {
   cursor: pointer;
+  font-size: 1em;
+}
+
+@media screen and (max-width: 900px) {
+  .profile label {
+    font-size: 0.8em;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .profile label {
+    font-size: 1em;
+  }
 }
 
 .dropdown-menu2 {
@@ -932,7 +959,7 @@ a {
 
     .job-card-county {
       float: right;
-      color: var(--placeholder-color);
+      color: var(--placeholder-input);
     }
     .job-card-county span {
       /* make it be on the right*/
@@ -1002,6 +1029,7 @@ a {
   cursor: pointer; 
   margin-top: -20px;
   position: relative;
+  color: var(--placeholder-input);
 }
 
 .menu-holder:hover > .menu-dot {
@@ -1010,8 +1038,8 @@ a {
 }
 
 .menu-dot {
-  background-color: var(--placeholder-color);
-  box-shadow: -6px 0 0 0 var(--placeholder-color), 6px 0 0 0 var(--placeholder-color);
+  background-color: var(--placeholder-input);
+  box-shadow: -6px 0 0 0 var(--placeholder-input), 6px 0 0 0 var(--placeholder-input);
   width: 4px;
   height: 4px;
   border: 0;
@@ -1467,9 +1495,6 @@ a {
     margin-top: 5px; }
   .main-container {
     padding-top: 20px; }
-  .logo p {
-    display: none;
-  }
   #Color {
     float: right;
   }
@@ -1498,7 +1523,11 @@ a {
   .header {
     padding: 0 20px; } }
 
-
+@media (max-width:900px) {
+  .logo p {
+    display: none;
+  }
+}
 
 
 
@@ -1553,8 +1582,16 @@ a {
   padding: 0;
 }
 
+#bigger-stronger {
+  font-size: 30pt;
+}
+
 .nav-item {
   perspective: 100px;
+}
+
+.nav-item i:hover {
+  color: var(--active-light-color);
 }
 
 .nav-link {
@@ -1736,7 +1773,6 @@ a {
 
 @media (max-width: 1000px) {
   .site-footer  {
-      margin-top: 100px;
-      margin-bottom: 100px;
+
   }
 }
