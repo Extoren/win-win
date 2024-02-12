@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { ref, set, push } from 'firebase/database';
+import { auth, database } from '../firebaseConfig';
 import './create.css';
 import Header from '../header';
 import getSvg  from '../Accesorios/getSvg';
@@ -79,6 +81,34 @@ const Create = () => {
             setPostalCode(newValue);
         }
     };
+    
+    const handleSubmit = () => {
+        const user = auth.currentUser;
+
+    if (user) {
+        const userId = user.uid; // Use the authenticated user's UID
+        const jobRef = push(ref(database, `jobs/${userId}`)); // Use `userId` here
+
+        const jobData = {
+            typeJobb: selectedType,
+            fylke: fylke,
+            postnummer: postalCode,
+            erfaring: selectedErfaring,
+            ansettelsestype: selectedAnsettelsestype,
+            arbeidstid: arbeidstid,
+            pris: price,
+            beskrivelse: description,
+            tilleggsinfo: additionalInfo,
+            kategori: selectedCategory // Ensure you have this state or adjust as per your implementation
+        };
+    
+        set(jobRef, jobData)
+            .then(() => alert('Jobb lagt til suksessfullt'))
+            .catch((error) => alert('Det oppstod en feil: ', error));
+    } else {
+        alert('No authenticated user. Please log in.');
+    }
+};
     
     
     // Refs for dropdowns
@@ -340,12 +370,13 @@ const Create = () => {
                                         onChange={handleAdditionalInfoChange}
                                         />
                                     </div>
-                                <button
-                                    className="form-submit-button"
-                                    type="submit"
-                                >
-                                    Lag Jobb
-                                </button>
+                                    <button
+                                        className="form-submit-button"
+                                        type="button" // Changed to "button" to prevent form submission behavior
+                                        onClick={handleSubmit}
+                                    >
+                                        Lag Jobb
+                                    </button>
                                 </div>
                             </div>
 
