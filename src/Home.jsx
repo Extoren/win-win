@@ -1,6 +1,8 @@
 import './App.css';
 import { simulateTyping } from './simulateTyping';
 import React, { useState, useRef, useEffect  } from 'react';
+import { onValue, ref } from 'firebase/database';
+import { database } from './firebaseConfig'; 
 import jobsData from './jobsData';
 import Header from './header';
 import getSvg  from './Accesorios/getSvg';
@@ -46,17 +48,17 @@ const JobCard = ({ job, onClick }) => {
               </div>
             )}
         </div>
-        <div className="job-card-county"><span>{job.date}</span> <br></br>{job.county}</div>
-        <div className="job-card-title">{job.title}</div>
+        <div className="job-card-county"><span>{job.date}</span> <br></br>{job.fylke}</div>
+        <div className="job-card-title">{job.typeJobb}</div>
         <div className="job-card-subtitle">
-          {job.description.length > 30 
-            ? `${job.description.substring(0, 30)}...` 
-            : job.description}
+          {job.beskrivelse?.length > 30 
+            ? `${job.beskrivelse.substring(0, 30)}...` 
+            : job.beskrivelse ?? 'Ingen beskrivelse'}
         </div>
-        <div className="job-card-price"><br></br>{job.price} kr</div>
+        <div className="job-card-price"><br></br>{job.pris} kr</div>
         <div className="job-detail-buttons">
           <button className="search-buttons detail-button">
-            {job.Ansiennitetsnivå}
+            {job.erfaring}
           </button>
           <button className="search-buttons detail-button">
             {job.ansettelsestype}
@@ -217,7 +219,7 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
 
   const countJobsByCounty = (jobs) => {
     return jobs.reduce((acc, job) => {
-      acc[job.county] = (acc[job.county] || 0) + 1;
+      acc[job.fylke] = (acc[job.fylke] || 0) + 1;
       return acc;
     }, {});
   };
@@ -233,6 +235,7 @@ function Home() {
     const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState([]);
     const [selectedSeniorityLevels, setSelectedSeniorityLevels] = useState([]);
     const [jobFilter, setJobFilter] = useState('');
+    const [jobs, setJobs] = useState([]);
     const inputRef = useRef(null);
     const categories = [
         'Barnepass', 'Gressklipping', 'Løvrydding', 'Snømåking', 'Hundelufting', 'Vaske biler', 'Selge produkter', 
@@ -242,16 +245,33 @@ function Home() {
     ];
     const navigate = useNavigate();
     const { jobId } = useParams();
-    const [filteredJobs, setFilteredJobs] = useState(jobsData);
+    const [filteredJobs, setFilteredJobs] = useState(jobs);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
 
     const [employmentTypeCounts, setEmploymentTypeCounts] = useState({});
     const [seniorityLevelCounts, setSeniorityLevelCounts] = useState({});
 
     useEffect(() => {
-      setEmploymentTypeCounts(countJobsByEmploymentType(jobsData));
-      setSeniorityLevelCounts(countJobsBySeniorityLevel(jobsData));
-    }, [jobsData]);
+      setEmploymentTypeCounts(countJobsByEmploymentType(jobs));
+      setSeniorityLevelCounts(countJobsBySeniorityLevel(jobs));
+    }, [jobs]);
+
+    useEffect(() => {
+      const jobsRef = ref(database, 'jobs');
+      onValue(jobsRef, (snapshot) => {
+        const data = snapshot.val();
+        const loadedJobs = [];
+        for (const id in data) {
+          for (const jobId in data[id]) { // because jobs are nested under userIds
+            loadedJobs.push({
+              id: jobId,
+              ...data[id][jobId]
+            });
+          }
+        }
+        setJobs(loadedJobs);
+      });
+    }, []);
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -312,7 +332,7 @@ function Home() {
     
     const countJobsBySeniorityLevel = (jobs) => {
       return jobs.reduce((acc, job) => {
-        const level = job.Ansiennitetsnivå; // Assuming 'Ansiennitetsnivå' is the field for seniority level
+        const level = job.erfaring; // Assuming 'Ansiennitetsnivå' is the field for seniority level
         if(level) { // Check if the job has a seniority level defined
           acc[level] = (acc[level] || 0) + 1;
         }
@@ -337,13 +357,13 @@ function Home() {
 
     // Effect to update the job count when the component mounts
     useEffect(() => {
-        setJobCount(jobsData.length);
-        setJobCounts(countJobsByCounty(jobsData));
-    }, [jobsData]);
+        setJobCount(jobs.length);
+        setJobCounts(countJobsByCounty(jobs));
+    }, [jobs]);
 
     useEffect(() => {
       if (jobId) {
-        const jobDetail = jobsData.find(job => job.id === parseInt(jobId, 10));
+        const jobDetail = jobs.find(job => job.id === jobId); // Make sure this comparison is correct
         if (jobDetail) {
           setSelectedJob(jobDetail);
         } else {
@@ -351,31 +371,36 @@ function Home() {
           navigate('/'); // Redirect to home if job ID is invalid
         }
       }
-    }, [jobId, navigate]);
+    }, [jobId, jobs, navigate]);
+    
 
     // Update the filteredJobs state whenever the selectedLocation or priceRange changes
     useEffect(() => {
-      const updatedFilteredJobs = jobsData.filter(job => {
-        const jobPrice = Number(job.price.replace(/\D/g, '')); // Assuming job.price is a string with currency symbol
+      const updatedFilteredJobs = jobs.filter(job => {
+        // Convert job.pris to a number after removing all non-digit characters
+        const jobPrisString = (typeof job.pris === 'string') ? job.pris : '';
+        const jobPrisNumber = Number(jobPrisString.replace(/\D/g, '')) || 0;
         
-        // Modify this condition to return false when priceRange.max is 0, meaning no jobs should be shown
-        const matchesPrice = priceRange.max > 1 ? jobPrice <= priceRange.max : false;
-    
+        // Filter based on the price range
+        const matchesPrice = priceRange.max > 1 ? jobPrisNumber <= priceRange.max : true;
+        
         return matchesPrice;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
-    }, [selectedLocation, priceRange, jobsData]);
+    }, [priceRange, jobs]);
+    
+    
     
     
     useEffect(() => {
       // Filter jobs based on all selected criteria except for the criteria of the category being counted
       const filterJobs = (excludeCategory) => {
-        return jobsData.filter(job => {
+        return jobs.filter(job => {
           const matchesLocation = excludeCategory !== 'Fylke' ? (!selectedLocation || job.county === selectedLocation) : true;
           const matchesEmploymentType = excludeCategory !== 'Ansettelsestype' ? (!selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype)) : true;
-          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå)) : true;
+          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring)) : true;
           return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
         });
       };
@@ -396,21 +421,25 @@ function Home() {
       const filteredJobs = filterJobs(null); // Apply all filters
       setFilteredJobs(filteredJobs);
       setJobCount(filteredJobs.length);
-    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobsData]);
+    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobs]);
     
 
     useEffect(() => {
-      const updatedFilteredJobs = jobsData.filter(job => {
-        const matchesPrice = !priceRange.max || Number(job.price.replace(/\D/g, '')) <= priceRange.max;
-        const matchesLocation = !selectedLocation || job.county === selectedLocation;
+      const updatedFilteredJobs = jobs.filter(job => {
+        // Ensure job.pris is a string before trying to replace non-digits
+        const jobPris = job.pris && typeof job.pris === 'string' ? Number(job.pris.replace(/\D/g, '')) : 0;
+        
+        const matchesPrice = !priceRange.max || jobPris <= priceRange.max;
+        const matchesLocation = !selectedLocation || job.fylke === selectedLocation;
         const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
-        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå);
+        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring);
+        
         return matchesPrice && matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length);
-    }, [selectedLocation, priceRange, jobsData, selectedEmploymentTypes, selectedSeniorityLevels]);
+    }, [selectedLocation, priceRange, jobs, selectedEmploymentTypes, selectedSeniorityLevels]);
     
     
 
@@ -725,7 +754,7 @@ function Home() {
                 </div>
                 <div className="job-cards">
                   {selectedJob == null && filteredJobs
-                    .filter(job => selectedLocation === '' || job.county === selectedLocation)
+                    .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
                     .map(job => (
                       <JobCard key={job.id} job={job} onClick={handleJobClick} />
                   ))}
