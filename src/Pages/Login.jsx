@@ -21,60 +21,62 @@ function Login() {
     const activeSectionRef = useRef(activeSection);
     activeSectionRef.current = activeSection;
     const [justRegistered, setJustRegistered] = useState(false);
+    const [signedInThroughGoogle, setSignedInThroughGoogle] = useState(false);
 
     
     const [email, setEmail] = useState('');
 
-    // New function to create a temporary account
     const createTemporaryAccountAndSendSignInLink = async (email) => {
         const temporaryPassword = "someRandomP@ssw0rd"; // Generate a secure, random password
         try {
             // Create a temporary account with the email and a placeholder password
-            await createUserWithEmailAndPassword(auth, email, temporaryPassword);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, temporaryPassword);
+            const user = userCredential.user;
             // Then, send the sign-in link to the email
             const actionCodeSettings = {
                 url: 'http://localhost:3000/makeUser',
                 handleCodeInApp: true,
             };
             await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+    
+            // Create a record in the Firebase Database for the user
+            const db = getDatabase();
+            const userRef = ref(db, 'users/' + user.uid);
+            set(userRef, {
+                email: email,
+                registrationComplete: false, // Indicates that the user's registration is not yet complete
+            });
+    
             window.localStorage.setItem('emailForSignIn', email);
         } catch (error) {
             console.error("Error creating account or sending sign-in link: ", error);
             alert(error.message);
         }
     };
+    
 
     const handleRegisterSubmit = async (e) => {
         e.preventDefault(); // Prevent the default form submission behavior
         if (email) {
-            const actionCodeSettings = {
-                // URL you want to redirect back to. The domain for this URL must be in the Firebase Console list of authorized domains.
-                url: 'http://localhost:3000/makeUser', // Adjust as per your deployment
-                handleCodeInApp: true, // Ensures that we can handle the sign-in after email verification in-app
-            };
-    
-            sendSignInLinkToEmail(auth, email, actionCodeSettings)
-                .then(() => {
-                    // Inform the user to check their email
-                    window.localStorage.setItem('emailForSignIn', email); // Save the email locally to use it later for sign-in
-                    alert("Check your email for the sign-in link.");
-                    setJustRegistered(true); // Optionally flag that registration has initiated
-                })
-                .catch((error) => {
-                    console.error("Error sending sign-in link to email:", error);
-                    alert(error.message);
-                });
+            try {
+                // Call your function to create account and send sign-in link
+                await createTemporaryAccountAndSendSignInLink(email);
+                setJustRegistered(true); // Optionally flag that registration has initiated
+            } catch (error) {
+                console.error("Error during registration: ", error);
+                alert(error.message);
+            }
         } else {
             alert('Please enter a valid email address.');
         }
     };
     
     
-
     const signInWithGoogle = async (e) => {
         e.preventDefault();
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
+            setSignedInThroughGoogle(true);
             const user = result.user;
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
@@ -164,19 +166,16 @@ function Login() {
             if (user) {
                 const db = getDatabase();
                 const userRef = ref(db, 'users/' + user.uid);
-                onValue(userRef, (snapshot) => {
+                onValue(userRef, async (snapshot) => {
                     const userData = snapshot.val();
-                    // Check if userData exists and the isSetupComplete flag is true
                     if (userData && userData.isSetupComplete) {
                         setIsLoggedIn(true);
                         navigate('/');
                     } else {
-                        // Now we check the ref's current value to decide
-                        if (activeSectionRef.current === 'register') {
+                        // Check if the user signed in through Google before redirecting
+                        if (activeSectionRef.current === 'register' && signedInThroughGoogle) {
                             navigate('/makeUser');
                         } else {
-                            // If not in register section, do not redirect
-                            // Optionally, handle this case, e.g., show an error or log out the user
                             console.log('User data incomplete or missing, and not in the register section.');
                         }
                     }
@@ -186,7 +185,7 @@ function Login() {
             }
         });
         return () => unsubscribe();
-    }, [setIsLoggedIn, navigate]); // Removed activeSection from dependencies to avoid re-running the effect unnecessarily
+    }, [setIsLoggedIn, navigate, signedInThroughGoogle]); 
     
     
      
