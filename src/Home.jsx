@@ -48,7 +48,7 @@ const JobCard = ({ job, onClick }) => {
               </div>
             )}
         </div>
-        <div className="job-card-county"><span>{job.date}</span> <br></br>{job.fylke}</div>
+        <div className="job-card-county"><span>ny</span> <br></br>{job.fylke}</div>
         <div className="job-card-title">{job.typeJobb}</div>
         <div className="job-card-subtitle">
           {job.beskrivelse?.length > 30 
@@ -89,8 +89,8 @@ const OverviewCard = ({ job, onClick  }) => {
           </foreignObject>
         </svg>
         <div className="overview-detail">
-          <div className="job-card-title">{job.title}</div>
-          <div className="job-card-subtitle">{job.county}, {job.postalCode}</div>
+          <div className="job-card-title">{job.typeJobb}</div>
+          <div className="job-card-subtitle">{job.fylke}, {job.postnummer}</div>
         </div>
         <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
           <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
@@ -98,10 +98,10 @@ const OverviewCard = ({ job, onClick  }) => {
       </div>
       <div className="job-overview-buttons">
         <div className="search-buttons time-button">
-          (Ansettelsestype)
+          {job.ansettelsestype}
         </div>
         <div className="search-buttons level-button">
-          (Ansiennitetsnivå)
+          {job.erfaring}
         </div>
         <div className="job-stat">Ny</div>
         <div className="job-day">1d</div>
@@ -110,7 +110,7 @@ const OverviewCard = ({ job, onClick  }) => {
   );
 };
 
-const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
+const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }) => {
     if (!job) return null;
 
     return (
@@ -118,8 +118,8 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
         <div className="job-overview-cards">
         <button className="job-overview-close" id="hide" onClick={onClose}>Tilbake</button>
           <div className="job-overview-card">
-          {jobsData
-            .filter(job => selectedLocation === '' || job.county === selectedLocation)
+          {jobs
+            .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
             .map(filteredJob => (
               <OverviewCard key={filteredJob.id} job={filteredJob} onClick={() => onOverviewClick(filteredJob)} />
           ))}
@@ -135,7 +135,7 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
           </div>
           <div className="job-explain-content">
             <div className="job-title-wrapper">
-              <div className="job-card-title">{job.title}</div>
+              <div className="job-card-title">{job.typeJobb}</div>
               <div className="job-action">
                 <svg
                   className="heart"
@@ -168,8 +168,8 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
             </div>
             <div className="job-subtitle-wrapper">
               <div className="company-name">
-                {job.name}
-                <span className="comp-location">{job.county}, {job.postalCode}</span>
+                {job.userName}
+                <span className="comp-location">{job.fylke}, {job.postnummer}</span>
               </div>
               <div className="posted">
                 Lagt ut for ANTALL dag(er) siden
@@ -178,33 +178,33 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
             </div>
             <div className="explain-bar">
               <div className="explain-contents">
-                <div className="explain-title">Erfaring</div>
-                <div className="explain-subtitle">(Erfaring)</div>
+                <div className="explain-title">Arbeidstid</div>
+                <div className="explain-subtitle">{job.arbeidstid}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Type ansatt</div>
-                <div className="explain-subtitle">(Ansiennitetsnivå)</div>
+                <div className="explain-subtitle">{job.erfaring}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Ansettelsestype</div>
-                <div className="explain-subtitle">(Ansettelsestype)</div>
+                <div className="explain-subtitle">{job.ansettelsestype}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Tilby lønn</div>
-                <div className="explain-subtitle">{job.price}</div>
+                <div className="explain-subtitle">{job.pris}</div>
               </div>
             </div>
             <div className="overview-text">
               <div className="overview-text-header">Oversikt</div>
               <div className="overview-text-subheader">
-                (Ren tekst beskrivelse her)
+                {job.beskrivelse}
               </div>
             </div>
             <div className="overview-text">
               <div className="overview-text-header">
                 Stillingsbeskrivelse
               </div>
-              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">{job.tilleggsinfo}</div>
               <br></br>
             </div>
             <button className="search-buttons card-buttons">
@@ -236,6 +236,7 @@ function Home() {
     const [selectedSeniorityLevels, setSelectedSeniorityLevels] = useState([]);
     const [jobFilter, setJobFilter] = useState('');
     const [jobs, setJobs] = useState([]);
+    const [users, setUsers] = useState({});
     const inputRef = useRef(null);
     const categories = [
         'Barnepass', 'Gressklipping', 'Løvrydding', 'Snømåking', 'Hundelufting', 'Vaske biler', 'Selge produkter', 
@@ -261,17 +262,37 @@ function Home() {
       onValue(jobsRef, (snapshot) => {
         const data = snapshot.val();
         const loadedJobs = [];
-        for (const id in data) {
-          for (const jobId in data[id]) { // because jobs are nested under userIds
+        for (const userId in data) {
+          for (const jobId in data[userId]) {
+            // Here we check if the user's name is available in the users state before adding it
+            const userName = users[userId] || 'Unknown User'; // Fallback to 'Unknown User' if not found
             loadedJobs.push({
               id: jobId,
-              ...data[id][jobId]
+              ...data[userId][jobId],
+              userName: userName // Add the userName to the job object
             });
           }
         }
         setJobs(loadedJobs);
       });
+      // Include users in the dependency array so this effect runs again when users state updates
+    }, [users]);
+    
+
+    useEffect(() => {
+      const usersRef = ref(database, 'users');
+      onValue(usersRef, (snapshot) => {
+        const data = snapshot.val();
+        const loadedUsers = {};
+        for (const userId in data) {
+          // Concatenate name and surname here
+          loadedUsers[userId] = `${data[userId].name} ${data[userId].surname}`; 
+        }
+        setUsers(loadedUsers);
+      });
     }, []);
+    
+    
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -762,6 +783,7 @@ function Home() {
                 {selectedJob && (
                   <JobDetailView 
                       job={selectedJob} 
+                      jobs={jobs}
                       onOverviewClick={handleOverviewClick} 
                       onClose={closeJobDetailView} 
                       selectedLocation={selectedLocation}
