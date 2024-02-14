@@ -142,6 +142,10 @@
     flex-direction: column;
     width: 100%;
   }
+
+  .form-body h2 {
+    font-size: 1em;
+  }
   
   .form-row {
     display: flex;
@@ -248,7 +252,7 @@
     border-radius: 8px;
   }
   
-  @media (min-width: 768px) {
+  @media (min-width: 1250px) {
     .create-job-listing-container {
       flex-direction: row;
     }
@@ -256,6 +260,15 @@
     .form-container2,
     .image-container {
       width: 50%;
+    }
+  }
+
+  @media (max-width: 1250px) {
+    .image-container {
+      width: 100%;
+    }
+    .job-explain2 {
+      margin-bottom: 100px;
     }
   }
 

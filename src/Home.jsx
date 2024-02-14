@@ -12,6 +12,32 @@ import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import { selectCategories } from './selectCategories';
 
+const renderLogo = (logo) => {
+  switch(logo) {
+    case 'fas fa-child':
+      return (
+        <div className="custom-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-baby-carriage" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+        </div>
+      );
+    // Other cases for different logos
+    default:
+      // Return the default logo representation or null if none
+      return null;
+  }
+};
 
 const JobCard = ({ job, onClick }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -30,7 +56,7 @@ const JobCard = ({ job, onClick }) => {
       {/* Start here */}
       <div className="job-card" onMouseLeave={hideMenu}>
         <div className="job-card-header">
-            {getSvg(job.svg)}
+          {renderLogo(job.logo)}
             <div className="menu-holder" onClick={toggleMenu}>
               <div className="menu-dot">
             </div>
@@ -84,7 +110,7 @@ const OverviewCard = ({ job, onClick  }) => {
           <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff",display: "flex",justifyContent: "center",alignItems: "center"}}>
             <div
               style={{display: "flex",justifyContent: "center",alignItems: "center",height: "100%"}}>
-              {getSvg(job.svg)}
+              {renderLogo(job.logo)}
             </div>
           </foreignObject>
         </svg>
@@ -110,8 +136,7 @@ const OverviewCard = ({ job, onClick  }) => {
   );
 };
 
-const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }) => {
-    if (!job) return null;
+export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }) => {
 
     return (
       <div className="job-overview">
@@ -131,7 +156,7 @@ const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }
             {getImg(job.img)}
           </div>
           <div className="job-logos">
-            {getSvg(job.svg)}
+            {renderLogo(job.logo)}
           </div>
           <div className="job-explain-content">
             <div className="job-title-wrapper">
@@ -178,16 +203,16 @@ const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }
             </div>
             <div className="explain-bar">
               <div className="explain-contents">
-                <div className="explain-title">Arbeidstid</div>
-                <div className="explain-subtitle">{job.arbeidstid}</div>
-              </div>
-              <div className="explain-contents">
                 <div className="explain-title">Type ansatt</div>
                 <div className="explain-subtitle">{job.erfaring}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Ansettelsestype</div>
                 <div className="explain-subtitle">{job.ansettelsestype}</div>
+              </div>
+              <div className="explain-contents">
+                <div className="explain-title">Arbeidstid</div>
+                <div className="explain-subtitle">{job.arbeidstid}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Tilby lønn</div>
@@ -277,6 +302,31 @@ function Home() {
       });
       // Include users in the dependency array so this effect runs again when users state updates
     }, [users]);
+    
+    useEffect(() => {
+      const jobRef = ref(database, 'jobs');
+      onValue(jobRef, (snapshot) => {
+        let jobFound = false;
+        snapshot.forEach(userSnapshot => {
+          const userJobs = userSnapshot.val();
+          const userJob = userJobs[jobId];
+          if (userJob) {
+            jobFound = true;
+            setSelectedJob({
+              id: jobId,
+              ...userJob,
+            });
+          }
+        });
+    
+        if (!jobFound) {
+          console.log("Job not found");
+          // Optionally redirect to home or show an error
+          // navigate('/');
+        }
+      });
+    }, [jobId, database]);
+    
     
 
     useEffect(() => {
@@ -382,17 +432,8 @@ function Home() {
         setJobCounts(countJobsByCounty(jobs));
     }, [jobs]);
 
-    useEffect(() => {
-      if (jobId) {
-        const jobDetail = jobs.find(job => job.id === jobId); // Make sure this comparison is correct
-        if (jobDetail) {
-          setSelectedJob(jobDetail);
-        } else {
-          // Handle case where job is not found
-          navigate('/'); // Redirect to home if job ID is invalid
-        }
-      }
-    }, [jobId, jobs, navigate]);
+    
+    
     
 
     // Update the filteredJobs state whenever the selectedLocation or priceRange changes

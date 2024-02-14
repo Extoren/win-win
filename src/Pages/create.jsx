@@ -24,6 +24,104 @@ function useOutsideClick(ref, callback) {
     }, [ref, callback]);
 }
 
+const LogoSelectionModal = ({ isOpen, onSelect, onClose }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const limit = 10;
+
+    if (!isOpen) return null;
+
+    const logos = [
+        { english: 'leaf', norwegian: 'blad' },
+        { english: 'child', norwegian: 'barn' },
+        { english: 'heart', norwegian: 'hjerte' },
+        { english: 'tools', norwegian: 'gressklipper' },
+        { english: 'brush', norwegian: 'pensel' },
+        { english: 'broom', norwegian: 'kost' },
+        { english: 'tint', norwegian: 'vannkanne' },
+        { english: 'camera', norwegian: 'kamera' },
+        { english: 'car', norwegian: 'bil' },
+        { english: 'coffee', norwegian: 'kaffe' },
+        { english: 'cog', norwegian: 'tannhjul' },
+        { english: 'flag', norwegian: 'flagg' },
+        { english: 'globe', norwegian: 'globus' },
+        { english: 'home', norwegian: 'hjem' },
+        { english: 'tree', norwegian: 'tre' },
+        { english: 'paw', norwegian: 'pote' }, 
+        { english: 'seedling', norwegian: 'spire' }, 
+        { english: 'utensils', norwegian: 'bestikk' }, 
+        { english: 'dustpan', norwegian: 'feiebrett' }, 
+        { english: 'snowflake', norwegian: 'snøfnugg' },
+        { english: 'sun', norwegian: 'sol' }, 
+        { english: 'recycle', norwegian: 'resirkulere' }, 
+        { english: 'book', norwegian: 'bok' }, 
+        { english: 'apple-alt', norwegian: 'eple' },
+        { english: 'soap', norwegian: 'såpe' }, 
+        { english: 'basketball-ball', norwegian: 'basketball' }, 
+        { english: 'bed', norwegian: 'seng' }, 
+        { english: 'desktop', norwegian: 'datamaskin' }, 
+        { english: 'plug', norwegian: 'plugg' }, 
+        { english: 'water', norwegian: 'vann' },
+    ];
+
+    const handleModalClick = (e) => {
+        e.stopPropagation();
+    };
+
+    const filteredLogos = logos.filter(logo => logo.norwegian.includes(searchTerm));
+
+    return (
+        <div style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1050,
+        }} onClick={onClose}>
+            <div onClick={handleModalClick} style={{
+                position: 'relative',
+                width: '80%',
+                padding: '10%',
+                backgroundColor: 'var(--inactive-color)',
+                borderRadius: '8px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            }}>
+                <button onClick={onClose} style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '10px',
+                    fontSize: '24px',
+                    cursor: 'pointer'
+                }}>X</button>
+                <h2 style={{ color: 'var(--body-color)' }}>Finn en passende logo</h2>
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    placeholder="Søk etter logo"
+                    style={{ margin: '10px', padding: '5px' }}
+                />
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {filteredLogos.slice(0, limit).map((logo) => (
+                        <button key={logo.english} onClick={() => onSelect(`fas fa-${logo.english}`)} style={{ margin: '10px', border: 'none', background: 'none' }}>
+                            <i className={`fas fa-${logo.english}`} style={{ fontSize: '1.5em', color: 'var(--active-color)', border: '1px solid var(--border-color)', padding: '5px', borderRadius: '10px' }}></i>
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+  
+
 const Create = () => {
     const job = jobsData[0];
     const [description, setDescription] = useState('Beskrivelse');
@@ -41,6 +139,25 @@ const Create = () => {
     const [fylke, setSelectedFylke] = useState('Fylke');
     const [selectedType, setSelectedType] = useState('Kategori');
     const [selectedAnsettelsestype, setSelectedAnsettelsestype] = useState('Ansettelsestype');
+
+    const [inputValue, setInputValue] = useState('');
+    const [logoModalOpen, setLogoModalOpen] = useState(false);
+    const [selectedLogo, setSelectedLogo] = useState('');
+
+    const handleOpenLogoModal = () => {
+        setLogoModalOpen(true);
+    };
+
+    const handleSelectLogo = (selectedItem) => {
+        const [logoClass] = selectedItem.split(':'); // Splitting based on a delimiter
+        setSelectedLogo(logoClass);
+        setLogoModalOpen(false); // Close the modal upon selection
+    };
+    
+
+    const handleCloseLogoModal = () => {
+        setLogoModalOpen(false);
+    };
 
     const handleDescriptionChange = (event) => {
         let inputValue = event.target.value;
@@ -94,6 +211,7 @@ const Create = () => {
             fylke: fylke,
             postnummer: postalCode,
             erfaring: selectedErfaring,
+            logo: selectedLogo,
             ansettelsestype: selectedAnsettelsestype,
             arbeidstid: arbeidstid,
             pris: price,
@@ -162,8 +280,8 @@ const Create = () => {
     };
 
     const toggleTypeDropdown = () => {
-        setIsTypeOpen(!isTypeOpen);
-    };
+        setIsTypeOpen(prevState => !prevState);
+    };    
 
     const toggleErfaringDropdown = () => {
         setIsErfaringOpen(!isErfaringOpen);
@@ -179,7 +297,6 @@ const Create = () => {
             setIsFylkeOpen(false);
             setSelectedFylke(option);
         } if (dropdown === 'type') {
-            setIsTypeOpen(false);
             setSelectedType(option);
         } if (dropdown === 'erfaring') {
             setIsErfaringOpen(false);
@@ -234,23 +351,33 @@ const Create = () => {
                             <p className="form-subtitle">Skriv inn detaljene for stillingsannonsen</p>
                         </div>
                         <div className="form-body">
-                            <div>
-                                <label htmlFor="type" className="form-label">Type Jobb</label>
-                                <button ref={typeToggleButtonRef} id="type" className="form-select" type="button" onClick={toggleTypeDropdown}>
-                                {selectedType}
-                                </button>
-                                {isTypeOpen && (
-                                    <ul ref={typeRef}>
-                                        {Object.entries(jobTypeCategoryMapping).length > 0 &&
-                                        selectedCategory &&
-                                        jobTypeCategoryMapping[selectedCategory]?.map((jobType) => (
-                                            <button key={jobType} onClick={() => handleOptionClick(jobType, 'type')}>
-                                            {jobType}
-                                            </button>
-                                        ))}
-                                    </ul>
-                                )}
-                            </div>
+                        <div>
+                            <label htmlFor="type" className="form-label">Type Jobb</label>
+                            <input 
+                                ref={typeToggleButtonRef} 
+                                id="type" 
+                                className="form-select" 
+                                type="text" 
+                                onClick={toggleTypeDropdown} 
+                                value={inputValue} 
+                                onChange={(e) => {
+                                    setInputValue(e.target.value);
+                                    handleOptionClick(e.target.value, 'type');
+                                }} 
+                            />
+                            {isTypeOpen && (
+                                <ul ref={typeRef}>
+                                    <h2>Eksempler på oppdrag</h2>
+                                    {Object.entries(jobTypeCategoryMapping).length > 0 &&
+                                    selectedCategory &&
+                                    jobTypeCategoryMapping[selectedCategory]?.filter(jobType => jobType.toLowerCase().includes(inputValue.toLowerCase())).map((jobType) => (
+                                        <button key={jobType} onClick={() => handleOptionClick(jobType, 'type')}>
+                                        {jobType}
+                                        </button>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                             <div className="flex-container">
                                 <div>
                                     <label htmlFor="Fylke" className="form-label">Fylke</label>
@@ -387,9 +514,19 @@ const Create = () => {
                                 <div className="job-bg">
                                     {getImg('default')}
                                 </div>
-                                <div className="job-logos">
-                                    {getSvg('default')}
+                                <div className="job-logos" onClick={handleOpenLogoModal}>
+                                    {selectedLogo ? 
+                                        <svg height="70">
+                                            {/* Your SVG code here */}
+                                            <foreignObject x="5" y="5" width="100" height="100" fontSize="1.5em">
+                                                <i className={selectedLogo}></i>
+                                            </foreignObject>
+                                        </svg> 
+                                    : 
+                                        getSvg('default')
+                                    }
                                 </div>
+                                    <LogoSelectionModal isOpen={logoModalOpen} onSelect={handleSelectLogo} onClose={handleCloseLogoModal} />
                                 <div className="job-explain-content">
                                     <div className="job-title-wrapper">
                                     <div className="job-card2-title">{selectedType}</div>

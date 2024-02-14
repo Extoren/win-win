@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from '@vercel/analytics/react';
+import JobDetailView from './Home';
 
 NProgress.configure({ speed: 200 }); // Adjust the speed as needed
 
@@ -55,7 +56,7 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/" element={<Home />} />
-          <Route path="/:jobId" element={<Home />} />
+          <Route path="/:jobId" element={<JobDetailView />} />
           <Route path="/create" element={<Create />} />
           <Route path="/myJobs" element={<MyJobs />} />
         </Routes>
