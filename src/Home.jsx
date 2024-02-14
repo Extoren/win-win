@@ -1,6 +1,8 @@
 import './App.css';
 import { simulateTyping } from './simulateTyping';
 import React, { useState, useRef, useEffect  } from 'react';
+import { onValue, ref } from 'firebase/database';
+import { database } from './firebaseConfig'; 
 import jobsData from './jobsData';
 import Header from './header';
 import getSvg  from './Accesorios/getSvg';
@@ -8,6 +10,7 @@ import getImg  from './Accesorios/getImg';
 import { useParams, useNavigate } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
+import { selectCategories } from './selectCategories';
 
 
 const JobCard = ({ job, onClick }) => {
@@ -45,17 +48,17 @@ const JobCard = ({ job, onClick }) => {
               </div>
             )}
         </div>
-        <div className="job-card-county"><span>{job.date}</span> <br></br>{job.county}</div>
-        <div className="job-card-title">{job.title}</div>
+        <div className="job-card-county"><span>ny</span> <br></br>{job.fylke}</div>
+        <div className="job-card-title">{job.typeJobb}</div>
         <div className="job-card-subtitle">
-          {job.description.length > 30 
-            ? `${job.description.substring(0, 30)}...` 
-            : job.description}
+          {job.beskrivelse?.length > 30 
+            ? `${job.beskrivelse.substring(0, 30)}...` 
+            : job.beskrivelse ?? 'Ingen beskrivelse'}
         </div>
-        <div className="job-card-price"><br></br>{job.price} kr</div>
+        <div className="job-card-price"><br></br>{job.pris} kr</div>
         <div className="job-detail-buttons">
           <button className="search-buttons detail-button">
-            {job.Ansiennitetsnivå}
+            {job.erfaring}
           </button>
           <button className="search-buttons detail-button">
             {job.ansettelsestype}
@@ -86,8 +89,8 @@ const OverviewCard = ({ job, onClick  }) => {
           </foreignObject>
         </svg>
         <div className="overview-detail">
-          <div className="job-card-title">{job.title}</div>
-          <div className="job-card-subtitle">{job.county}, {job.postalCode}</div>
+          <div className="job-card-title">{job.typeJobb}</div>
+          <div className="job-card-subtitle">{job.fylke}, {job.postnummer}</div>
         </div>
         <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
           <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
@@ -95,10 +98,10 @@ const OverviewCard = ({ job, onClick  }) => {
       </div>
       <div className="job-overview-buttons">
         <div className="search-buttons time-button">
-          (Ansettelsestype)
+          {job.ansettelsestype}
         </div>
         <div className="search-buttons level-button">
-          (Ansiennitetsnivå)
+          {job.erfaring}
         </div>
         <div className="job-stat">Ny</div>
         <div className="job-day">1d</div>
@@ -107,7 +110,7 @@ const OverviewCard = ({ job, onClick  }) => {
   );
 };
 
-const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
+const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }) => {
     if (!job) return null;
 
     return (
@@ -115,8 +118,8 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
         <div className="job-overview-cards">
         <button className="job-overview-close" id="hide" onClick={onClose}>Tilbake</button>
           <div className="job-overview-card">
-          {jobsData
-            .filter(job => selectedLocation === '' || job.county === selectedLocation)
+          {jobs
+            .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
             .map(filteredJob => (
               <OverviewCard key={filteredJob.id} job={filteredJob} onClick={() => onOverviewClick(filteredJob)} />
           ))}
@@ -132,7 +135,7 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
           </div>
           <div className="job-explain-content">
             <div className="job-title-wrapper">
-              <div className="job-card-title">{job.title}</div>
+              <div className="job-card-title">{job.typeJobb}</div>
               <div className="job-action">
                 <svg
                   className="heart"
@@ -165,8 +168,8 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
             </div>
             <div className="job-subtitle-wrapper">
               <div className="company-name">
-                {job.name}
-                <span className="comp-location">{job.county}, {job.postalCode}</span>
+                {job.userName}
+                <span className="comp-location">{job.fylke}, {job.postnummer}</span>
               </div>
               <div className="posted">
                 Lagt ut for ANTALL dag(er) siden
@@ -175,33 +178,33 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
             </div>
             <div className="explain-bar">
               <div className="explain-contents">
-                <div className="explain-title">Erfaring</div>
-                <div className="explain-subtitle">(Erfaring)</div>
+                <div className="explain-title">Arbeidstid</div>
+                <div className="explain-subtitle">{job.arbeidstid}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Type ansatt</div>
-                <div className="explain-subtitle">(Ansiennitetsnivå)</div>
+                <div className="explain-subtitle">{job.erfaring}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Ansettelsestype</div>
-                <div className="explain-subtitle">(Ansettelsestype)</div>
+                <div className="explain-subtitle">{job.ansettelsestype}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Tilby lønn</div>
-                <div className="explain-subtitle">{job.price}</div>
+                <div className="explain-subtitle">{job.pris}</div>
               </div>
             </div>
             <div className="overview-text">
               <div className="overview-text-header">Oversikt</div>
               <div className="overview-text-subheader">
-                (Ren tekst beskrivelse her)
+                {job.beskrivelse}
               </div>
             </div>
             <div className="overview-text">
               <div className="overview-text-header">
                 Stillingsbeskrivelse
               </div>
-              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">{job.tilleggsinfo}</div>
               <br></br>
             </div>
             <button className="search-buttons card-buttons">
@@ -216,19 +219,10 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
 
   const countJobsByCounty = (jobs) => {
     return jobs.reduce((acc, job) => {
-      acc[job.county] = (acc[job.county] || 0) + 1;
+      acc[job.fylke] = (acc[job.fylke] || 0) + 1;
       return acc;
     }, {});
   };
-
-  export const selectCategories = [
-    { icon: "fas fa-home", label: "Inne", sublabel: "/oppdrag" },
-    { icon: "fas fa-tree", label: "Ute", sublabel: "/oppdrag" },
-    { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
-    { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
-    { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
-    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
-  ];
 
 function Home() {
 
@@ -238,7 +232,11 @@ function Home() {
     const [selectedJob, setSelectedJob] = useState(null);
     const [showLocations, setShowLocations] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState('');
+    const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState([]);
+    const [selectedSeniorityLevels, setSelectedSeniorityLevels] = useState([]);
     const [jobFilter, setJobFilter] = useState('');
+    const [jobs, setJobs] = useState([]);
+    const [users, setUsers] = useState({});
     const inputRef = useRef(null);
     const categories = [
         'Barnepass', 'Gressklipping', 'Løvrydding', 'Snømåking', 'Hundelufting', 'Vaske biler', 'Selge produkter', 
@@ -248,9 +246,53 @@ function Home() {
     ];
     const navigate = useNavigate();
     const { jobId } = useParams();
-    const [filteredJobs, setFilteredJobs] = useState(jobsData);
+    const [filteredJobs, setFilteredJobs] = useState(jobs);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
 
+    const [employmentTypeCounts, setEmploymentTypeCounts] = useState({});
+    const [seniorityLevelCounts, setSeniorityLevelCounts] = useState({});
+
+    useEffect(() => {
+      setEmploymentTypeCounts(countJobsByEmploymentType(jobs));
+      setSeniorityLevelCounts(countJobsBySeniorityLevel(jobs));
+    }, [jobs]);
+
+    useEffect(() => {
+      const jobsRef = ref(database, 'jobs');
+      onValue(jobsRef, (snapshot) => {
+        const data = snapshot.val();
+        const loadedJobs = [];
+        for (const userId in data) {
+          for (const jobId in data[userId]) {
+            // Here we check if the user's name is available in the users state before adding it
+            const userName = users[userId] || 'Unknown User'; // Fallback to 'Unknown User' if not found
+            loadedJobs.push({
+              id: jobId,
+              ...data[userId][jobId],
+              userName: userName // Add the userName to the job object
+            });
+          }
+        }
+        setJobs(loadedJobs);
+      });
+      // Include users in the dependency array so this effect runs again when users state updates
+    }, [users]);
+    
+
+    useEffect(() => {
+      const usersRef = ref(database, 'users');
+      onValue(usersRef, (snapshot) => {
+        const data = snapshot.val();
+        const loadedUsers = {};
+        for (const userId in data) {
+          // Concatenate name and surname here
+          loadedUsers[userId] = `${data[userId].name} ${data[userId].surname}`; 
+        }
+        setUsers(loadedUsers);
+      });
+    }, []);
+    
+    
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -266,6 +308,27 @@ function Home() {
     }
   };   
 
+  const handleEmploymentTypeSelection = (employmentType) => {
+    setSelectedEmploymentTypes(prev => {
+      if (prev.includes(employmentType)) {
+        return prev.filter(type => type !== employmentType);
+      } else {
+        return [...prev, employmentType];
+      }
+    });
+  };
+  
+  const handleSeniorityLevelSelection = (seniorityLevel) => {
+    setSelectedSeniorityLevels(prev => {
+      if (prev.includes(seniorityLevel)) {
+        return prev.filter(level => level !== seniorityLevel);
+      } else {
+        return [...prev, seniorityLevel];
+      }
+    });
+  };
+  
+
     const handleJobClick = (job) => {
       navigate(`/${job.id}`);
     };
@@ -279,6 +342,25 @@ function Home() {
         setJobFilter(categoryName);
         simulateTyping(inputRef, categoryName);
     };
+
+    const countJobsByEmploymentType = (jobs) => {
+      return jobs.reduce((acc, job) => {
+        const type = job.ansettelsestype; // Assuming 'ansettelsestype' is the correct field for employment type
+        acc[type] = (acc[type] || 0) + 1;
+        return acc;
+      }, {});
+    };
+    
+    const countJobsBySeniorityLevel = (jobs) => {
+      return jobs.reduce((acc, job) => {
+        const level = job.erfaring; // Assuming 'Ansiennitetsnivå' is the field for seniority level
+        if(level) { // Check if the job has a seniority level defined
+          acc[level] = (acc[level] || 0) + 1;
+        }
+        return acc;
+      }, {});
+    };
+    
 
     // Filter categories based on input
     const filteredCategories = categories.filter(category => 
@@ -296,13 +378,13 @@ function Home() {
 
     // Effect to update the job count when the component mounts
     useEffect(() => {
-        setJobCount(jobsData.length);
-        setJobCounts(countJobsByCounty(jobsData));
-    }, [jobsData]);
+        setJobCount(jobs.length);
+        setJobCounts(countJobsByCounty(jobs));
+    }, [jobs]);
 
     useEffect(() => {
       if (jobId) {
-        const jobDetail = jobsData.find(job => job.id === parseInt(jobId, 10));
+        const jobDetail = jobs.find(job => job.id === jobId); // Make sure this comparison is correct
         if (jobDetail) {
           setSelectedJob(jobDetail);
         } else {
@@ -310,21 +392,76 @@ function Home() {
           navigate('/'); // Redirect to home if job ID is invalid
         }
       }
-    }, [jobId, navigate]);
+    }, [jobId, jobs, navigate]);
+    
 
     // Update the filteredJobs state whenever the selectedLocation or priceRange changes
     useEffect(() => {
-      const updatedFilteredJobs = jobsData.filter(job => {
-        const jobPrice = Number(job.price.replace(/\D/g, '')); // Assuming job.price is a string with currency symbol
-        // Remove the upper limit on price when max is set to 5000
-        const matchesPrice = priceRange.max === 1000 || jobPrice <= priceRange.max;
-        return (!selectedLocation || job.county === selectedLocation) && matchesPrice;
+      const updatedFilteredJobs = jobs.filter(job => {
+        // Convert job.pris to a number after removing all non-digit characters
+        const jobPrisString = (typeof job.pris === 'string') ? job.pris : '';
+        const jobPrisNumber = Number(jobPrisString.replace(/\D/g, '')) || 0;
+        
+        // Filter based on the price range
+        const matchesPrice = priceRange.max > 1 ? jobPrisNumber <= priceRange.max : true;
+        
+        return matchesPrice;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
-    }, [selectedLocation, priceRange, jobsData]);
+    }, [priceRange, jobs]);
+    
+    
+    
+    
+    useEffect(() => {
+      // Filter jobs based on all selected criteria except for the criteria of the category being counted
+      const filterJobs = (excludeCategory) => {
+        return jobs.filter(job => {
+          const matchesLocation = excludeCategory !== 'Fylke' ? (!selectedLocation || job.county === selectedLocation) : true;
+          const matchesEmploymentType = excludeCategory !== 'Ansettelsestype' ? (!selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype)) : true;
+          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring)) : true;
+          return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+        });
+      };
+    
+      // Update employment type counts without considering current employment type selections
+      const newEmploymentTypeCounts = countJobsByEmploymentType(filterJobs('Ansettelsestype'));
+      setEmploymentTypeCounts(newEmploymentTypeCounts);
+    
+      // Update seniority level counts without considering current seniority level selections
+      const newSeniorityLevelCounts = countJobsBySeniorityLevel(filterJobs('Ansiennitetsnivå'));
+      setSeniorityLevelCounts(newSeniorityLevelCounts);
+    
+      // Update Fylke counts without considering current Fylke selections
+      const newCountyCounts = countJobsByCounty(filterJobs('Fylke'));
+      setJobCounts(newCountyCounts);
+    
+      // Apply all filters for displaying jobs
+      const filteredJobs = filterJobs(null); // Apply all filters
+      setFilteredJobs(filteredJobs);
+      setJobCount(filteredJobs.length);
+    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobs]);
+    
 
+    useEffect(() => {
+      const updatedFilteredJobs = jobs.filter(job => {
+        // Ensure job.pris is a string before trying to replace non-digits
+        const jobPris = job.pris && typeof job.pris === 'string' ? Number(job.pris.replace(/\D/g, '')) : 0;
+        
+        const matchesPrice = !priceRange.max || jobPris <= priceRange.max;
+        const matchesLocation = !selectedLocation || job.fylke === selectedLocation;
+        const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
+        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring);
+        
+        return matchesPrice && matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+      });
+    
+      setFilteredJobs(updatedFilteredJobs);
+      setJobCount(updatedFilteredJobs.length);
+    }, [selectedLocation, priceRange, jobs, selectedEmploymentTypes, selectedSeniorityLevels]);
+    
     
 
   useEffect(() => {
@@ -479,7 +616,7 @@ function Home() {
                     <input 
                       id='range-min'
                       type="range" 
-                      min="0" 
+                      min="1" 
                       max="1000" // Adjust according to your needs
                       value={priceRange.max} 
                       onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) })} 
@@ -556,7 +693,7 @@ function Home() {
                   </div>
                 </div>
                 <div className="job-time">
-                  <div className="job-time">
+                  {/*<div className="job-time">
                     <p>Område i kart</p>
                     <input
                       id="search-box"
@@ -569,40 +706,35 @@ function Home() {
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2243492.267531465!2d8.46894576840826!3d60.47202389999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46110e5b1a4a57e7%3A0x3624d96eae8f78f1!2sNorway!5e0!3m2!1sen!2s!4v1633965196208!5m2!1sen!2s"
                     allowFullScreen=""
                     loading="lazy"
-                  />
+                  />*/}
                 </div>
                 <div className="job-time">
                   <div className="job-time-title">Ansettelsestype</div>
                   <div className="job-wrapper">
                     <div className="type-container">
-                      <input type="checkbox" id="job13" className="job-style" />
+                      <input type="checkbox" id="job13" className="job-style" checked={selectedEmploymentTypes.includes("Heltidsjobber")} onChange={() => handleEmploymentTypeSelection("Heltidsjobber")}/>
                       <label htmlFor="job13">Heltidsjobber</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Heltidsjobber"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job14" className="job-style" />
+                      <input type="checkbox" id="job14" className="job-style" checked={selectedEmploymentTypes.includes("Deltidsjobber")} onChange={() => handleEmploymentTypeSelection("Deltidsjobber")}/>
                       <label htmlFor="job14">Deltidsjobber</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Deltidsjobber"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job15" className="job-style" />
+                      <input type="checkbox" id="job15" className="job-style" checked={selectedEmploymentTypes.includes("Eksterne jobber")} onChange={() => handleEmploymentTypeSelection("Eksterne jobber")}/>
                       <label htmlFor="job15">Eksterne jobber</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Eksterne jobber"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job16" className="job-style" />
+                      <input type="checkbox" id="job16" className="job-style" checked={selectedEmploymentTypes.includes("Kontrakt")} onChange={() => handleEmploymentTypeSelection("Kontrakt")}/>
                       <label htmlFor="job16">Kontrakt</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{employmentTypeCounts["Kontrakt"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input
-                        type="checkbox"
-                        id="job17"
-                        className="job-style"
-                        defaultChecked=""
-                      />
+                      <input type="checkbox" id="job17" className="job-style" checked={selectedEmploymentTypes.includes("Små jobber")} onChange={() => handleEmploymentTypeSelection("Små jobber")}/>
                       <label htmlFor="job17">Små jobber</label>
-                      <span className="job-number">1</span>
+                      <span className="job-number">{employmentTypeCounts["Små jobber"] || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -610,29 +742,24 @@ function Home() {
                   <div className="job-time-title">Ansiennitetsnivå</div>
                   <div className="job-wrapper">
                     <div className="type-container">
-                      <input
-                        type="checkbox"
-                        id="job18"
-                        className="job-style"
-                        defaultChecked=""
-                      />
+                      <input type="checkbox" id="job18" className="job-style" checked={selectedSeniorityLevels.includes("Studentnivå")} onChange={() => handleSeniorityLevelSelection("Studentnivå")}/>
                       <label htmlFor="job18">Studentnivå</label>
-                      <span className="job-number">1</span>
+                      <span className="job-number">{seniorityLevelCounts["Studentnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job19" className="job-style" />
+                      <input type="checkbox" id="job19" className="job-style" checked={selectedSeniorityLevels.includes("Inngangsnivå")} onChange={() => handleSeniorityLevelSelection("Inngangsnivå")}/>
                       <label htmlFor="job19">Inngangsnivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Inngangsnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job20" className="job-style" />
+                      <input type="checkbox" id="job20" className="job-style" checked={selectedSeniorityLevels.includes("Midtnivå")} onChange={() => handleSeniorityLevelSelection("Midtnivå")}/>
                       <label htmlFor="job20">Midtnivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Midtnivå"] || 0}</span>
                     </div>
                     <div className="type-container">
-                      <input type="checkbox" id="job21" className="job-style" />
+                      <input type="checkbox" id="job21" className="job-style" checked={selectedSeniorityLevels.includes("Seniornivå")} onChange={() => handleSeniorityLevelSelection("Seniornivå")}/>
                       <label htmlFor="job21">Seniornivå</label>
-                      <span className="job-number">0</span>
+                      <span className="job-number">{seniorityLevelCounts["Seniornivå"] || 0}</span>
                     </div>
                   </div>
                 </div>
@@ -648,7 +775,7 @@ function Home() {
                 </div>
                 <div className="job-cards">
                   {selectedJob == null && filteredJobs
-                    .filter(job => selectedLocation === '' || job.county === selectedLocation)
+                    .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
                     .map(job => (
                       <JobCard key={job.id} job={job} onClick={handleJobClick} />
                   ))}
@@ -656,6 +783,7 @@ function Home() {
                 {selectedJob && (
                   <JobDetailView 
                       job={selectedJob} 
+                      jobs={jobs}
                       onOverviewClick={handleOverviewClick} 
                       onClose={closeJobDetailView} 
                       selectedLocation={selectedLocation}

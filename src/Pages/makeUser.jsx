@@ -24,9 +24,6 @@ const updateDatabaseWithUserData = (userId, formData) => {
         });
 };
 
-
-
-
 function MakeUser() {
     const { setIsLoggedIn } = useContext(AuthContext);
     const [currentStep, setCurrentStep] = useState(0);
@@ -40,22 +37,21 @@ function MakeUser() {
 
     const handleSubmit = () => {
         const user = auth.currentUser;
-        // Verify that all steps are complete and the necessary data is available
-        if (user && currentStep === 1 && formData.name && formData.surname) {
+        if (user && currentStep === 1 && formData.name && formData.surname && selectedOption) {
             const updatedFormData = {
                 ...formData,
-                isSetupComplete: true // Set flag to true only when all data is present
+                role: selectedOption === 'option1' ? 'Barn' : 'Voksen', // Include the role based on the selected option
+                isSetupComplete: true
             };
     
             updateDatabaseWithUserData(user.uid, updatedFormData);
-            setIsLoggedIn(true); // Assuming this will set the context state for loggedIn
-            navigate('/'); // Redirect to home only after data is written
+            setIsLoggedIn(true);
+            navigate('/');
         } else {
             console.error("User is not authenticated or required information is missing");
         }
     };
     
-
     const handleRadioChange = (e) => {
         setSelectedOption(e.target.id);
     };
@@ -64,10 +60,6 @@ function MakeUser() {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
-
-    {/*const handleEmailChange = (e) => {
-        setFormData(prev => ({ ...prev, email: e.target.value }));
-    };*/}
 
     const canProceedToNextStep = () => {
         if (currentStep === 0 && selectedOption) {
@@ -91,16 +83,6 @@ function MakeUser() {
             setCurrentStep(currentStep - 1);
         }
     };
-
-
-    {/*const signInWithGoogle = async (event) => {
-        event.preventDefault();
-        try {
-            await signInWithPopup(auth, googleAuthProvider);
-        } catch (error) {
-            console.error("Error signing in with Google", error);
-        }
-    };*/}
 
     return (
         <div className="container">
@@ -131,18 +113,6 @@ function MakeUser() {
                                 <input type="text" name="surname" id="surname" value={formData.surname} onChange={handleNameSurnameChange} required />
                             </>
                         )}
-
-                        {/*{currentStep === 2 && (
-                            <>
-                                <div className='email-container'>
-                                    <p>Legg til din epost:</p>
-                                    <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">
-                                        <img src="google.png" alt="Google logo" />
-                                        Google
-                                    </button>
-                                </div>
-                            </>
-                        )})*/}
 
                         <div className="button-container">
                             {currentStep > 0 && (

@@ -16,7 +16,8 @@ function Header({ onClose }) {
     const location = useLocation();
     const [userName, setUserName] = useState({ firstName: '', lastName: '' });
     const isMakeUserRoute = location.pathname === "/makeUser";
-    const [userType, setUserType] = useState(null);
+    const [role, setRole] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
   
     // Function to toggle the theme
     const toggleTheme = () => {
@@ -42,6 +43,31 @@ function Header({ onClose }) {
   
     }, [theme]);
 
+    useEffect(() => {
+      setIsLoading(true); // Start loading
+      if (isLoggedIn && auth.currentUser) {
+          const userId = auth.currentUser.uid;
+          const dbRef = ref(database, 'users/' + userId);
+  
+          get(dbRef).then((snapshot) => {
+              if (snapshot.exists()) {
+                  const userData = snapshot.val();
+                  setUserName({ firstName: userData.name, lastName: userData.surname });
+                  setRole(userData.role || '');
+              } else {
+                  console.log("No data available");
+              }
+              setIsLoading(false); // End loading once data is fetched
+          }).catch((error) => {
+              console.error(error);
+              setIsLoading(false); // Ensure loading ends even if there's an error
+          });
+      } else {
+          setIsLoading(false); // Not logged in, so not loading
+      }
+  }, [isLoggedIn, auth.currentUser]);
+  
+
     const handleDivClick = () => {
       setShowDropdown(!showDropdown);
     };
@@ -61,7 +87,7 @@ function Header({ onClose }) {
                   // Update the state for the user's name and surname.
                   setUserName({ firstName: userData.name, lastName: userData.surname });
                   // Also update the state for the user's type.
-                  setUserType(userData.userType || ''); // use empty string as default if userType is not set
+                  setRole(userData.role || ''); // use empty string as default if userType is not set
               } else {
                   console.log("No data available");
               }
@@ -81,14 +107,20 @@ function Header({ onClose }) {
       </div>
       <div className="header-menu-container">
         <div className="header-menu">
-            <NavLink to="/" activeClassName="active" onClick={onClose}>Finn Jobb</NavLink>
-            {/*<NavLink to="/" activeClassName="active">Dinne oppdrag</NavLink>*/}
-            <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
-            {userType === 'Offentlig' && (
-              <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
-                  <i className="fas fa-plus-circle"></i> Lag Jobb
-              </NavLink>
-            )}
+                {!isLoading && role === 'Voksen' && (
+                    <NavLink to="/myJobs" activeClassName="active">Oppdrag</NavLink>
+                )}
+                {!isLoading && role !== 'Voksen' && (
+                    <NavLink to="/" activeClassName="active" onClick={onClose}>Finn Jobb</NavLink>
+                )}
+                {!isLoading && (
+                    <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
+                )}
+                {!isLoading && role === 'Voksen' && (
+                    <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
+                        <i className="fas fa-plus-circle"></i> Lag Jobb
+                    </NavLink>
+                )}
         </div>
       </div>
       <div className="user-settings">
@@ -134,34 +166,38 @@ function Header({ onClose }) {
             <a href="#">English</a>
           </div>
         </div>
-        {isLoggedIn && !isMakeUserRoute ? ( // Check if logged in AND not on makeUser route
+        {isLoading ? (
+        // Show a loading indicator or simply nothing while checking user status
+        <div>Laster...</div> // You can replace this with a more subtle loader or placeholder
+          ) : isLoggedIn && !isMakeUserRoute ? (
+              // Once loading is complete and user is logged in, show user profile and settings
               <div className="profile-container">
-                <div className="profile" onClick={handleDivClick}>
-                <div className="user-profile">
-                    <i className="fas fa-user"></i>
-                </div>
-                  <label htmlFor="text">{isLoggedIn ? `${userName.firstName} ${userName.lastName}` : <div className="placeholder-text">Laster...</div>}</label>
-                </div>
-
-                {showDropdown && (
-                  <div className="dropdown-menu2">
-                    <button id="profile-btn">
-                        <i className="fas fa-user"></i> Din profil
-                    </button>
-                    <button id="settings-btn">
-                      <i className="fas fa-cog"></i> Innstillinger
-                    </button>
-                    <button id="sign-out-btn" onClick={handleSignOut}>
-                        <i className="fas fa-sign-out-alt"></i> Logg ut
-                    </button>
+                  <div className="profile" onClick={handleDivClick}>
+                  <div className="user-profile">
+                      <i className="fas fa-user"></i>
                   </div>
-                )}
+                  <label htmlFor="text">{`${userName.firstName} ${userName.lastName}`}</label>
+                  </div>
+                  {showDropdown && (
+                      <div className="dropdown-menu2">
+                          <button id="profile-btn">
+                              <i className="fas fa-user"></i> Din profil
+                          </button>
+                          <button id="settings-btn">
+                            <i className="fas fa-cog"></i> Innstillinger
+                          </button>
+                          <button id="sign-out-btn" onClick={handleSignOut}>
+                              <i className="fas fa-sign-out-alt"></i> Logg ut
+                          </button>
+                      </div>
+                  )}
               </div>
-            ) : (
+          ) : (
+              // If not loading, not logged in, or on the MakeUser route, show the login link
               <Link to="/Login">
                   <div className="user-name">Logg inn</div>
               </Link>
-            )}
+          )}
       </div>
     </div>
   );

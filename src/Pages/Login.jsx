@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from 'react';
 import './Login.css';
 import { googleAuthProvider, auth } from '../firebaseConfig';
 import { signInWithPopup, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import Header from '../header';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
@@ -19,57 +20,93 @@ function Login() {
     const [showContents, setShowContents] = useState(false);
     const activeSectionRef = useRef(activeSection);
     activeSectionRef.current = activeSection;
+    const [justRegistered, setJustRegistered] = useState(false);
+    const [signedInThroughGoogle, setSignedInThroughGoogle] = useState(false);
+
     
     const [email, setEmail] = useState('');
 
-    // Call this function when the user submits their email
-    const sendSignInLink = async (e) => {
-        e.preventDefault();
-        const actionCodeSettings = {
-            // URL you want to redirect back to. The domain (www.example.com) for this
-            // URL must be whitelisted in the Firebase Console.
-            url: 'http://localhost:3000/makeUser', // This is where the user will be redirected after clicking the link
-            handleCodeInApp: true,
-            // Add any additional settings if necessary
-        };
-    
+    const createTemporaryAccountAndSendSignInLink = async (email) => {
+        const temporaryPassword = "someRandomP@ssw0rd"; // Generate a secure, random password
         try {
+            // Create a temporary account with the email and a placeholder password
+            const userCredential = await createUserWithEmailAndPassword(auth, email, temporaryPassword);
+            const user = userCredential.user;
+            // Then, send the sign-in link to the email
+            const actionCodeSettings = {
+                url: 'http://localhost:3000/makeUser',
+                handleCodeInApp: true,
+            };
             await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-            // Save the email locally so you don't need to ask the user for it again
-            // if they click on the link in the same device
+    
+            // Create a record in the Firebase Database for the user
+            const db = getDatabase();
+            const userRef = ref(db, 'users/' + user.uid);
+            set(userRef, {
+                email: email,
+                registrationComplete: false, // Indicates that the user's registration is not yet complete
+            });
+    
             window.localStorage.setItem('emailForSignIn', email);
-            alert('Link sent! Check your email for the sign-in link.');
         } catch (error) {
-            console.error("Error sending sign-in link: ", error);
+            console.error("Error creating account or sending sign-in link: ", error);
             alert(error.message);
         }
     };
     
 
+    const handleRegisterSubmit = async (e) => {
+        e.preventDefault(); // Prevent the default form submission behavior
+        if (email) {
+            try {
+                // Call your function to create account and send sign-in link
+                await createTemporaryAccountAndSendSignInLink(email);
+                setJustRegistered(true); // Optionally flag that registration has initiated
+            } catch (error) {
+                console.error("Error during registration: ", error);
+                alert(error.message);
+            }
+        } else {
+            alert('Please enter a valid email address.');
+        }
+    };
+    
+    
     const signInWithGoogle = async (e) => {
         e.preventDefault();
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
+            setSignedInThroughGoogle(true);
             const user = result.user;
-            // User is authenticated at this point and added to Firebase Auth
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
     
+            // First, check if the user already exists
             onValue(userRef, async (snapshot) => {
                 const userData = snapshot.val();
-                if (userData && userData.isSetupComplete) {
-                    // Proceed with login
-                    setIsLoggedIn(true);
-                    navigate('/');
-                } else {
-                    // User does not exist in database or setup is not complete
-                    if (activeSection === 'login') {
+                if (userData) {
+                    // User exists, proceed with login
+                    if (userData.isSetupComplete) {
+                        setIsLoggedIn(true);
+                        navigate('/');
+                    } else {
                         alert('Du er ikke registrert. Registrer deg først ;)');
-                        // Log out the user
                         await auth.signOut();
-                        // Optionally, redirect to a different page or show a message
-                    } else if (activeSection === 'register') {
-                        // Handle registration logic here
+                    }
+                } else {
+                    // New user, proceed with registration
+                    if (activeSection === 'register') {
+                        set(userRef, {
+                            email: user.email,
+                            userType: userType,
+                            // other user data...
+                            isSetupComplete: true, // Ensure this is set correctly during registration
+                        });
+                        setIsLoggedIn(true);
+                        navigate('/');
+                    } else {
+                        alert('Please register before logging in.');
+                        await auth.signOut();
                     }
                 }
             }, {
@@ -80,25 +117,65 @@ function Login() {
         }
     };
     
+    // Function to handle the sign-in process after the user clicks on the link
+    const handleSignInWithEmailLink = async (email) => {
+        try {
+            const result = await signInWithEmailLink(auth, email, window.location.href);
+            const user = result.user;
+            // Update or set user data in the database
+            const db = getDatabase();
+            const userRef = ref(db, 'users/' + user.uid);
+            onValue(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    // User exists, update as necessary
+                    console.log("User already exists in the database.");
+                } else {
+                    // New user, set initial data
+                    set(userRef, {
+                        email: user.email,
+                        userType: 'DefaultType', // Modify as necessary
+                        isSetupComplete: false, // Set to false until the user completes their profile
+                    });
+                }
+            }, {
+                onlyOnce: true
+            });
+            setIsLoggedIn(true);
+            navigate('/makeUser'); // Redirect to account setup or profile page
+        } catch (error) {
+            console.error("Error signing in with email link: ", error);
+            // Handle errors, such as showing an alert to the user
+        }
+    };
 
+    useEffect(() => {
+        if (isSignInWithEmailLink(auth, window.location.href) && !justRegistered) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (email) {
+                handleSignInWithEmailLink(email).catch(console.error);
+            } else {
+                // Optionally, prompt for email or handle the case differently
+            }
+        }
+        // Reset justRegistered at a point where it's safe to assume the user is not directly navigating post-registration
+    }, [auth, justRegistered]);
+    
+    
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             if (user) {
                 const db = getDatabase();
                 const userRef = ref(db, 'users/' + user.uid);
-                onValue(userRef, (snapshot) => {
+                onValue(userRef, async (snapshot) => {
                     const userData = snapshot.val();
-                    // Check if userData exists and the isSetupComplete flag is true
                     if (userData && userData.isSetupComplete) {
                         setIsLoggedIn(true);
                         navigate('/');
                     } else {
-                        // Now we check the ref's current value to decide
-                        if (activeSectionRef.current === 'register') {
+                        // Check if the user signed in through Google before redirecting
+                        if (activeSectionRef.current === 'register' && signedInThroughGoogle) {
                             navigate('/makeUser');
                         } else {
-                            // If not in register section, do not redirect
-                            // Optionally, handle this case, e.g., show an error or log out the user
                             console.log('User data incomplete or missing, and not in the register section.');
                         }
                     }
@@ -108,34 +185,10 @@ function Login() {
             }
         });
         return () => unsubscribe();
-    }, [setIsLoggedIn, navigate]); // Removed activeSection from dependencies to avoid re-running the effect unnecessarily
+    }, [setIsLoggedIn, navigate, signedInThroughGoogle]); 
     
-    useEffect(() => {
-        // Confirm the link is a sign-in with email link.
-        if (isSignInWithEmailLink(auth, window.location.href)) {
-            let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) {
-                // User opened the link on a different device. To prevent session fixation
-                // attacks, ask the user to provide the associated email again. For example:
-                email = window.prompt('Please provide your email for confirmation');
-            }
-            signInWithEmailLink(auth, email, window.location.href)
-                .then((result) => {
-                    // Clear email from storage.
-                    window.localStorage.removeItem('emailForSignIn');
-                    // You can access the new user via result.user
-                    // Additional user info profile not available via:
-                    // result.additionalUserInfo.profile == null
-                    // You can check if the user is new or existing:
-                    // result.additionalUserInfo.isNewUser
-                    setIsLoggedIn(true);
-                    navigate('/makeUser'); // Redirect to makeUser after successful sign-in
-                })
-                .catch((error) => {
-                    console.error("Error signing in with email link: ", error);
-                });
-        }
-    }, [auth, navigate, setIsLoggedIn]);    
+    
+     
     
 
     function toggleActive(id) {
@@ -215,7 +268,7 @@ function Login() {
                             {showContents && (
                                 <div className="contents">
                                     <div className="arrow-left" onClick={() => setShowContents(false)}>Tilbake</div>
-                                    <form onSubmit={sendSignInLink}>
+                                    <form onSubmit={handleRegisterSubmit}>
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
                                             <label htmlFor="phoneNumberInput" className="form-label">Skriv inn</label>
                                              <input type="email" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required />
