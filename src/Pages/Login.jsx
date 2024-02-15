@@ -51,32 +51,24 @@ function Login() {
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
             const user = result.user;
-            // User is authenticated at this point and added to Firebase Auth
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
-
-            set(userRef, {
-                email: user.email,
-                userType: userType, // Make sure this is correctly captured
-                // other user data...
-            });
     
-            onValue(userRef, async (snapshot) => {
+            // Check if user data already exists and is setup complete
+            onValue(userRef, (snapshot) => {
                 const userData = snapshot.val();
                 if (userData && userData.isSetupComplete) {
-                    // Proceed with login
+                    // User data exists and setup is complete, so just log the user in
                     setIsLoggedIn(true);
                     navigate('/');
                 } else {
-                    // User does not exist in database or setup is not complete
-                    if (activeSection === 'login') {
-                        alert('Du er ikke registrert. Registrer deg først ;)');
-                        // Log out the user
-                        await auth.signOut();
-                        // Optionally, redirect to a different page or show a message
-                    } else if (activeSection === 'register') {
-                        // Handle registration logic here
-                    }
+                    // User data does not exist, so set the user data
+                    set(userRef, {
+                        userType: userType,
+                        // Set any other user info you need to initialize
+                    }).catch((error) => {
+                        console.error("Error setting user data: ", error);
+                    });
                 }
             }, {
                 onlyOnce: true

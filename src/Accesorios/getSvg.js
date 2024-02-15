@@ -3,6 +3,31 @@ import '../App.css';
 
 function getSvg(svgName) {
     switch (svgName) {
+
+      
+      case 'fas fa-child': 
+        return (
+          <div className="child">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-child" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );
+                    
+
+
+
+
       case 'default':
         return (
           <div className="default">

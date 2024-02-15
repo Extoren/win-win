@@ -5,7 +5,6 @@ import './create.css';
 import Header from '../header';
 import getSvg  from '../Accesorios/getSvg';
 import getImg  from '../Accesorios/getImg';
-import jobsData from '../jobsData';
 import { selectCategories } from '../selectCategories';
 import NavigationBar from '../NavigationBar';
 import { jobTypeCategoryMapping } from '../jobTypeCategoryMapping';
@@ -123,7 +122,6 @@ const LogoSelectionModal = ({ isOpen, onSelect, onClose }) => {
   
 
 const Create = () => {
-    const job = jobsData[0];
     const [description, setDescription] = useState('Beskrivelse');
     const [additionalInfo, setAdditionalInfo] = useState('Tilleggsinfo');
     const [price, setPrice] = useState('');
@@ -217,7 +215,7 @@ const Create = () => {
             pris: price,
             beskrivelse: description,
             tilleggsinfo: additionalInfo,
-            kategori: selectedCategory // Ensure you have this state or adjust as per your implementation
+            kategori: selectedCategory
         };
     
         set(jobRef, jobData)
@@ -562,7 +560,7 @@ const Create = () => {
                                     </div>
                                     <div className="job-subtitle-wrapper">
                                     <div className="company-name">
-                                        {job.name}
+                                        Ditt navn
                                         <span className="comp-location">{fylke} - {postalCode}</span>
                                     </div>
                                     <div className="posted">

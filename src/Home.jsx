@@ -12,33 +12,6 @@ import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import { selectCategories } from './selectCategories';
 
-const renderLogo = (logo) => {
-  switch(logo) {
-    case 'fas fa-child':
-      return (
-        <div className="custom-logo">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
-                <rect width="100%" height="100%" fill="#fff" />
-                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
-                  }}
-                >
-                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
-                    }}
-                  >
-                    <i className="fas fa-baby-carriage" style={{ color: "#ffae00", fontSize: 24 }}
-                    />
-                  </div>
-                </foreignObject>
-              </svg>
-        </div>
-      );
-    // Other cases for different logos
-    default:
-      // Return the default logo representation or null if none
-      return null;
-  }
-};
-
 const JobCard = ({ job, onClick }) => {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -56,7 +29,7 @@ const JobCard = ({ job, onClick }) => {
       {/* Start here */}
       <div className="job-card" onMouseLeave={hideMenu}>
         <div className="job-card-header">
-          {renderLogo(job.logo)}
+          {getSvg(job.logo)}
             <div className="menu-holder" onClick={toggleMenu}>
               <div className="menu-dot">
             </div>
@@ -110,7 +83,7 @@ const OverviewCard = ({ job, onClick  }) => {
           <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff",display: "flex",justifyContent: "center",alignItems: "center"}}>
             <div
               style={{display: "flex",justifyContent: "center",alignItems: "center",height: "100%"}}>
-              {renderLogo(job.logo)}
+              {getSvg(job.logo)}
             </div>
           </foreignObject>
         </svg>
@@ -156,7 +129,7 @@ export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLoc
             {getImg(job.img)}
           </div>
           <div className="job-logos">
-            {renderLogo(job.logo)}
+            {getSvg(job.logo)}
           </div>
           <div className="job-explain-content">
             <div className="job-title-wrapper">
@@ -282,27 +255,22 @@ function Home() {
       setSeniorityLevelCounts(countJobsBySeniorityLevel(jobs));
     }, [jobs]);
 
-    useEffect(() => {
-      const jobsRef = ref(database, 'jobs');
-      onValue(jobsRef, (snapshot) => {
-        const data = snapshot.val();
-        const loadedJobs = [];
-        for (const userId in data) {
-          for (const jobId in data[userId]) {
-            // Here we check if the user's name is available in the users state before adding it
-            const userName = users[userId] || 'Unknown User'; // Fallback to 'Unknown User' if not found
-            loadedJobs.push({
-              id: jobId,
-              ...data[userId][jobId],
-              userName: userName // Add the userName to the job object
-            });
-          }
-        }
-        setJobs(loadedJobs);
-      });
-      // Include users in the dependency array so this effect runs again when users state updates
-    }, [users]);
     
+    useEffect(() => {
+      const usersRef = ref(database, 'users');
+      onValue(usersRef, (snapshot) => {
+        const usersData = snapshot.val();
+        const usersObject = {};
+        for (const key in usersData) {
+          usersObject[key] = {
+            name: usersData[key].name,
+            surname: usersData[key].surname
+          };
+        }
+        setUsers(usersObject);
+      });
+    }, []);
+
     useEffect(() => {
       const jobRef = ref(database, 'jobs');
       onValue(jobRef, (snapshot) => {
@@ -312,9 +280,12 @@ function Home() {
           const userJob = userJobs[jobId];
           if (userJob) {
             jobFound = true;
+            const user = users[userSnapshot.key]; // get the user data using the key
+            const userName = user ? `${user.name} ${user.surname}` : 'Unknown User';
             setSelectedJob({
               id: jobId,
               ...userJob,
+              userName: userName, // set the userName here
             });
           }
         });
@@ -325,22 +296,32 @@ function Home() {
           // navigate('/');
         }
       });
-    }, [jobId, database]);
-    
+    }, [jobId, users]); // Depend on users here to make sure user data is available
     
 
+
+    // Now fetch jobs
     useEffect(() => {
-      const usersRef = ref(database, 'users');
-      onValue(usersRef, (snapshot) => {
-        const data = snapshot.val();
-        const loadedUsers = {};
-        for (const userId in data) {
-          // Concatenate name and surname here
-          loadedUsers[userId] = `${data[userId].name} ${data[userId].surname}`; 
+      const jobsRef = ref(database, 'jobs');
+      onValue(jobsRef, (snapshot) => {
+        const jobsData = snapshot.val();
+        const loadedJobs = [];
+        for (const userId in jobsData) {
+          for (const jobId in jobsData[userId]) {
+            const user = users[userId];
+            // Check if user data exists to avoid undefined errors
+            const userName = user ? `${user.name} ${user.surname}` : 'Unknown User';
+            loadedJobs.push({
+              id: jobId,
+              ...jobsData[userId][jobId],
+              userName: userName // Now we have the userName included
+            });
+          }
         }
-        setUsers(loadedUsers);
+        setJobs(loadedJobs);
       });
-    }, []);
+    }, [users]); // Depend on the users state here to re-run when users are fetched
+      
     
     
 
