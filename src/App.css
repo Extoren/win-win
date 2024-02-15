@@ -37,7 +37,7 @@
 }
 
 :root, .light-mode {
-  --body-bg-color: #e5ecef;
+  --body-bg-color: #fff;
   --theme-bg-color: #fafafb;
   --body-font: "Poppins", sans-serif;
   --body-color: #2f2f33;
@@ -61,7 +61,7 @@
 }
 
 .dark-mode {
-  --body-bg-color: #1d1d1d;
+  --body-bg-color: #1c1c24;
   --theme-bg-color: #13131a;
   --header-bg-color: #1c1c24;
   --alert-bg-color: #292932;
@@ -91,7 +91,6 @@ html {
 
 body {
   margin: 0;
-  background-color: var(--body-bg-color);
   font-family: var(--body-font);
   font-size: 15px;
   color: var(--body-color); 
@@ -125,12 +124,16 @@ body {
   background-color: var(--inactive-color);
   color: var(--subtitle-color); }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  overflow: hidden;
-  background-color: var(--theme-bg-color); }
+  .container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto; /* Centers the container */
+    overflow: hidden;
+    background-color: var(--theme-bg-color); 
+    max-width: 1900px;
+    width: 100%; 
+  }
+  
 
   .container, .wrapper {
     max-height: 100.5vh; /* Instead of height, use max-height */
