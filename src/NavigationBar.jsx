@@ -59,6 +59,14 @@ const NavigationBar = ({ onClose }) => {
               </NavLink>
             </li>
           )}
+          {!isLoading && role === 'Barn' && (
+            <li className="nav-item">
+              <NavLink to="/favoritt" className={`nav-link ${activePath === '/favoritt' ? 'active' : ''}`} onClick={() => setActivePath('/create')}>
+                <i id="bigger-stronger" className="nav-icon fas fa-heart"></i>
+                <span className="nav-text">favoritt</span>
+              </NavLink>
+            </li>
+          )}
           {!isLoading && role === 'Voksen' && (
             <li className="nav-item">
               <NavLink to="/create" className={`nav-link ${activePath === '/create' ? 'active' : ''}`} onClick={() => setActivePath('/create')}>

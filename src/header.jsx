@@ -124,6 +124,11 @@ function Header({ onClose }) {
                         <i className="fas fa-plus-circle"></i> Lag Jobb
                     </NavLink>
                 )}
+                {!isLoading && role === 'Barn' && (
+                    <NavLink to="/favoritt" className={location.pathname === "/favoritt" ? "" : "menu-background"} activeClassName="active">
+                      <i className="fas fa-heart"></i> Favoritter
+                    </NavLink>
+                )}
         </div>
       </div>
       <div className="user-settings">
