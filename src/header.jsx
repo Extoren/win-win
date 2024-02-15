@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link, useLocation, NavLink } from 'react-router-dom';
+import { Link, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import { auth } from './firebaseConfig';
 import { signOut } from 'firebase/auth';
@@ -18,6 +18,7 @@ function Header({ onClose }) {
     const isMakeUserRoute = location.pathname === "/makeUser";
     const [role, setRole] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
   
     // Function to toggle the theme
     const toggleTheme = () => {
@@ -26,16 +27,18 @@ function Header({ onClose }) {
       localStorage.setItem('theme', newTheme);
     };
 
-    // Function to handle user sign out
     const handleSignOut = () => {
       signOut(auth).then(() => {
-          // Sign-out successful.
-          setIsLoggedIn(false); // Update context state
+        // Sign-out successful.
+        setIsLoggedIn(false); // Update context state
+        window.location.href = '/'; // Redirect to root path and reload the page
       }).catch((error) => {
-          // An error happened.
-          console.error('Error signing out:', error);
+        // An error happened.
+        console.error('Error signing out:', error);
       });
-  };
+    };
+    
+    
   
     // Load theme from local storage on mount
     useEffect(() => {

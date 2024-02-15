@@ -1,6 +1,8 @@
 import './App.css';
 import { simulateTyping } from './simulateTyping';
 import React, { useState, useRef, useEffect  } from 'react';
+import { onValue, ref } from 'firebase/database';
+import { database } from './firebaseConfig'; 
 import jobsData from './jobsData';
 import Header from './header';
 import getSvg  from './Accesorios/getSvg';
@@ -9,7 +11,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import { selectCategories } from './selectCategories';
-
 
 const JobCard = ({ job, onClick }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -28,7 +29,7 @@ const JobCard = ({ job, onClick }) => {
       {/* Start here */}
       <div className="job-card" onMouseLeave={hideMenu}>
         <div className="job-card-header">
-            {getSvg(job.svg)}
+          {getSvg(job.logo)}
             <div className="menu-holder" onClick={toggleMenu}>
               <div className="menu-dot">
             </div>
@@ -46,17 +47,17 @@ const JobCard = ({ job, onClick }) => {
               </div>
             )}
         </div>
-        <div className="job-card-county"><span>{job.date}</span> <br></br>{job.county}</div>
-        <div className="job-card-title">{job.title}</div>
+        <div className="job-card-county"><span>ny</span> <br></br>{job.fylke}</div>
+        <div className="job-card-title">{job.typeJobb}</div>
         <div className="job-card-subtitle">
-          {job.description.length > 30 
-            ? `${job.description.substring(0, 30)}...` 
-            : job.description}
+          {job.beskrivelse?.length > 30 
+            ? `${job.beskrivelse.substring(0, 30)}...` 
+            : job.beskrivelse ?? 'Ingen beskrivelse'}
         </div>
-        <div className="job-card-price"><br></br>{job.price} kr</div>
+        <div className="job-card-price"><br></br>{job.pris} kr</div>
         <div className="job-detail-buttons">
           <button className="search-buttons detail-button">
-            {job.Ansiennitetsnivå}
+            {job.erfaring}
           </button>
           <button className="search-buttons detail-button">
             {job.ansettelsestype}
@@ -82,13 +83,13 @@ const OverviewCard = ({ job, onClick  }) => {
           <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff",display: "flex",justifyContent: "center",alignItems: "center"}}>
             <div
               style={{display: "flex",justifyContent: "center",alignItems: "center",height: "100%"}}>
-              {getSvg(job.svg)}
+              {getSvg(job.logo)}
             </div>
           </foreignObject>
         </svg>
         <div className="overview-detail">
-          <div className="job-card-title">{job.title}</div>
-          <div className="job-card-subtitle">{job.county}, {job.postalCode}</div>
+          <div className="job-card-title">{job.typeJobb}</div>
+          <div className="job-card-subtitle">{job.fylke}, {job.postnummer}</div>
         </div>
         <svg className="heart" xmlns="http://www.w3.org/2000/svg"viewBox="0 0 24 24"fill="none"stroke="currentColor" strokeWidth={2}strokeLinecap="round"strokeLinejoin="round">
           <path d="M20.8 4.6a5.5 5.5 0 00-7.7 0l-1.1 1-1-1a5.5 5.5 0 00-7.8 7.8l1 1 7.8 7.8 7.8-7.7 1-1.1a5.5 5.5 0 000-7.8z" />
@@ -96,10 +97,10 @@ const OverviewCard = ({ job, onClick  }) => {
       </div>
       <div className="job-overview-buttons">
         <div className="search-buttons time-button">
-          (Ansettelsestype)
+          {job.ansettelsestype}
         </div>
         <div className="search-buttons level-button">
-          (Ansiennitetsnivå)
+          {job.erfaring}
         </div>
         <div className="job-stat">Ny</div>
         <div className="job-day">1d</div>
@@ -108,16 +109,15 @@ const OverviewCard = ({ job, onClick  }) => {
   );
 };
 
-const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
-    if (!job) return null;
+export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }) => {
 
     return (
       <div className="job-overview">
         <div className="job-overview-cards">
         <button className="job-overview-close" id="hide" onClick={onClose}>Tilbake</button>
           <div className="job-overview-card">
-          {jobsData
-            .filter(job => selectedLocation === '' || job.county === selectedLocation)
+          {jobs
+            .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
             .map(filteredJob => (
               <OverviewCard key={filteredJob.id} job={filteredJob} onClick={() => onOverviewClick(filteredJob)} />
           ))}
@@ -129,11 +129,11 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
             {getImg(job.img)}
           </div>
           <div className="job-logos">
-            {getSvg(job.svg)}
+            {getSvg(job.logo)}
           </div>
           <div className="job-explain-content">
             <div className="job-title-wrapper">
-              <div className="job-card-title">{job.title}</div>
+              <div className="job-card-title">{job.typeJobb}</div>
               <div className="job-action">
                 <svg
                   className="heart"
@@ -166,8 +166,8 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
             </div>
             <div className="job-subtitle-wrapper">
               <div className="company-name">
-                {job.name}
-                <span className="comp-location">{job.county}, {job.postalCode}</span>
+                {job.userName}
+                <span className="comp-location">{job.fylke}, {job.postnummer}</span>
               </div>
               <div className="posted">
                 Lagt ut for ANTALL dag(er) siden
@@ -176,33 +176,33 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
             </div>
             <div className="explain-bar">
               <div className="explain-contents">
-                <div className="explain-title">Erfaring</div>
-                <div className="explain-subtitle">(Erfaring)</div>
-              </div>
-              <div className="explain-contents">
                 <div className="explain-title">Type ansatt</div>
-                <div className="explain-subtitle">(Ansiennitetsnivå)</div>
+                <div className="explain-subtitle">{job.erfaring}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Ansettelsestype</div>
-                <div className="explain-subtitle">(Ansettelsestype)</div>
+                <div className="explain-subtitle">{job.ansettelsestype}</div>
+              </div>
+              <div className="explain-contents">
+                <div className="explain-title">Arbeidstid</div>
+                <div className="explain-subtitle">{job.arbeidstid}</div>
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Tilby lønn</div>
-                <div className="explain-subtitle">{job.price}</div>
+                <div className="explain-subtitle">{job.pris}</div>
               </div>
             </div>
             <div className="overview-text">
               <div className="overview-text-header">Oversikt</div>
               <div className="overview-text-subheader">
-                (Ren tekst beskrivelse her)
+                {job.beskrivelse}
               </div>
             </div>
             <div className="overview-text">
               <div className="overview-text-header">
                 Stillingsbeskrivelse
               </div>
-              <div className="overview-text-item">Tilleggsinfo</div>
+              <div className="overview-text-item">{job.tilleggsinfo}</div>
               <br></br>
             </div>
             <button className="search-buttons card-buttons">
@@ -217,7 +217,7 @@ const JobDetailView = ({ job, onOverviewClick, onClose, selectedLocation }) => {
 
   const countJobsByCounty = (jobs) => {
     return jobs.reduce((acc, job) => {
-      acc[job.county] = (acc[job.county] || 0) + 1;
+      acc[job.fylke] = (acc[job.fylke] || 0) + 1;
       return acc;
     }, {});
   };
@@ -233,6 +233,8 @@ function Home() {
     const [selectedEmploymentTypes, setSelectedEmploymentTypes] = useState([]);
     const [selectedSeniorityLevels, setSelectedSeniorityLevels] = useState([]);
     const [jobFilter, setJobFilter] = useState('');
+    const [jobs, setJobs] = useState([]);
+    const [users, setUsers] = useState({});
     const inputRef = useRef(null);
     const categories = [
         'Barnepass', 'Gressklipping', 'Løvrydding', 'Snømåking', 'Hundelufting', 'Vaske biler', 'Selge produkter', 
@@ -242,16 +244,86 @@ function Home() {
     ];
     const navigate = useNavigate();
     const { jobId } = useParams();
-    const [filteredJobs, setFilteredJobs] = useState(jobsData);
+    const [filteredJobs, setFilteredJobs] = useState(jobs);
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 }); // Adjust max according to your needs
 
     const [employmentTypeCounts, setEmploymentTypeCounts] = useState({});
     const [seniorityLevelCounts, setSeniorityLevelCounts] = useState({});
 
     useEffect(() => {
-      setEmploymentTypeCounts(countJobsByEmploymentType(jobsData));
-      setSeniorityLevelCounts(countJobsBySeniorityLevel(jobsData));
-    }, [jobsData]);
+      setEmploymentTypeCounts(countJobsByEmploymentType(jobs));
+      setSeniorityLevelCounts(countJobsBySeniorityLevel(jobs));
+    }, [jobs]);
+
+    
+    useEffect(() => {
+      const usersRef = ref(database, 'users');
+      onValue(usersRef, (snapshot) => {
+        const usersData = snapshot.val();
+        const usersObject = {};
+        for (const key in usersData) {
+          usersObject[key] = {
+            name: usersData[key].name,
+            surname: usersData[key].surname
+          };
+        }
+        setUsers(usersObject);
+      });
+    }, []);
+
+    useEffect(() => {
+      const jobRef = ref(database, 'jobs');
+      onValue(jobRef, (snapshot) => {
+        let jobFound = false;
+        snapshot.forEach(userSnapshot => {
+          const userJobs = userSnapshot.val();
+          const userJob = userJobs[jobId];
+          if (userJob) {
+            jobFound = true;
+            const user = users[userSnapshot.key]; // get the user data using the key
+            const userName = user ? `${user.name} ${user.surname}` : 'Unknown User';
+            setSelectedJob({
+              id: jobId,
+              ...userJob,
+              userName: userName, // set the userName here
+            });
+          }
+        });
+    
+        if (!jobFound) {
+          console.log("Job not found");
+          // Optionally redirect to home or show an error
+          // navigate('/');
+        }
+      });
+    }, [jobId, users]); // Depend on users here to make sure user data is available
+    
+
+
+    // Now fetch jobs
+    useEffect(() => {
+      const jobsRef = ref(database, 'jobs');
+      onValue(jobsRef, (snapshot) => {
+        const jobsData = snapshot.val();
+        const loadedJobs = [];
+        for (const userId in jobsData) {
+          for (const jobId in jobsData[userId]) {
+            const user = users[userId];
+            // Check if user data exists to avoid undefined errors
+            const userName = user ? `${user.name} ${user.surname}` : 'Unknown User';
+            loadedJobs.push({
+              id: jobId,
+              ...jobsData[userId][jobId],
+              userName: userName // Now we have the userName included
+            });
+          }
+        }
+        setJobs(loadedJobs);
+      });
+    }, [users]); // Depend on the users state here to re-run when users are fetched
+      
+    
+    
 
     const handleOverviewClick = (job) => {
       setSelectedJob(job);
@@ -312,7 +384,7 @@ function Home() {
     
     const countJobsBySeniorityLevel = (jobs) => {
       return jobs.reduce((acc, job) => {
-        const level = job.Ansiennitetsnivå; // Assuming 'Ansiennitetsnivå' is the field for seniority level
+        const level = job.erfaring; // Assuming 'Ansiennitetsnivå' is the field for seniority level
         if(level) { // Check if the job has a seniority level defined
           acc[level] = (acc[level] || 0) + 1;
         }
@@ -337,45 +409,41 @@ function Home() {
 
     // Effect to update the job count when the component mounts
     useEffect(() => {
-        setJobCount(jobsData.length);
-        setJobCounts(countJobsByCounty(jobsData));
-    }, [jobsData]);
+        setJobCount(jobs.length);
+        setJobCounts(countJobsByCounty(jobs));
+    }, [jobs]);
 
-    useEffect(() => {
-      if (jobId) {
-        const jobDetail = jobsData.find(job => job.id === parseInt(jobId, 10));
-        if (jobDetail) {
-          setSelectedJob(jobDetail);
-        } else {
-          // Handle case where job is not found
-          navigate('/'); // Redirect to home if job ID is invalid
-        }
-      }
-    }, [jobId, navigate]);
+    
+    
+    
 
     // Update the filteredJobs state whenever the selectedLocation or priceRange changes
     useEffect(() => {
-      const updatedFilteredJobs = jobsData.filter(job => {
-        const jobPrice = Number(job.price.replace(/\D/g, '')); // Assuming job.price is a string with currency symbol
+      const updatedFilteredJobs = jobs.filter(job => {
+        // Convert job.pris to a number after removing all non-digit characters
+        const jobPrisString = (typeof job.pris === 'string') ? job.pris : '';
+        const jobPrisNumber = Number(jobPrisString.replace(/\D/g, '')) || 0;
         
-        // Modify this condition to return false when priceRange.max is 0, meaning no jobs should be shown
-        const matchesPrice = priceRange.max > 1 ? jobPrice <= priceRange.max : false;
-    
+        // Filter based on the price range
+        const matchesPrice = priceRange.max > 1 ? jobPrisNumber <= priceRange.max : true;
+        
         return matchesPrice;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length); // Update job count based on filtered jobs
-    }, [selectedLocation, priceRange, jobsData]);
+    }, [priceRange, jobs]);
+    
+    
     
     
     useEffect(() => {
       // Filter jobs based on all selected criteria except for the criteria of the category being counted
       const filterJobs = (excludeCategory) => {
-        return jobsData.filter(job => {
+        return jobs.filter(job => {
           const matchesLocation = excludeCategory !== 'Fylke' ? (!selectedLocation || job.county === selectedLocation) : true;
           const matchesEmploymentType = excludeCategory !== 'Ansettelsestype' ? (!selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype)) : true;
-          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå)) : true;
+          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring)) : true;
           return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
         });
       };
@@ -396,21 +464,25 @@ function Home() {
       const filteredJobs = filterJobs(null); // Apply all filters
       setFilteredJobs(filteredJobs);
       setJobCount(filteredJobs.length);
-    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobsData]);
+    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobs]);
     
 
     useEffect(() => {
-      const updatedFilteredJobs = jobsData.filter(job => {
-        const matchesPrice = !priceRange.max || Number(job.price.replace(/\D/g, '')) <= priceRange.max;
-        const matchesLocation = !selectedLocation || job.county === selectedLocation;
+      const updatedFilteredJobs = jobs.filter(job => {
+        // Ensure job.pris is a string before trying to replace non-digits
+        const jobPris = job.pris && typeof job.pris === 'string' ? Number(job.pris.replace(/\D/g, '')) : 0;
+        
+        const matchesPrice = !priceRange.max || jobPris <= priceRange.max;
+        const matchesLocation = !selectedLocation || job.fylke === selectedLocation;
         const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
-        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.Ansiennitetsnivå);
+        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring);
+        
         return matchesPrice && matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
       });
     
       setFilteredJobs(updatedFilteredJobs);
       setJobCount(updatedFilteredJobs.length);
-    }, [selectedLocation, priceRange, jobsData, selectedEmploymentTypes, selectedSeniorityLevels]);
+    }, [selectedLocation, priceRange, jobs, selectedEmploymentTypes, selectedSeniorityLevels]);
     
     
 
@@ -725,7 +797,7 @@ function Home() {
                 </div>
                 <div className="job-cards">
                   {selectedJob == null && filteredJobs
-                    .filter(job => selectedLocation === '' || job.county === selectedLocation)
+                    .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
                     .map(job => (
                       <JobCard key={job.id} job={job} onClick={handleJobClick} />
                   ))}
@@ -733,6 +805,7 @@ function Home() {
                 {selectedJob && (
                   <JobDetailView 
                       job={selectedJob} 
+                      jobs={jobs}
                       onOverviewClick={handleOverviewClick} 
                       onClose={closeJobDetailView} 
                       selectedLocation={selectedLocation}
