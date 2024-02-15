@@ -202,6 +202,9 @@
     font-size: 14px;
   }
 
+  .fa-heart {
+    color: #fff;
+  }
   
   
   .form-input:focus, 
