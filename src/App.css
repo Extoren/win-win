@@ -912,7 +912,7 @@ a {
     color: var(--subtitle-color); }
   .searched-sort .menu-icon {
     font-size: 9px;
-    color: var(--placeholder-color);
+    color: var(--placeholder-input);
     margin-left: 6px; }
 
 .job-cards {
