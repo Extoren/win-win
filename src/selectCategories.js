@@ -6,5 +6,5 @@ export const selectCategories = [
     { icon: "fas fa-palette", label: "Kreative", sublabel: "/oppdrag" },
     { icon: "fas fa-book", label: "Lærings", sublabel: "/oppdrag" },
     { icon: "fas fa-leaf", label: "Miljø", sublabel: "/oppdrag" },
-    { icon: "fas fa-users", label: "Sosiale", sublabel: "/Oppdrag" },
+    { icon: "fas fa-users", label: "Sosiale", sublabel: "/oppdrag" },
   ];

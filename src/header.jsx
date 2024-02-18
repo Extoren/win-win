@@ -6,6 +6,8 @@ import { signOut } from 'firebase/auth';
 import logo from './Bilder/Logo_CC.png';
 import { database } from './firebaseConfig';
 import { ref, get } from "firebase/database";
+import { useTranslation } from 'react-i18next'
+
 
 function Header({ onClose }) {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -38,6 +40,21 @@ function Header({ onClose }) {
       });
     };
     
+    
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (language) => {
+      i18n.changeLanguage(language);
+      localStorage.setItem('appLanguage', language); // Save the selected language to localStorage
+    };
+    
+    useEffect(() => {
+      const savedLanguage = localStorage.getItem('appLanguage');
+      if (savedLanguage) {
+        i18n.changeLanguage(savedLanguage);
+      }
+      // Include other initialization logic here as necessary
+    }, []); // The empty array ensures this effect runs only once on mount
     
   
     // Load theme from local storage on mount
@@ -110,25 +127,25 @@ function Header({ onClose }) {
       </div>
       <div className="header-menu-container">
         <div className="header-menu">
-                {!isLoading && role === 'Voksen' && (
-                    <NavLink to="/myJobs" activeClassName="active">Oppdrag</NavLink>
-                )}
-                {!isLoading && role !== 'Voksen' && (
-                    <NavLink to="/" activeClassName="active" onClick={onClose}>Finn Jobb</NavLink>
-                )}
-                {!isLoading && (
-                    <NavLink to="/faq" activeClassName="active">FAQ</NavLink>
-                )}
-                {!isLoading && role === 'Voksen' && (
-                    <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
-                        <i className="fas fa-plus-circle"></i> Lag Jobb
-                    </NavLink>
-                )}
-                {!isLoading && role === 'Barn' && (
-                    <NavLink to="/favoritt" className={location.pathname === "/favoritt" ? "" : "menu-background"} activeClassName="active">
-                      <i className="fas fa-heart"></i> Favoritter
-                    </NavLink>
-                )}
+          {!isLoading && role === 'Voksen' && (
+            <NavLink to="/myJobs" activeClassName="active">{t('assignments')}</NavLink>
+          )}
+          {!isLoading && role !== 'Voksen' && (
+            <NavLink to="/" activeClassName="active" onClick={onClose}>{t('find_job')}</NavLink>
+          )}
+          {!isLoading && (
+            <NavLink to="/faq" activeClassName="active">{t('faq')}</NavLink>
+          )}
+          {!isLoading && role === 'Voksen' && (
+            <NavLink to="/create" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
+              <i className="fas fa-plus-circle"></i> {t('create_job')}
+            </NavLink>
+          )}
+          {!isLoading && role === 'Barn' && (
+            <NavLink to="/favoritt" className={location.pathname === "/favoritt" ? "" : "menu-background"} activeClassName="active">
+              <i className="fas fa-heart"></i> {t('favorites')}
+            </NavLink>
+          )}
         </div>
       </div>
       <div className="user-settings">
@@ -159,7 +176,7 @@ function Header({ onClose }) {
           >
             <rect x={3} y={3} width={18} height={18} rx={2} ry={2} />
             <image
-              xlinkHref="https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Norway.svg"
+              xlinkHref={i18n.language === 'en' ? "https://upload.wikimedia.org/wikipedia/en/4/4c/Flag_of_the_United_Kingdom_reversed.svg" : "https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Norway.svg"}
               x={6}
               y={6}
               width={12}
@@ -167,45 +184,43 @@ function Header({ onClose }) {
             />
           </svg>
           <div className="dropdown-menu">
-            {/* Dropdown menu content goes here */}
-            <a href="#" className="selected-location">
-              Norsk
+            <a href="#" className="selected-location" onClick={() => changeLanguage('no')}>
+              {t('Norsk')}
             </a>
-            <a href="#">English</a>
+            <a href="#" onClick={() => changeLanguage('en')}>
+              {t('English')}
+            </a>
           </div>
         </div>
         {isLoading ? (
-        // Show a loading indicator or simply nothing while checking user status
-        <div>Laster...</div> // You can replace this with a more subtle loader or placeholder
-          ) : isLoggedIn && !isMakeUserRoute ? (
-              // Once loading is complete and user is logged in, show user profile and settings
-              <div className="profile-container">
-                  <div className="profile" onClick={handleDivClick}>
-                  <div className="user-profile">
-                      <i className="fas fa-user"></i>
-                  </div>
-                  <label htmlFor="text">{`${userName.firstName} ${userName.lastName}`}</label>
-                  </div>
-                  {showDropdown && (
-                      <div className="dropdown-menu2">
-                          <button id="profile-btn">
-                              <i className="fas fa-user"></i> Din profil
-                          </button>
-                          <button id="settings-btn">
-                            <i className="fas fa-cog"></i> Innstillinger
-                          </button>
-                          <button id="sign-out-btn" onClick={handleSignOut}>
-                              <i className="fas fa-sign-out-alt"></i> Logg ut
-                          </button>
-                      </div>
-                  )}
+          <div>{t('loading')}</div>
+        ) : isLoggedIn && !isMakeUserRoute ? (
+          <div className="profile-container">
+            <div className="profile" onClick={handleDivClick}>
+              <div className="user-profile">
+                  <i className="fas fa-user"></i>
               </div>
-          ) : (
-              // If not loading, not logged in, or on the MakeUser route, show the login link
-              <Link to="/Login">
-                  <div className="user-name">Logg inn</div>
-              </Link>
-          )}
+              <label htmlFor="text">{`${userName.firstName} ${userName.lastName}`}</label>
+            </div>
+            {showDropdown && (
+                <div className="dropdown-menu2">
+                    <button id="profile-btn">
+                        <i className="fas fa-user"></i> {t('your_profile')}
+                    </button>
+                    <button id="settings-btn">
+                      <i className="fas fa-cog"></i> {t('settings')}
+                    </button>
+                    <button id="sign-out-btn" onClick={handleSignOut}>
+                        <i className="fas fa-sign-out-alt"></i> {t('sign_out')}
+                    </button>
+                </div>
+            )}
+          </div>
+        ) : (
+          <Link to="/Login">
+              <div className="user-name">{t('login')}</div>
+          </Link>
+        )}
       </div>
     </div>
   );
