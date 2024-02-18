@@ -3,7 +3,6 @@ import { simulateTyping } from './simulateTyping';
 import React, { useState, useRef, useEffect  } from 'react';
 import { onValue, ref } from 'firebase/database';
 import { database } from './firebaseConfig'; 
-import jobsData from './jobsData';
 import Header from './header';
 import getSvg  from './Accesorios/getSvg';
 import getImg  from './Accesorios/getImg';
@@ -11,6 +10,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
 import { selectCategories } from './selectCategories';
+import { useTranslation } from 'react-i18next'
+
 
 const JobCard = ({ job, onClick }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -23,6 +24,21 @@ const JobCard = ({ job, onClick }) => {
   const hideMenu = () => {
     setShowMenu(false);
   }
+
+  const { t, i18n } = useTranslation();
+
+    const changeLanguage = (language) => {
+      i18n.changeLanguage(language);
+      localStorage.setItem('appLanguage', language); // Save the selected language to localStorage
+    };
+    
+    useEffect(() => {
+      const savedLanguage = localStorage.getItem('appLanguage');
+      if (savedLanguage) {
+        i18n.changeLanguage(savedLanguage);
+      }
+      // Include other initialization logic here as necessary
+    }, []); // The empty array ensures this effect runs only once on mount
 
   return (
     <div className="job-card" onClick={() => onClick(job)}>
@@ -38,11 +54,11 @@ const JobCard = ({ job, onClick }) => {
               <div className="menu"  onMouseLeave={hideMenu}>
                 <div className="menu-item">
                   <i className="fas fa-heart" style={{ marginRight: '8px' }}></i>
-                  Favoritt
+                  {t('favorite')}
                 </div>
                 <div className="menu-item">
                   <i className="fas fa-flag" style={{ marginRight: '8px' }}></i>
-                    Anmeld
+                    {t('anmeld')}
                 </div>
               </div>
             )}
@@ -64,7 +80,7 @@ const JobCard = ({ job, onClick }) => {
           </button>
           <div className="job-card-buttons">
             <button className="search-buttons card-buttons">
-              Søk Nå
+              {t('søk')}
             </button>
           </div>
         </div>
@@ -254,6 +270,22 @@ function Home() {
     const handleCloseClick = () => {
       setIsPopupVisible(false); // This will hide the popup menu
   };
+  
+
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+    localStorage.setItem('appLanguage', language); // Save the selected language to localStorage
+  };
+  
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('appLanguage');
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+    // Include other initialization logic here as necessary
+  }, []); // The empty array ensures this effect runs only once on mount
 
     useEffect(() => {
       setEmploymentTypeCounts(countJobsByEmploymentType(jobs));
@@ -426,7 +458,7 @@ function Home() {
         <h1>Filtrer</h1>
         <div className="popup-menu-content">
           <div className="job-time" id="background-change">
-              <div className="job-time-title">Lønnsområde</div>
+            <div className="job-time-title">{t('lønnsområde')}</div>
               <div className="slider-container">
                 <input 
                   id='range-min'
@@ -768,7 +800,7 @@ function Home() {
                     )}
                   </div>
                 </div>
-                <button className="search-button">Finn Jobb</button>
+                <button className="search-button">{t('find_job')}</button>
               </div>
                 {/*<div className="search-salary">
                 <svg
@@ -802,7 +834,7 @@ function Home() {
             <div className="main-container">
                 <div className="search-type">
                 <div className="job-time" id="background-change">
-                  <div className="job-time-title">Lønnsområde</div>
+                  <div className="job-time-title">{t('lønnsområde')}</div>
                   <div className="slider-container">
                     <input 
                       id='range-min'
@@ -964,7 +996,7 @@ function Home() {
                 <div className={`searched-bar ${selectedJob ? "hide-searched-bar" : ""}`}>
                   <div className="searched-show">Viser {jobCount} jobber</div>
                     <div className="searched-sort">
-                      Sorter etter: <span className="post-time">Nyeste Post </span>
+                      {t('sorter')}: <span className="post-time">Nyeste Post </span>
                       <span className="menu-icon">▼</span>
                     </div>
                 </div>
@@ -986,7 +1018,7 @@ function Home() {
                 )}
               </div>
             </div>
-            <Footer />
+            {!selectedJob && <Footer />}
           </div>
           <NavigationBar />
         </div>
