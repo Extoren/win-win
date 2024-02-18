@@ -912,7 +912,7 @@ a {
     color: var(--subtitle-color); }
   .searched-sort .menu-icon {
     font-size: 9px;
-    color: var(--placeholder-color);
+    color: var(--placeholder-input);
     margin-left: 6px; }
 
 .job-cards {
@@ -1778,4 +1778,151 @@ a {
   .site-footer  {
 
   }
+}
+
+
+.settings-container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.settings-icon {
+  width: 50px;
+  height: 2px;
+  padding: 2px;
+  border-radius: 100px;
+  background-color: var(--placeholder-input);
+  position: relative;
+  margin: 5px 0;
+}
+
+/* Circle for the first line */
+.settings-icon:first-child::after {
+  content: '';
+  position: absolute;
+  left: 20%; /* Position at 10% from the left of the line */
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--body-bg-color);
+  border: 5px solid var(--Hover-color);
+}
+
+/* Circle for the second line */
+.settings-icon:nth-child(2)::after {
+  content: '';
+  position: absolute;
+  left: 90%; /* Position at 50% (center) of the line */
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--body-bg-color);
+  border: 5px solid var(--Hover-color);
+}
+
+/* Circle for the third line */
+.settings-icon:nth-child(3)::after {
+  content: '';
+  position: absolute;
+  left: 50%; /* Position at 90% from the left of the line */
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--body-bg-color);
+  border: 5px solid var(--Hover-color);
+}
+
+@media (min-width: 731px) {
+  .settings-container {
+    display: none;
+  }
+}
+
+.settings-container:hover .settings-icon:first-child::after {
+  animation: move1 2s infinite;
+}
+
+.settings-container:hover .settings-icon:nth-child(2)::after {
+  animation: move2 2s infinite;
+}
+
+.settings-container:hover .settings-icon:nth-child(3)::after {
+  animation: move3 2s infinite;
+}
+
+@keyframes move1 {
+  0% {
+    left: 20%;
+  }
+  33% {
+    left: 50%;
+  }
+  66% {
+    left: 90%;
+  }
+  100% {
+    left: 20%;
+  }
+}
+
+@keyframes move2 {
+  0% {
+    left: 90%;
+  }
+  33% {
+    left: 20%;
+  }
+  66% {
+    left: 50%;
+  }
+  100% {
+    left: 90%;
+  }
+}
+
+@keyframes move3 {
+  0% {
+    left: 50%;
+  }
+  33% {
+    left: 90%;
+  }
+  66% {
+    left: 20%;
+  }
+  100% {
+    left: 50%;
+  }
+}
+
+.popup-menu {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  border-radius: 10px;
+  background-color: var(--header-bg-color);
+  z-index: 100;
+  padding: 20px;
+  overflow: auto;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+  transform: translate(-50%, -50%); /* Centers the popup */
+}
+
+.popup-menu-content {
+  border: 3px solid var(--alert-bg-color);
+  padding: 20px;
+  border-radius: 20px;
 }
