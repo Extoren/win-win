@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import './App.css';
 import FAQ from "./Pages/FAQ";
 import Login from "./Pages/Login";
@@ -17,6 +17,18 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from '@vercel/analytics/react';
 import JobDetailView from './Home';
 import './i18n';
+import { Navigate } from 'react-router-dom';
+import useUserRole from './hooks/useUserRole';
+
+const ProtectedRoute = ({ children }) => {
+    const { role, isLoading } = useUserRole();
+
+    if (isLoading) {
+        return <div>Loading...</div>; // Or any loading indicator you prefer
+    }
+
+    return role === 'Voksen' ? children : <Navigate to="/" replace />;
+};
 
 NProgress.configure({ speed: 200 }); // Adjust the speed as needed
 
@@ -58,8 +70,8 @@ function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/" element={<Home />} />
           <Route path="/:jobId" element={<JobDetailView />} />
-          <Route path="/create" element={<Create />} />
-          <Route path="/myJobs" element={<MyJobs />} />
+          <Route path="/create" element={<ProtectedRoute><Create /></ProtectedRoute>} />
+          <Route path="/myJobs" element={<ProtectedRoute><MyJobs /></ProtectedRoute>} />
         </Routes>
       </Router>
     </AuthProvider>
