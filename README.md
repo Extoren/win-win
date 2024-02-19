@@ -1,70 +1,58 @@
-# Getting Started with Create React App
+# Project WinWin Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Introduction
+A brief introduction to the Project WinWin, highlighting its goal to connect public adults and children through job postings and tasks, facilitating community engagement and responsibility sharing.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### General Features
+- Responsive design adaptable to all screen sizes with dynamic content loading.
+- Color theme toggling (Dark/Light mode) and language selection (Norwegian/English).
+- Special mobile navigation for an enhanced user experience.
+- Job filtering based on criteria like price, county, employment type, and level.
 
-### `npm start`
+### User Roles and Permissions
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### Unregistered Users
+- View jobs but cannot apply or create jobs.
+- Restricted from accessing links meant for registered users.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### Public Adult Users
+- Create tasks for public children users.
+- View and manage their posted tasks. $\color{orange}{\text{// Under construction}}$
+- Profile creation with a reliability rating system. $\color{orange}{\text{// Under construction}}$
 
-### `npm test`
+#### Public Child Users
+- View posted tasks made from public adult users.
+- Apply for tasks created by public adults. $\color{orange}{\text{// Under construction}}$
+- Profile enhancements with CV and open application features. $\color{orange}{\text{// Under construction}}$
+- Communication with adults via email or phone for job details. $\color{orange}{\text{// Under construction}}$
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Site Navigation
+- Customized navigation based on user roles (Adult/Child) with no crossover.
+- Dedicated sections for FAQs, job creation, and personal job listings.
 
-### `npm run build`
+### Mobile Features
+- Tailored job filtering and navigation for phone and tablet users.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Technical Details
+- Job listings with unique IDs for sharing and tracking.
+- Integration with Google for registration and login.
+- Mail registration and login. $\color{orange}{\text{// Under construction}}$
+- Search functionality for specific jobs categorized by indoor, outdoor, creative, educational, and social tasks.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Administration
+- Admin panel for managing site values, texts, and accessing analytics. $\color{orange}{\text{// Under construction}}$
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Installation and Setup
+Instructions on setting up the project locally, including prerequisites, installation steps, and how to run the application.
 
-### `npm run eject`
+## Contribution
+Guidelines for contributing to the project, including coding standards, pull request process, and contact information for the project maintainers.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## License
+Details on the project's license and usage rights.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contact
+Information for reaching out to the project team for support or queries.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
