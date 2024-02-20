@@ -19,6 +19,7 @@ import JobDetailView from './Home';
 import './i18n';
 import { Navigate } from 'react-router-dom';
 import useUserRole from './hooks/useUserRole';
+import Profile from './Pages/profile';
 
 const ProtectedRoute = ({ children }) => {
     const { role, isLoading } = useUserRole();
@@ -65,6 +66,7 @@ function App() {
         <SpeedInsights/>
         <RouteChangeTracker />
         <Routes>
+          <Route path="/profile" element={<Profile />} />
           <Route path="/makeUser" element={<MakeUser />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/faq" element={<FAQ />} />

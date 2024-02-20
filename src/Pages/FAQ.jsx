@@ -22,7 +22,6 @@ function FAQ() {
     return (
         <div className="container">
             <Header />
-            <div className="wrapper">
                 <center>
                     <h1>ofte stilte spørsmål</h1>
                 </center>
@@ -63,7 +62,6 @@ function FAQ() {
                             )}
                         </div>
                     ))}
-                </div>
             </div>
             <NavigationBar />
             <Footer />
