@@ -1,0 +1,235 @@
+.profile-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    height: 100vh;
+    max-height: 100%;
+    width: 90%;
+    max-width: 100%;
+    margin: auto;
+}
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 80%;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--active-color);
+    font-size: clamp(3rem, 2em, 2rem);
+    transition: 3s;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-details p {
+    margin-top: -10px;
+    font-size: clamp(0.5rem, 0.5rem, 0.5rem, 0.5rem);
+}
+
+.profile-stars {
+    color: var(--active-color);
+    margin-top: -10px;
+}
+
+.profile-stars span {
+    color: var(--body-color);
+}
+
+.profile-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.add-friend-btn {
+    margin-left: 20px;
+    padding: 5px 20px;
+    height: 100%;
+    margin-top: 22px;
+    background: none;
+    border: 2px solid var(--active-light-color);
+    color: var(--body-color);
+}
+
+.profile-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.profile-box {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 90%;
+}
+
+@media (max-width: 768px) {
+    .profile-box {
+        flex-direction: column;
+    }
+    .profile-achievements {
+        margin-top: 20px;
+    }
+    .achievements {
+        border-radius: 10px !important;
+        transition: 3s;
+    }
+    .about-me {
+        border-radius: 10px !important;
+        transition: 3s;
+    }
+    .profile-saves {
+        border-radius: 10px !important;
+        transition: 3s;
+    }
+    .profile-row {
+        flex-direction: column;
+    }
+    .add-friend-btn {
+        margin-left: 0;
+        padding: 3px;
+        margin-top: -15px;
+        margin-bottom: 15px;
+        background: none;
+        transition: 1s;
+    }
+    .profile-details p {
+        display: none;
+    }
+}
+
+@media (min-width:768px) {
+    .mobile-text {
+        display: none;
+    }
+}
+
+.profile-saves-container {
+    margin-top: 70px;
+    display: flex;
+    justify-content: left;
+}
+
+.profile-saves {
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 20px;
+    border-radius: 20px 50px;
+    border: 2px solid var(--border-color);
+    transition: 3s;
+}
+
+.about-me {
+    width: 90%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 20px 40px;
+    border: 2px solid var(--border-color);
+    transition: 3s;
+}
+
+.about-me p {
+    background: var(--border-color);
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.achievements {
+    width: 100%;
+    padding: 20px;
+    border-radius: 50px 20px;
+    border: 2px solid var(--border-color);
+    transition: 3s;
+}
+  
+.badge {
+    display: inline-block;
+    border-radius: 5px;
+    color: #fff;    
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.3);
+}
+
+.first-place {
+    background: linear-gradient(45deg, #f8d448, #f9a825);
+    border: 1px solid #c79100;
+}
+
+.speedy-runner {
+    background: linear-gradient(45deg, #ff6f60, #ff8e80);
+    border: 1px solid #ba000d;
+}
+
+.verify-place {
+    background: linear-gradient(45deg, #e7ff60, #7bbb3a);
+    border: 1px solid #a69899;
+}
+  
+.open-files {
+    display: flex;
+    justify-content:left;
+    gap: 50px;
+}
+
+@media (max-width: 600px) {
+    .open-files {
+        flex-direction: column;
+    }
+    .profile-picture {
+        border-radius: 20px;
+        font-size: 2em;
+        transition: 3s;
+    }
+    .profile-saves {
+        margin-bottom: 100px;
+    }
+}
+
+@media (max-width: 400px) {
+    .profile-picture {
+        font-size: 2em;
+        border: none;
+    }
+}
+
+.open-files input {
+    background: none;
+}
+
+.open-files button {
+    border: 2px solid var(--active-light-color);
+    color: var(--body-color);
+    padding: 5px 10px;
+    width: 100%;
+}
+
+.open-files p span {
+    color: var(--active-color);
+    font-size: 0.7em;
+}

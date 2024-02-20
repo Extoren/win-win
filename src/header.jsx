@@ -204,12 +204,16 @@ function Header({ onClose }) {
             </div>
             {showDropdown && (
                 <div className="dropdown-menu2">
-                    <button id="profile-btn">
-                        <i className="fas fa-user"></i> {t('your_profile')}
-                    </button>
-                    <button id="settings-btn">
-                      <i className="fas fa-cog"></i> {t('settings')}
-                    </button>
+                    <Link to="/profile">
+                        <button id="profile-btn">
+                            <i className="fas fa-user"></i> {t('your_profile')}
+                        </button>
+                    </Link>
+                    <Link to="/settings">
+                        <button id="settings-btn">
+                            <i className="fas fa-cog"></i> {t('settings')}
+                        </button>
+                    </Link>
                     <button id="sign-out-btn" onClick={handleSignOut}>
                         <i className="fas fa-sign-out-alt"></i> {t('sign_out')}
                     </button>
