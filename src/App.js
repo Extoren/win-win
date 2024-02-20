@@ -66,7 +66,7 @@ function App() {
         <SpeedInsights/>
         <RouteChangeTracker />
         <Routes>
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/win/:userId" element={<Profile />} />
           <Route path="/makeUser" element={<MakeUser />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/faq" element={<FAQ />} />
