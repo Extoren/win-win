@@ -2,14 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import './profile.css';
 import Header from '../header';
 import NavigationBar from '../NavigationBar';
-import Footer from '../Footer';
 import { AuthContext } from '../AuthContext';
 import { auth, database } from '../firebaseConfig';
 import { ref, get } from "firebase/database";
+import { useParams } from 'react-router-dom'; 
 
 function Profile() {
     const { isLoggedIn } = useContext(AuthContext);
     const [userName, setUserName] = useState({ firstName: '', lastName: '' });
+    const [userData, setUserData] = useState({}); // state to store user data
+    const { userId } = useParams(); // useParams hook to get userId from URL
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -29,6 +31,21 @@ function Profile() {
         }
     }, [isLoggedIn]);
 
+    useEffect(() => {
+        if (userId) { // Check if the userId is available
+            const userRef = ref(database, 'users/' + userId);
+            get(userRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    setUserData(snapshot.val()); // Set the entire user data in state
+                } else {
+                    console.log("No data available for user: " + userId);
+                }
+            }).catch((error) => {
+                console.error("Error fetching data: ", error);
+            });
+        }
+    }, [userId]); // Only re-run the effect if the userId changes
+
     return (
         <div className="container">
             <Header />
@@ -39,7 +56,7 @@ function Profile() {
                     </div>
                     <div className="profile-details">
                         <div className="profile-row">
-                            <h2>{`${userName.firstName} ${userName.lastName}`}</h2>
+                            <h2>{`${userData.name || ''} ${userData.surname || ''}`}</h2>
                             <button className="add-friend-btn">Verifiser</button>
                         </div>
                         <p>Velkommen til min profil! :)</p>

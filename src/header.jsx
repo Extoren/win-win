@@ -204,7 +204,7 @@ function Header({ onClose }) {
             </div>
             {showDropdown && (
                 <div className="dropdown-menu2">
-                    <Link to="/profile">
+                    <Link to={`/win/${auth.currentUser.uid}`}>
                         <button id="profile-btn">
                             <i className="fas fa-user"></i> {t('your_profile')}
                         </button>
