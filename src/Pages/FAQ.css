@@ -3,6 +3,12 @@ html {
     overflow: hidden;
 }
 
+.faq-header {
+    border-bottom: 2px solid var(--border-color);
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
 .faqs-container {
     display: flex;
     flex-direction: column;
@@ -11,6 +17,13 @@ html {
     height: 100%;
     padding: 20px;
 }
+
+/* make the .faqs-container second last child be further down*/
+.faqs-container > *:nth-last-child(2) {
+    margin-bottom: 100px;
+}
+
+
 .faq-singular {
     position: relative;
     border-bottom: 1px solid #ccc;

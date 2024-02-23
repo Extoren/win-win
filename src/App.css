@@ -1710,7 +1710,6 @@ a {
   flex-direction: column;
   width: 100%;
   height: 30%;
-  margin-top: 100px;
 }
 
 .footer-container {
@@ -1755,28 +1754,6 @@ a {
 
 .footer-links a:hover {
   color: var(--active-color);
-}
-
-.footer-newsletter form {
-  display: flex;
-  margin-top: 20px;
-}
-
-.footer-newsletter input,
-.footer-newsletter button {
-  padding: 10px;
-  margin: 5px;
-}
-
-.footer-newsletter input {
-  flex-grow: 1;
-}
-
-.footer-newsletter button {
-  background-color: var(--active-light-color);
-  border: none;
-  color: var(--body-color);
-  cursor: pointer;
 }
 
 /*@media (max-width: 768px) {

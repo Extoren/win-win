@@ -22,7 +22,7 @@ function FAQ() {
     return (
         <div className="container">
             <Header />
-                <center>
+                <center className="faq-header">
                     <h1>ofte stilte spørsmål</h1>
                 </center>
                 <div
@@ -62,9 +62,9 @@ function FAQ() {
                             )}
                         </div>
                     ))}
+                    <Footer />
             </div>
             <NavigationBar />
-            <Footer />
         </div>
     );
 }

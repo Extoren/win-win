@@ -318,10 +318,12 @@ const Create = () => {
     return (
         <div className="container">
             <Header />
+            <center className="faq-header">
+                <h1>Velg en <span>kategori</span> for jobben!</h1>
+            </center>
             <div className="create-job-listing-container">
             {!initialSelectionMade ? (
                     <div className="initial-selection-container">
-                        <h1>Velg en <span>kategori</span> for jobben!</h1>
                         <br></br>
                         <div className="button-container2">
                             {selectCategories.map((category, index) => (

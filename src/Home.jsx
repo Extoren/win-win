@@ -13,7 +13,7 @@ import { selectCategories } from './selectCategories';
 import { useTranslation } from 'react-i18next'
 
 
-const JobCard = ({ job, onClick }) => {
+export const JobCard = ({ job, onClick }) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = (event) => {
