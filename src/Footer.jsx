@@ -28,12 +28,6 @@ const Footer = () => {
                     <a href="/contact">Kontakt oss</a>
                     <a href="/privacy">Personvernerklæring</a>
                 </div>
-                <div className="footer-newsletter">
-                    <form>
-                        <input type="email" placeholder="Abonner på vårt nyhetsbrev" />
-                        <button type="submit">Abonner</button>
-                    </form>
-                </div>
             </div>
         </footer>
     );

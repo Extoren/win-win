@@ -5,3 +5,15 @@
     justify-content: center;
     height: 100vh;
 }
+
+.myJobs-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.job-container {
+    width: 350px;
+}
