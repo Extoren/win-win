@@ -8,6 +8,7 @@ import getImg  from '../Accesorios/getImg';
 import { selectCategories } from '../selectCategories';
 import NavigationBar from '../NavigationBar';
 import { jobTypeCategoryMapping } from '../jobTypeCategoryMapping';
+import { useLocation } from 'react-router-dom';
 
 function useOutsideClick(ref, callback) {
     useEffect(() => {
@@ -119,7 +120,6 @@ const LogoSelectionModal = ({ isOpen, onSelect, onClose }) => {
     );
 };
 
-  
 
 const Create = () => {
     const [description, setDescription] = useState('Beskrivelse');
@@ -141,6 +141,9 @@ const Create = () => {
     const [inputValue, setInputValue] = useState('');
     const [logoModalOpen, setLogoModalOpen] = useState(false);
     const [selectedLogo, setSelectedLogo] = useState('');
+
+    const location = useLocation();
+    const jobData = location.state?.job;
 
     const handleOpenLogoModal = () => {
         setLogoModalOpen(true);
@@ -226,6 +229,23 @@ const Create = () => {
     }
 };
     
+    useEffect(() => {
+        if (jobData) {
+            // Pre-fill the form using jobData
+            setDescription(jobData.beskrivelse || '');
+            setAdditionalInfo(jobData.tilleggsinfo || '');
+            setPrice(jobData.pris || '');
+            setArbeidstid(jobData.arbeidstid || '');
+            setPostalCode(jobData.postnummer || '');
+            setSelectedErfaring(jobData.erfaring || 'Ansiennitetsnivå');
+            setSelectedFylke(jobData.fylke || 'Fylke');
+            setSelectedType(jobData.typeJobb || 'Kategori');
+            setSelectedAnsettelsestype(jobData.ansettelsestype || 'Ansettelsestype');
+            setSelectedLogo(jobData.logo || '');
+            // Directly mark initial selection as made if editing
+            setInitialSelectionMade(true);
+        }
+    }, [jobData]);
     
     // Refs for dropdowns
     const fylkeRef = useRef(null);
