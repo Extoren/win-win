@@ -7,11 +7,18 @@ import { ref, onValue } from 'firebase/database';
 import { database, auth } from '../firebaseConfig'; // Make sure to import auth here
 import { JobCard } from '../Home';
 import { AuthContext } from '../AuthContext'; // Import AuthContext
+import { useNavigate } from 'react-router-dom';
 
 function MyJobs() {
   const [jobs, setJobs] = useState([]);
   const { isLoggedIn } = useContext(AuthContext); // Use AuthContext
   const [currentUser, setCurrentUser] = useState(null);
+
+  const navigate = useNavigate();
+
+  const editJob = (jobData) => {
+    navigate('/create', { state: { job: jobData } });
+  };
 
   // Get the current user's ID from the auth state
   useEffect(() => {
@@ -55,7 +62,10 @@ function MyJobs() {
       <div className="myJobs">
         <div className="job-container">
           {jobs.map(job => (
-            <JobCard key={job.id} job={job} onClick={() => {}} />
+            <div key={job.id}>
+              <button className="edit-job-button" onClick={() => editJob(job)}>Edit</button> {/* Edit button */}
+              <JobCard job={job} onClick={() => {}} />
+            </div>
           ))}
         </div>
       </div>
