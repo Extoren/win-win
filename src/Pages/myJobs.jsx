@@ -57,7 +57,7 @@ function MyJobs() {
     <div className="container">
       <Header />
       <center className="faq-header">
-        <h1>Dine Oppdrag</h1>
+        <h1>Dine <span>Oppdrag</span></h1>
       </center>
       <div className="myJobs">
         <div className="job-container">

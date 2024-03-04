@@ -339,7 +339,11 @@ const Create = () => {
         <div className="container">
             <Header />
             <center className="faq-header">
-                <h1>Velg en <span>kategori</span> for jobben!</h1>
+                {initialSelectionMade ? (
+                    <h1>Rediger <span>jobben</span> din!</h1>
+                ) : (
+                    <h1>Velg en <span>kategori</span> for jobben!</h1>
+                )}
             </center>
             <div className="create-job-listing-container">
             {!initialSelectionMade ? (
@@ -361,7 +365,6 @@ const Create = () => {
                     </div>
                 ) : (
                     <>
-                        
                     <div className="form-container2">
                         <button className="go-back-button" onClick={handleGoBack}>Gå tilbake</button>
                         <div className="form-header">
