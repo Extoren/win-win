@@ -23,7 +23,7 @@ function FAQ() {
         <div className="container">
             <Header />
                 <center className="faq-header">
-                    <h1>ofte stilte spørsmål</h1>
+                    <h1>ofte stilte <span>spørsmål</span></h1>
                 </center>
                 <div
                     className="faqs-container"

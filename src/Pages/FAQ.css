@@ -4,9 +4,8 @@ html {
 }
 
 .faq-header {
-    border-bottom: 2px solid var(--border-color);
-    border-bottom-left-radius: 50%;
-    border-bottom-right-radius: 50%;
+    border-bottom: 3px solid var(--border-color);
+    border-radius: 300px;
 }
 
 .faqs-container {
