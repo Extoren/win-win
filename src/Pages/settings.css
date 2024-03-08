@@ -1,0 +1,30 @@
+.settings {
+  height: 100vh;
+}
+
+.settings-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.settings-buttons button {
+  margin: 10px;
+  padding: 20px;
+  width: 50%;
+  border-radius: 10px;
+  border: none;
+  text-align: left;
+  background-color: var(--body-bg-color);
+  color: var(--body-color);
+  font-size: 1em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#red {
+  background-color: var(--warning-color);
+  opacity: 0.8;
+  color: var(--body-bg-color);
+}
