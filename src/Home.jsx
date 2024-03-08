@@ -638,33 +638,42 @@ function Home() {
     
     
     useEffect(() => {
-      // Filter jobs based on all selected criteria except for the criteria of the category being counted
-      const filterJobs = (excludeCategory) => {
+      const filterJobs = () => {
         return jobs.filter(job => {
-          const matchesLocation = excludeCategory !== 'Fylke' ? (!selectedLocation || job.county === selectedLocation) : true;
-          const matchesEmploymentType = excludeCategory !== 'Ansettelsestype' ? (!selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype)) : true;
-          const matchesSeniorityLevel = excludeCategory !== 'Ansiennitetsnivå' ? (!selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring)) : true;
-          return matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+          const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
+          const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring);
+          
+          // Note: We're not filtering by location here as we want to determine which locations are available
+          // based on the employment type and seniority level filters
+          return matchesEmploymentType && matchesSeniorityLevel;
         });
       };
     
-      // Update employment type counts without considering current employment type selections
-      const newEmploymentTypeCounts = countJobsByEmploymentType(filterJobs('Ansettelsestype'));
-      setEmploymentTypeCounts(newEmploymentTypeCounts);
-    
-      // Update seniority level counts without considering current seniority level selections
-      const newSeniorityLevelCounts = countJobsBySeniorityLevel(filterJobs('Ansiennitetsnivå'));
-      setSeniorityLevelCounts(newSeniorityLevelCounts);
-    
-      // Update Fylke counts without considering current Fylke selections
-      const newCountyCounts = countJobsByCounty(filterJobs('Fylke'));
-      setJobCounts(newCountyCounts);
-    
-      // Apply all filters for displaying jobs
-      const filteredJobs = filterJobs(null); // Apply all filters
+      const filteredJobs = filterJobs();
       setFilteredJobs(filteredJobs);
       setJobCount(filteredJobs.length);
-    }, [selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels, jobs]);
+    
+      const newEmploymentTypeCounts = countJobsByEmploymentType(filteredJobs);
+      const newSeniorityLevelCounts = countJobsBySeniorityLevel(filteredJobs);
+    
+      setEmploymentTypeCounts(newEmploymentTypeCounts);
+      setSeniorityLevelCounts(newSeniorityLevelCounts);
+    
+      // Dynamically calculate available Fylke options based on the filtered jobs
+      const availableFylkeOptions = filteredJobs.reduce((acc, job) => {
+        acc[job.fylke] = (acc[job.fylke] || 0) + 1;
+        return acc;
+      }, {});
+    
+      // Now you can either directly update the UI to reflect these available Fylke options
+      // Or update a state variable that holds the available Fylke options, and then use that
+      // to control the rendering of Fylke filter options in your UI
+      setJobCounts(availableFylkeOptions); // Assuming you use this state to dynamically render Fylke options
+    
+    }, [selectedEmploymentTypes, selectedSeniorityLevels, jobs]);
+    
+    
+    
     
 
     useEffect(() => {
