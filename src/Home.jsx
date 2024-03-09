@@ -9,8 +9,10 @@ import getImg  from './Accesorios/getImg';
 import { useParams, useNavigate } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
 import Footer from './Footer';
-import { selectCategories } from './selectCategories';
+import { jobTypeCategoryMapping } from './jobTypeCategoryMapping';
 import { useTranslation } from 'react-i18next'
+import { selectCategories } from './selectCategories';
+
 
 
 export const JobCard = ({ job, onClick }) => {
@@ -266,6 +268,67 @@ function Home() {
 
     const [employmentTypeCounts, setEmploymentTypeCounts] = useState({});
     const [seniorityLevelCounts, setSeniorityLevelCounts] = useState({});
+
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState([]);
+
+
+    // When jobs or selectedCategory changes, update filteredJobs
+    useEffect(() => {
+      if (!selectedCategory) {
+        // If no category is selected, show all jobs
+        setFilteredJobs(jobs);
+      } else {
+        // Get the job types associated with the selected category
+        const jobTypes = jobTypeCategoryMapping[selectedCategory];
+
+        // Filter jobs where their type matches any of the types in the jobTypes array
+        const updatedFilteredJobs = jobs.filter(job => 
+          jobTypes.includes(job.typeJobb)
+        );
+
+        setFilteredJobs(updatedFilteredJobs);
+      }
+
+      setJobCount(filteredJobs.length);
+    }, [jobs, selectedCategory]); // Only re-run the effect if jobs or selectedCategory changes
+
+
+     // Toggle category selection
+    const handleCategoryClick = (categoryName) => {
+      setSelectedCategories(prevCategories => {
+        if (prevCategories.includes(categoryName)) {
+          return prevCategories.filter(cat => cat !== categoryName); // Unselect category
+        } else {
+          return [...prevCategories, categoryName]; // Select category
+        }
+      });
+    };
+
+    // Check if category is selected
+    const isCategorySelected = (categoryName) => {
+      return selectedCategories.includes(categoryName);
+    };
+
+    // Apply filters based on selected categories
+  useEffect(() => {
+    const updatedFilteredJobs = jobs.filter(job => {
+      if (selectedCategories.length === 0) {
+        return true; // No category selected, show all jobs
+      }
+      // Job should match at least one of the selected categories
+      return selectedCategories.some(category =>
+        jobTypeCategoryMapping[category].includes(job.typeJobb)
+      );
+    });
+
+    setFilteredJobs(updatedFilteredJobs);
+    setJobCount(updatedFilteredJobs.length);
+  }, [jobs, selectedCategories]); // Update dependency array
+
+
+
+
 
     const handleCloseClick = () => {
       setIsPopupVisible(false); // This will hide the popup menu
@@ -637,41 +700,40 @@ function Home() {
     
     
     
-    useEffect(() => {
-      const filterJobs = () => {
-        return jobs.filter(job => {
-          const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
-          const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring);
-          
-          // Note: We're not filtering by location here as we want to determine which locations are available
-          // based on the employment type and seniority level filters
-          return matchesEmploymentType && matchesSeniorityLevel;
-        });
-      };
-    
-      const filteredJobs = filterJobs();
-      setFilteredJobs(filteredJobs);
-      setJobCount(filteredJobs.length);
-    
-      const newEmploymentTypeCounts = countJobsByEmploymentType(filteredJobs);
-      const newSeniorityLevelCounts = countJobsBySeniorityLevel(filteredJobs);
-    
-      setEmploymentTypeCounts(newEmploymentTypeCounts);
-      setSeniorityLevelCounts(newSeniorityLevelCounts);
-    
-      // Dynamically calculate available Fylke options based on the filtered jobs
-      const availableFylkeOptions = filteredJobs.reduce((acc, job) => {
-        acc[job.fylke] = (acc[job.fylke] || 0) + 1;
-        return acc;
-      }, {});
-    
-      // Now you can either directly update the UI to reflect these available Fylke options
-      // Or update a state variable that holds the available Fylke options, and then use that
-      // to control the rendering of Fylke filter options in your UI
-      setJobCounts(availableFylkeOptions); // Assuming you use this state to dynamically render Fylke options
-    
-    }, [selectedEmploymentTypes, selectedSeniorityLevels, jobs]);
-    
+    // ...previous code
+
+useEffect(() => {
+  const filterJobs = () => {
+    return jobs
+      .filter(job => {
+        // Match category if one is selected
+        const matchesCategory = !selectedCategory || jobTypeCategoryMapping[selectedCategory].includes(job.typeJobb);
+        // Match price range
+        const jobPrisNumber = Number((job.pris || '').replace(/\D/g, '')) || 0;
+        const matchesPrice = !priceRange.max || jobPrisNumber <= priceRange.max;
+        // Match location
+        const matchesLocation = !selectedLocation || job.fylke === selectedLocation;
+        // Match employment type
+        const matchesEmploymentType = !selectedEmploymentTypes.length || selectedEmploymentTypes.includes(job.ansettelsestype);
+        // Match seniority level
+        const matchesSeniorityLevel = !selectedSeniorityLevels.length || selectedSeniorityLevels.includes(job.erfaring);
+
+        return matchesCategory && matchesPrice && matchesLocation && matchesEmploymentType && matchesSeniorityLevel;
+      });
+  };
+
+  const updatedFilteredJobs = filterJobs();
+  setFilteredJobs(updatedFilteredJobs);
+  setJobCount(updatedFilteredJobs.length); // Update job count based on all applied filters
+
+  // Update the counts for the filters based on the filtered jobs
+  setEmploymentTypeCounts(countJobsByEmploymentType(updatedFilteredJobs));
+  setSeniorityLevelCounts(countJobsBySeniorityLevel(updatedFilteredJobs));
+  setJobCounts(countJobsByCounty(updatedFilteredJobs)); // Assuming you use this state to dynamically render County options
+}, [jobs, selectedCategory, priceRange, selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels]);
+
+// ...rest of your component
+
     
     
     
@@ -714,25 +776,31 @@ function Home() {
             <div className={`wrapper ${theme}`} ref={wrapperRef}>
             <div className="select-category">
               <div className="category-wrapper">
-            {selectCategories.map((category, index) => (
-              <p
-                key={index}
-                onMouseEnter={() => setHoverIndex(index)}
-                onMouseLeave={() => setHoverIndex(null)}
-                style={{ 
-                  backgroundColor: hoverIndex === index ? 'var(--level-button)' : 'var(--alert-bg-color)',
-                  color: hoverIndex === index ? 'var(--body-color)' : 'inherit', // Change text color on hover
-                }}
-              >
-                <i className={category.icon} style={{ color: hoverIndex === index ? 'white' : 'var(--active-color)' }}></i>
-                <span style={{
-                  textDecorationColor: hoverIndex === index && theme !== 'dark-mode' ? 'white' : 'var(--active-color)'
-                }}>
-                  {category.label}
-                </span>
-                <br /> {category.sublabel}
-              </p>
-            ))}
+              {selectCategories.map((category, index) => (
+                <p
+                  key={index}
+                  onMouseEnter={() => setHoverIndex(index)}
+                  onMouseLeave={() => setHoverIndex(null)}
+                  onClick={() => handleCategoryClick(category.label)}
+                  style={{
+                    backgroundColor: isCategorySelected(category.label) ? 'var(--Hover-color)' : 'var(--alert-bg-color)', // Change the color based on selection
+                    color: isCategorySelected(category.label) ? 'var(--selected-text-color)' : 'inherit',
+                  }}
+                >
+                  <i 
+                    className={category.icon} 
+                    style={{ 
+                      color: isCategorySelected(category.label) ? 'white' : hoverIndex === index ? 'white' : 'var(--active-color)',
+                    }}
+                  ></i>
+                  <span style={{
+                    textDecorationColor: isCategorySelected(category.label) ? 'white' : hoverIndex === index && theme !== 'dark-mode' ? 'white' : 'var(--active-color)'
+                  }}>
+                    {category.label}
+                  </span>
+                  <br /> {category.sublabel}
+                </p>
+              ))}
             </div>
           </div>
             <div className="search-menu">

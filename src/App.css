@@ -172,6 +172,7 @@ body {
     color: var(--active-color);
     font-size: 2em;
     margin-right: 20px;
+    transition: 2s;
   }
 
   @keyframes moving-border {
