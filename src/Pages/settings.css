@@ -76,7 +76,7 @@
 
 
 
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
   .settings-buttons button {
     width: calc((100% - (2 * 2 * 10px)) / 2);
     font-size: 1em;
