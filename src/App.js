@@ -4,7 +4,7 @@ import FAQ from "./Pages/FAQ";
 import Login from "./Pages/Login";
 import Home from './Home';
 import Create from './Pages/create';
-import { AuthProvider } from './AuthContext';
+import { AuthProvider, AuthContext } from './AuthContext';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MakeUser from './Pages/makeUser';
 import MyJobs from './Pages/myJobs';
@@ -20,6 +20,7 @@ import './i18n';
 import { Navigate } from 'react-router-dom';
 import useUserRole from './hooks/useUserRole';
 import Profile from './Pages/profile';
+import Settings from './Pages/settings';
 
 const ProtectedRoute = ({ children }) => {
     const { role, isLoading } = useUserRole();
@@ -57,6 +58,17 @@ const RouteChangeTracker = () => {
   return null;
 };
 
+const SettingsRoute = ({ children }) => {
+  const { isLoggedIn } = useContext(AuthContext);
+  const { role, isLoading } = useUserRole();
+
+  if (isLoading) {
+      return <div>laster...</div>;
+  }
+
+  return isLoggedIn ? children : <Navigate to="/login" replace />;
+};
+
 
 function App() {
   return (
@@ -66,6 +78,7 @@ function App() {
         <SpeedInsights/>
         <RouteChangeTracker />
         <Routes>
+          <Route path="/settings" element={<SettingsRoute><Settings /></SettingsRoute>} />
           <Route path="/win/:userId" element={<Profile />} />
           <Route path="/makeUser" element={<MakeUser />} />
           <Route path="/Login" element={<Login />} />

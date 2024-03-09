@@ -401,7 +401,8 @@ body {
   border: 1px solid var(--active-color) !important;
   color: var(--body-color);
   border: none;
-  padding: 10px 27px;
+  padding: 10px;
+  width: 100%;
   font-size: 12px;
   font-weight: 500;
   border-radius: 4px;
@@ -415,7 +416,8 @@ body {
   border: 1px solid var(--active-color) !important;
   color: var(--body-color);
   border: none;
-  padding: 10px 20px;
+  padding: 10px;
+  width: 100%;
   font-size: 12px;
   font-weight: 500;
   border-radius: 4px;
@@ -432,7 +434,8 @@ body {
   background-color: var(--warning-color);
   color: var(--button-color);
   border: none;
-  padding: 10px 20px;
+  padding: 10px;
+  width: 100%;
   font-size: 12px;
   font-weight: 500;
   border-radius: 4px;
