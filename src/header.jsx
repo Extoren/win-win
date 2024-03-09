@@ -150,7 +150,7 @@ function Header({ onClose }) {
       </div>
       <div className="user-settings">
         <div className={`App ${theme}`}>
-          <div className="dark-light" onClick={toggleTheme}>
+          {/*<div className="dark-light" onClick={toggleTheme}>
             <svg
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -161,7 +161,7 @@ function Header({ onClose }) {
             >
                 <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
             </svg>
-          </div>
+          </div>*/}
         </div>
         <div className="user-menu">
           <svg

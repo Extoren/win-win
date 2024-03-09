@@ -301,12 +301,13 @@ body {
   align-items: center;
   font-weight: 500; }
   .user-settings svg {
-    width: 20px;
+    width: 30px;
     color: #94949f; }
 
     .user-menu {
       position: relative;
       margin-right: 8px;
+      margin-top: 5px;
       padding-right: 8px;
       border-right: 2px solid #d6d6db; }
       .user-menu:before {
