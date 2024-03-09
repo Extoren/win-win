@@ -60,14 +60,12 @@ function MyJobs() {
         <h1>Dine <span>Oppdrag</span></h1>
       </center>
       <div className="myJobs">
-        <div className="job-container">
           {jobs.map(job => (
             <div key={job.id}>
               <button className="edit-job-button" onClick={() => editJob(job)}>Edit</button> {/* Edit button */}
               <JobCard job={job} onClick={() => {}} />
             </div>
           ))}
-        </div>
       </div>
       <NavigationBar />
       <Footer />

@@ -927,9 +927,20 @@ useEffect(() => {
                       className="slider" 
                     />
                     <span className="slider-value">
-                      {priceRange.max === 1000 ? 'Alle prisklasser' : `${priceRange.max} kr`}
+                    {priceRange.max === 1 ? 'Gratis' : priceRange.max === 1000 ? 'Alle prisklasser' : `${priceRange.max} kr`}
                     </span>
                   </div>
+                  <br />
+                  <div className="type-container">
+                      <input type="radio" name="location" id="job01" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
+                      <label htmlFor="job01">Time betalt</label>
+                      <span className="job-number">{jobCounts['Time'] || 0}</span>
+                    </div>
+                    <div className="type-container">
+                      <input type="radio" name="location" id="job02" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
+                      <label htmlFor="job02">Slutt betalt</label>
+                      <span className="job-number">{jobCounts['Slutt'] || 0}</span>
+                    </div>
                 </div>
                 <div className="job-time">
                   <div className="fylke-header">
@@ -1091,7 +1102,7 @@ useEffect(() => {
                     <button className="toggle-button" onClick={() => setShowSeniorityLevels(prev => !prev)}>
                       {showSeniorityLevels ? "-" : "+"}
                     </button>
-                    <div className="job-time-title">Ansiennitetsnivå</div>
+                    <div className="job-time-title">Erfaringsnivå</div>
                   </div>
                   <div className="job-wrapper">
                     {showSeniorityLevels && (
