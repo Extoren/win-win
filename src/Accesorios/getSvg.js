@@ -23,11 +23,532 @@ function getSvg(svgName) {
                 </svg>
         </div>
       );
-                    
+      case 'fas fa-leaf': 
+        return (
+          <div className="child">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-leaf" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );
+      case 'fas fa-heart': 
+        return (
+          <div className="child">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-heart" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );
+      case 'fas fa-tools': 
+      return (
+        <div className="child">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-tools" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );
+      case 'fas fa-brush': 
+      return (
+        <div className="brush">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-brush" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );       
+      case 'fas fa-broom': 
+      return (
+        <div className="broom">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-broom" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );    
+      case 'fas fa-tint': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-tint" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );                          
+      case 'fas fa-camera': 
+      return (
+        <div className="tint">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-camera" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );                       
+      case 'fas fa-car': 
+      return (
+        <div className="tint">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-car" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );             
+      case 'fas fa-coffee': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-coffee" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );              
+      case 'fas fa-cog': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-cog" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );           
+      case 'fas fa-flag': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-flag" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );       
+      case 'fas fa-globe': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-globe" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );        
+      case 'fas fa-home': 
+      return (
+        <div className="tint">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-home" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );       
+      case 'fas fa-tree': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-tree" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );    
+      case 'fas fa-paw': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-paw" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );    
+      case 'fas fa-seedling': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-seedling" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );    
+      case 'fas fa-utensils': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-utensils" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );    
+      case 'fas fa-dustpan': 
+        return (
+          <div className="tint">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-dustpan" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );    
+      case 'fas fa-snowflake': 
+      return (
+        <div className="tint">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-snowflake" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );    
+      case 'fas fa-sun': 
+      return (
+        <div className="tint">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-sun" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );    
+      case 'fas fa-recycle': 
+      return (
+        <div className="recycle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-recycle" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );    
+      case 'fas fa-book': 
+        return (
+          <div className="book">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-book" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );           
+      case 'fas fa-apple-alt': 
+      return (
+        <div className="apple-alt">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-apple-alt" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );          
+      case 'fas fa-soap': 
+      return (
+        <div className="soap">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-soap" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );         
+      case 'fas fa-basketball-ball': 
+      return (
+        <div className="basketball-ball">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-basketball-ball" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );                   
+      case 'fas fa-bed': 
+        return (
+          <div className="bed">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-bed" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );        
+      case 'fas fa-desktop': 
+        return (
+          <div className="desktop">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-desktop" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );              
+      case 'fas fa-plug': 
+      return (
+        <div className="plug">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                <rect width="100%" height="100%" fill="#fff" />
+                <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                  }}
+                >
+                  <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                    }}
+                  >
+                    <i className="fas fa-plug" style={{ color: "#ffae00", fontSize: 24 }}
+                    />
+                  </div>
+                </foreignObject>
+              </svg>
+      </div>
+    );        
+      case 'fas fa-water': 
+        return (
+          <div className="water">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={{ backgroundColor: "#fff" }}>
+                  <rect width="100%" height="100%" fill="#fff" />
+                  <foreignObject width="100%" height="100%" style={{backgroundColor: "#fff", display: "flex", justifyContent: "center", alignItems: "center"
+                    }}
+                  >
+                    <div style={{display: "flex",justifyContent: "center",alignItems: "center", height: "100%"
+                      }}
+                    >
+                      <i className="fas fa-water" style={{ color: "#ffae00", fontSize: 24 }}
+                      />
+                    </div>
+                  </foreignObject>
+                </svg>
+        </div>
+      );                          
 
 
 
-
+      
       case 'default':
         return (
           <div className="default">

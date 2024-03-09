@@ -215,6 +215,7 @@ body {
     margin-right: 10px;
     border: 2px solid transparent;
     z-index: 2;
+    transition: 1s;
   }
   
   .category-wrapper p:hover {
@@ -302,12 +303,13 @@ body {
   font-weight: 500; }
   .user-settings svg {
     width: 30px;
+    margin-top: 5px;
     color: #94949f; }
 
     .user-menu {
       position: relative;
       margin-right: 8px;
-      margin-top: 5px;
+      margin-top: 0px;
       padding-right: 8px;
       border-right: 2px solid #d6d6db; }
       .user-menu:before {
@@ -318,7 +320,7 @@ body {
         border-radius: 50%;
         border: 2px solid var(--header-bg-color);
         right: 6px;
-        top: -1px;
+        top: 2px;
         background-color: var(--active-color); }
     
         .dropdown-menu {
@@ -1451,6 +1453,11 @@ a {
     }
   }
 
+  @media screen and (max-width: 1100px) {
+    .header-menu {
+      display: none; } 
+  }
+
 @media screen and (max-width: 800px) {
   .job-explain {
     margin-left: 0; 
@@ -1486,27 +1493,15 @@ a {
 }
 
 @media screen and (max-width: 590px) {
-  .header-menu {
-    display: none; } 
     .search-menu {
       display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 20%;
+      width: 90%;
     }
     .search-location {
       width: 100%;
     }
-    .search-job {
+    .Categories-nav {
       width: 100%;
-    }
-    .search-button {
-      order: 2;
-      width: 70%;
-      margin: auto;
-      border-radius: 20px;
-      padding: 10px;
-      border: 10px solid var(--body-bg-color);
     }
   }
 
@@ -1556,6 +1551,9 @@ a {
   .explain-contents {
     width: 100%;
     margin: 0; }
+  .Categories-nav {
+    width: 140%;
+  }
   .explain-contents:nth-child(2) ~ .explain-contents {
     margin: 0;
     border: 0; }
@@ -1563,6 +1561,12 @@ a {
     padding: 20px; }
   .header {
     padding: 0 20px; } }
+
+@media screen and (max-width: 400px) {
+  .Categories-nav {
+    width: 250px
+  }
+}
 
 @media (max-width:900px) {
   .logo p {
@@ -1584,7 +1588,7 @@ a {
 
 /* NavigationBar */
 
-@media (min-width: 591px) {
+@media (min-width: 1100px) {
   .nav-container {
     display: none;
   }
@@ -1798,9 +1802,9 @@ a {
   }
 }*/
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
   .site-footer  {
-
+    margin-bottom: 50px;
   }
 }
 
