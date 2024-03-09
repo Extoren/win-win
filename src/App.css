@@ -301,12 +301,13 @@ body {
   align-items: center;
   font-weight: 500; }
   .user-settings svg {
-    width: 20px;
+    width: 30px;
     color: #94949f; }
 
     .user-menu {
       position: relative;
       margin-right: 8px;
+      margin-top: 5px;
       padding-right: 8px;
       border-right: 2px solid #d6d6db; }
       .user-menu:before {
@@ -765,14 +766,45 @@ a {
   margin-top: 14px; }
 
 .job-wrapper {
-  padding-top: 20px; }
+  padding-top: 20px;
+  padding-left: 33px;}
 
 .job-time {
-  padding-top: 20px; }
+  padding-top: 20px; 
+}
   .job-time-title {
     font-size: 14px;
     font-weight: 500; }
 
+    .hidden {
+      display: none;
+    }
+
+    .toggle-and-title {
+      display: flex;
+      flex-direction: column;
+    }
+    
+
+    .fylke-header {
+      display: flex;
+      align-items: center;
+      gap: 10px; /* Adjust the gap between the button and the title as needed */
+    }
+
+    .toggle-button {
+      background: none;
+      color: var(--body-color);
+      border: 2px solid var(--border-color);
+      border-radius: 5px;
+      width: 10px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1.5em;
+    }
 
 .job-time iframe {
   width: 100%;
