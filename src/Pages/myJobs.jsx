@@ -62,7 +62,9 @@ function MyJobs() {
       <div className="myJobs">
           {jobs.map(job => (
             <div key={job.id}>
-              <button className="edit-job-button" onClick={() => editJob(job)}>Edit</button> {/* Edit button */}
+              <button className="edit-job-button" onClick={() => editJob(job)}>
+                <i className="fas fa-pencil-alt"></i> Rediger
+              </button>
               <JobCard job={job} onClick={() => {}} />
             </div>
           ))}

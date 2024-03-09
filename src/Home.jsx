@@ -1143,11 +1143,13 @@ useEffect(() => {
                   <div className="settings-icon"></div>
               </div>
                 <div className={`searched-bar ${selectedJob ? "hide-searched-bar" : ""}`}>
-                  <div className="searched-show">Viser {jobCount} jobber</div>
-                    <div className="searched-sort">
-                      {t('sorter')}: <span className="post-time">Nyeste Post </span>
-                      <span className="menu-icon">▼</span>
-                    </div>
+                  <div className="searched-show">
+                    Viser {jobCount} {jobCount === 1 ? 'jobb' : 'jobber'}
+                  </div>
+                  <div className="searched-sort">
+                    {t('sorter')}: <span className="post-time">Nyeste Post </span>
+                    <span className="menu-icon">▼</span>
+                  </div>
                 </div>
                 <div className="job-cards">
                   {selectedJob == null && filteredJobs
