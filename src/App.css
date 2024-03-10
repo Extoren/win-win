@@ -957,10 +957,14 @@ a {
 .job-cards {
   padding-top: 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-column-gap: 25px;
   grid-row-gap: 25px;
   animation: slideY .6s both; }
+  @media (max-width: 1600px) {
+    .job-cards {
+      grid-template-columns: repeat(3, 1fr); }
+  }
   @media screen and (max-width: 1212px) {
     .job-cards {
       grid-template-columns: repeat(2, 1fr); } }

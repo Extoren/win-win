@@ -21,6 +21,7 @@ import { Navigate } from 'react-router-dom';
 import useUserRole from './hooks/useUserRole';
 import Profile from './Pages/profile';
 import Settings from './Pages/settings';
+import { SelectedJobProvider } from './SelectedJobContext';
 
 const ProtectedRoute = ({ children }) => {
     const { role, isLoading } = useUserRole();
@@ -84,7 +85,8 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/" element={<Home />} />
-          <Route path="/:jobId" element={<JobDetailView />} />
+          <Route path="/jobb" element={<Home />} />
+          <Route path="/jobb/:jobId" element={<JobDetailView />} />
           <Route path="/create" element={<ProtectedRoute><Create /></ProtectedRoute>} />
           <Route path="/myJobs" element={<ProtectedRoute><MyJobs /></ProtectedRoute>} />
         </Routes>

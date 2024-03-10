@@ -129,6 +129,7 @@ const OverviewCard = ({ job, onClick  }) => {
 
 export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }) => {
 
+  const { jobId } = useParams();
     return (
       <div className="job-overview">
         <div className="job-overview-cards">
@@ -464,9 +465,10 @@ function Home() {
   };
   
 
-    const handleJobClick = (job) => {
-      navigate(`/${job.id}`);
-    };
+  const handleJobClick = (jobId) => {
+    // Navigate to the job detail view with jobId
+    navigate(`/jobb/${jobId}`);
+  };
 
     const closeJobDetailView = () => {
       setSelectedJob(null);
@@ -1155,7 +1157,7 @@ useEffect(() => {
                   {selectedJob == null && filteredJobs
                     .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
                     .map(job => (
-                      <JobCard key={job.id} job={job} onClick={handleJobClick} />
+                      <JobCard key={job.id} job={job} onClick={() => handleJobClick(job.id)} />
                   ))}
                 </div>
                 {selectedJob && (
