@@ -12,10 +12,11 @@ import Footer from './Footer';
 import { jobTypeCategoryMapping } from './jobTypeCategoryMapping';
 import { useTranslation } from 'react-i18next'
 import { selectCategories } from './selectCategories';
+import Popup from './popup';
 
 
 
-export const JobCard = ({ job, onClick }) => {
+export const JobCard = ({ job, onClick, className }) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = (event) => {
@@ -43,7 +44,7 @@ export const JobCard = ({ job, onClick }) => {
     }, []); // The empty array ensures this effect runs only once on mount
 
   return (
-    <div className="job-card" onClick={() => onClick(job)}>
+    <div className={`job-card ${className}`} onClick={() => onClick(job)}>
       {/* Start here */}
       <div className="job-card" onMouseLeave={hideMenu}>
         <div className="job-card-header">
@@ -55,11 +56,11 @@ export const JobCard = ({ job, onClick }) => {
             {showMenu && (
               <div className="menu"  onMouseLeave={hideMenu}>
                 <div className="menu-item">
-                  <i className="fas fa-heart" style={{ marginRight: '8px' }}></i>
+                <i className="far fa-heart" style={{ marginRight: '8px' }}></i>
                   {t('favorite')}
                 </div>
                 <div className="menu-item">
-                  <i className="fas fa-flag" style={{ marginRight: '8px' }}></i>
+                  <i className="far fa-flag" style={{ marginRight: '8px' }}></i>
                     {t('anmeld')}
                 </div>
               </div>
@@ -128,7 +129,16 @@ const OverviewCard = ({ job, onClick  }) => {
 };
 
 export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLocation }) => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+  const handleButtonClick = () => {
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+  
     return (
       <div className="job-overview">
         <div className="job-overview-cards">
@@ -223,9 +233,10 @@ export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLoc
               <div className="overview-text-item">{job.tilleggsinfo}</div>
               <br></br>
             </div>
-            <button className="search-buttons card-buttons">
-              Søk Nå
-            </button>
+            <div>
+              <button className="search-buttons card-buttons" onClick={handleButtonClick}>Søk Nå</button>
+              {isPopupOpen && <Popup onClose={closePopup} />}
+            </div>
           </div>
         </div>
       </div>
@@ -275,6 +286,14 @@ function Home() {
 
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedCategories, setSelectedCategories] = useState([]);
+
+    const shouldFadeOut = (job) => {
+      // If no categories are selected, don't fade out any jobs
+      if (!selectedCategories.length) return false;
+
+      // Fade out the job if its category is not in the selected categories
+      return !selectedCategories.includes(job.category);
+  };
 
 
     // When jobs or selectedCategory changes, update filteredJobs
@@ -1155,7 +1174,11 @@ useEffect(() => {
                   {selectedJob == null && filteredJobs
                     .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
                     .map(job => (
-                      <JobCard key={job.id} job={job} onClick={handleJobClick} />
+                      <JobCard 
+                      key={job.id} 
+                      job={job} 
+                      onClick={handleJobClick} 
+                      className={`job-card ${shouldFadeOut(job) ? "job-card-hide" : ""}`} />
                   ))}
                 </div>
                 {selectedJob && (
