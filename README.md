@@ -23,7 +23,7 @@ A brief introduction to the Project WinWin, highlighting its goal to connect pub
 - Profile creation with a reliability rating system. $\color{orange}{\text{// Under construction}}$
 
 #### Public Child Users
-- View posted tasks made from public adult users.
+- View posted tasks made from public adult users. $\color{lime}{\text{// Complete}}$
 - Apply for tasks created by public adults. $\color{orange}{\text{// Under construction}}$
 - Profile enhancements with CV and open application features. $\color{orange}{\text{// Under construction}}$
 - Communication with adults via email or phone for job details. $\color{orange}{\text{// Under construction}}$
