@@ -120,7 +120,7 @@ function Header({ onClose }) {
   return (
     <div className="header" ref={headerRef}>
       <div className="logo" onClick={onClose}>
-        <Link to="/index.html">
+        <Link to="/">
           <img src={logo} alt="logo" id="logo" />
         </Link>
         <p>Winstinct!</p>

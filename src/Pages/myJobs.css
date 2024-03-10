@@ -5,5 +5,58 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    gap: 20px;
+    gap: 50px;
+}
+
+@media (max-width: 768px) {
+    .myJobs {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+}
+
+.myJobs .job-buttons {
+    margin-top: -10px;
+    border-top: 2px solid var(--border-color);
+    border-left: 2px solid var(--border-color);
+    border-right: 2px solid var(--border-color);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.myJobs .job-buttons button {
+    color: var(--active-color);
+    background: none;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.myJobs .job-buttons button:hover {
+    background: var(--inactive-color);
+}
+
+.myJobs .job-buttons2 {
+    margin-top: -10px;
+    border-bottom: 2px solid var(--border-color);
+    border-left: 2px solid var(--border-color);
+    border-right: 2px solid var(--border-color);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+
+.myJobs .job-buttons2 button {
+    color: var(--active-color);
+    background: none;
+    font-weight: 700;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.myJobs .job-buttons2 button:hover {
+    background: var(--inactive-color);
+}
+
+#green {
+    color: var(--subtitle-color);
 }
