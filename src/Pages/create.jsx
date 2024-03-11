@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ref, set, push } from 'firebase/database';
+import { ref, set, push, onValue } from 'firebase/database';
 import { auth, database } from '../firebaseConfig';
 import './create.css';
 import Header from '../header';
@@ -201,33 +201,50 @@ const Create = () => {
     };
     
     const handleSubmit = () => {
-        const user = auth.currentUser;
+    const user = auth.currentUser;
 
     if (user) {
         const userId = user.uid; // Use the authenticated user's UID
-        const jobRef = push(ref(database, `jobs/${userId}`)); // Use `userId` here
+        const userRef = ref(database, `users/${userId}`);
 
-        const jobData = {
-            typeJobb: selectedType,
-            fylke: fylke,
-            postnummer: postalCode,
-            erfaring: selectedErfaring,
-            logo: selectedLogo,
-            ansettelsestype: selectedAnsettelsestype,
-            arbeidstid: arbeidstid,
-            pris: price,
-            beskrivelse: description,
-            tilleggsinfo: additionalInfo,
-            kategori: selectedCategory
-        };
-    
-        set(jobRef, jobData)
-            .then(() => alert('Jobb lagt til suksessfullt'))
-            .catch((error) => alert('Det oppstod en feil: ', error));
+        // Fetch the user's details from the database
+        onValue(userRef, (snapshot) => {
+            const userDetails = snapshot.val();
+            if (userDetails) {
+                const userName = `${userDetails.name} ${userDetails.surname}`;
+
+                // Now we have the userName, add it to the jobData
+                const jobData = {
+                    typeJobb: selectedType,
+                    fylke: fylke,
+                    postnummer: postalCode,
+                    erfaring: selectedErfaring,
+                    logo: selectedLogo,
+                    ansettelsestype: selectedAnsettelsestype,
+                    arbeidstid: arbeidstid,
+                    pris: price,
+                    beskrivelse: description,
+                    tilleggsinfo: additionalInfo,
+                    kategori: selectedCategory,
+                    userName: userName
+                };
+            
+                const jobsRef = ref(database, `jobs/${userId}`);
+                const newJobRef = push(jobsRef);
+                set(newJobRef, jobData)
+                    .then(() => alert('Jobb lagt til suksessfullt'))
+                    .catch((error) => alert('Det oppstod en feil: ', error));
+            } else {
+                alert('Kan ikke finne brukerinformasjon.');
+            }
+        }, { onlyOnce: true }); // We only want to fetch the user details once
+        
     } else {
-        alert('No authenticated user. Please log in.');
+        alert('Ingen autentisert bruker. Vennligst logg inn.');
     }
 };
+
+    
     
     useEffect(() => {
         if (jobData) {
