@@ -19,7 +19,7 @@ A brief introduction to the Project WinWin, highlighting its goal to connect pub
 
 #### Public Adult Users
 - Create tasks for public children users.  $\color{lime}{\text{// Complete}}$
-- View and manage their posted tasks. $\color{orange}{\text{// Under construction}}$
+- View and manage their posted tasks. $\color{lime}{\text{// Complete}}$
 - Profile creation with a reliability rating system. $\color{orange}{\text{// Under construction}}$
 
 #### Public Child Users
