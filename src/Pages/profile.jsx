@@ -49,47 +49,125 @@ function Profile() {
     return (
         <div className="container">
             <Header />
-            <div className="profile-page">
-                <div className="profile-header">
-                    <div className="profile-picture">
-                        <i className="fas fa-user"></i>
-                    </div>
-                    <div className="profile-details">
-                        <div className="profile-row">
+
+                <div className="innerwrap">
+                    <section className="section1 clearfix">
+                    <div>
+                        <div className="row grid clearfix">
+                        <div className="col2 first">
+                            <div className="profile-picture">
+                                <i className="fas fa-user"></i>
+                            </div>
                             <h2>{`${userData.name || ''} ${userData.surname || ''}`}</h2>
-                            <button className="add-friend-btn">Verifiser</button>
-                        </div>
-                        <p>Velkommen til min profil! :)</p>
-                        <div className="profile-stars">
-                            <i className="fas fa-star"><span> ?</span></i>
-                        </div>
-                    </div>
-                </div>
-                <div className="mobile-text">
-                    <p>Velkommen til min profil! :)</p>
-                </div>
-                <div className="profile-box">
-                    <div className="profile-content">
-                        <div className="about-me">
-                            <h3>Om meg</h3>
                             <p>
-                                Jeg elsker å jobbe! Jeg er en veldig flink arbeider og jeg er veldig glad i å hjelpe andre. 
-                                Jeg har jobbet i mange forskjellige bransjer og har mye erfaring. Jeg er også veldig glad i å lære nye ting. 
-                                Jeg er en veldig positiv person og jeg er veldig glad i å jobbe med andre. Jeg er også veldig glad i å hjelpe andre.
+                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                            industry. Lorem Ipsum has been the industry's
                             </p>
+                            <span>Følg</span>
+                        </div>
+                        <div className="col2 last">
+                            <div className="grid clearfix">
+                            <div className="col3 first">
+                                <h1>0</h1>
+                                <span>Jobber</span>
+                            </div>
+                            <div className="col3">
+                                <h1>0</h1>
+                                <span>Favoritter</span>
+                            </div>
+                            <div className="col3 last">
+                                <h1>0</h1>
+                                <span>Følgere</span>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div className="row clearfix">
+                        <ul className="row2tab clearfix">
+                            <li>
+                            <i className="fa fa-list-alt" /> Mine jobber{" "}
+                            </li>
+                            <li>
+                            <i className="fa fa-heart" /> Mine Favoritter{" "}
+                            </li>
+                            <li>
+                            <i className="fa fa-check" /> Følgende{" "}
+                            </li>
+                            <li>
+                            <i className="fa fa-trophy " /> Prestasjoner{" "}
+                            </li>
+                        </ul>
                         </div>
                     </div>
-                    <div class="profile-achievements">
-                        <div class="achievements">
-                            <h3>Prestasjoner</h3>
-                            <p>3 merker</p>
-                            <div class="badge first-place">First</div>
-                            <div class="badge speedy-runner">Ten</div>
-                            <div class="badge verify-place">Verified</div>
+                    <span className="smalltri">
+                        <i className="fa fa-check" />
+                    </span>
+                    </section>
+                    <section className="section2 clearfix">
+                    <div className="grid">
+                        <div className="col3 first">
+                        <div className="postcont">
+                            <img
+                            src="#"
+                            alt=""
+                            />
+                        </div>
+                        <div className="profileinfo">
+                            <div className="profile-picture">
+                                <i className="fas fa-user"></i>
+                            </div>
+                            <p>
+                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                            industry. Lorem Ipsum has been the industry's standard dummy tex
+                            </p>
+                            <span>
+                            Les mer <i className="fa fa-angle-right" />
+                            </span>
+                        </div>
+                        </div>
+                        <div className="col3 center">
+                        <div className="postcont">
+                            <img
+                            src="http://www.grazia.fr/var/grazia/storage/images/media/images/mode/2016-01-29-david-beckham-devoile-sa/david-beckham-pour-h-m-2/13241802-1-fre-FR/David-Beckham-pour-H-M-2_w300.jpg"
+                            alt=""
+                            />
+                        </div>
+                        <div className="profileinfo">
+                            <div className="profile-picture">
+                                <i className="fas fa-user"></i>
+                            </div>
+                            <p>
+                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                            industry. Lorem Ipsum has been the industry's standard dummy tex
+                            </p>
+                            <span>
+                            Les mer <i className="fa fa-angle-right" />
+                            </span>
+                        </div>
+                        </div>
+                        <div className="col3 last">
+                        <div className="postcont">
+                            <img
+                            src="http://img.timeinc.net/people/i/2006/startracks/060814/david_beckham.jpg"
+                            alt=""
+                            />
+                        </div>
+                        <div className="profileinfo">
+                            <div className="profile-picture">
+                                <i className="fas fa-user"></i>
+                            </div>
+                            <p>
+                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                            industry. Lorem Ipsum has been the industry's standard dummy tex
+                            </p>
+                            <span>
+                            Les mer <i className="fa fa-angle-right" />
+                            </span>
+                        </div>
                         </div>
                     </div>
-                </div>
-                <div className="profile-saves-container">
+                    </section>
+                    <div className="profile-saves-container">
                     <div className="profile-saves">
                         <h3>Åpen CV og søknad</h3>
                         <div className="open-files">
@@ -106,7 +184,9 @@ function Profile() {
                         </div>
                     </div>
                 </div>
-            </div>
+                </div>
+
+
             <NavigationBar />
         </div>
     );
