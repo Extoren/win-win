@@ -34,7 +34,9 @@
     background-color: var(--inactive-color);
     color: var(--subtitle-color); }
   
-
+#not {
+    cursor: not-allowed;
+}
 
   .form-container {
     display: flex;
@@ -43,13 +45,6 @@
     height: 100vh;
     padding: 20px;
     margin-bottom: 50px;
-}
-
-@media (max-height: 500px) {
-    .form-container {
-        margin-top: 150px;
-        margin-bottom: 150px;
-    }
 }
 
 @media (max-width: 1000px) {
@@ -124,7 +119,16 @@
         position: relative;
         left: 0%;
     }
-    
+}
+
+@media (max-height: 856px) {
+    .form-container {
+        height: 100%;
+    }
+    .form-section.info {
+        position: relative;
+        left: 0%;
+    }
 }
 
 .box {
