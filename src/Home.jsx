@@ -217,7 +217,7 @@ export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLoc
               </div>
               <div className="explain-contents">
                 <div className="explain-title">Tilby lønn</div>
-                <div className="explain-subtitle">{job.pris}</div>
+                <div className="explain-subtitle">{job.pris} kr</div>
               </div>
             </div>
             <div className="overview-text">
@@ -403,23 +403,23 @@ function Home() {
           const userJob = userJobs[jobId];
           if (userJob) {
             jobFound = true;
-            const user = users[userSnapshot.key]; // get the user data using the key
-            const userName = user ? `${user.name} ${user.surname}` : 'Unknown User';
+            // Since userJob contains the job details, you can directly access the userName property
+            const userName = userJob.userName ? userJob.userName : 'Unknown User';
             setSelectedJob({
               id: jobId,
               ...userJob,
-              userName: userName, // set the userName here
+              userName: userName, // set the userName here from the job details
             });
           }
         });
     
         if (!jobFound) {
+          // Handle job not found scenario
           // console.log("Job not found");
-          // Optionally redirect to home or show an error
           // navigate('/');
         }
       });
-    }, [jobId, users]); // Depend on users here to make sure user data is available
+    }, [jobId, users]); // Depend on jobId and users to re-run when they change
     
 
 

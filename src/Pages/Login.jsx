@@ -182,8 +182,8 @@ function Login() {
                             <div className="form-section login">
                                 <h2>Log In</h2>
                                 <form>
-                                    <input type="tel" placeholder="Email" required="" />
-                                    <button type="submit">Logg Inn</button>
+                                    <input disabled id="not" type="tel" placeholder="Email" required="" />
+                                    <button disabled id="not" type="submit">Logg Inn</button>
                                 </form>
 
                                 <h3>eller</h3>
@@ -216,8 +216,8 @@ function Login() {
                                     <form onSubmit={sendSignInLink}>
                                         <h1>Registrer <span>{userType}</span> bruker</h1>
                                             <label htmlFor="phoneNumberInput" className="form-label">Skriv inn</label>
-                                             <input type="email" className="form-control" id="phoneNumberInput" aria-describedby="emailHelp" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required />
-                                             <button type="submit">Registrer</button>
+                                            <input disabled id="not" type="email" className="form-control" aria-describedby="emailHelp" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required />
+                                            <button disabled id="not" type="submit">Registrer</button>
                                         <h3>eller</h3>
                                         <div className='email-container'>
                                             <button onClick={(e) => signInWithGoogle(e)} className="app-link-button3 app-google-sign-in-button">
