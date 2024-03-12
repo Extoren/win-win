@@ -946,6 +946,9 @@ a {
 .searched-sort {
   font-size: 14px;
   color: var(--subtitle-color); }
+  .searched-sort span {
+    cursor: pointer;
+  }
   .searched-sort .post-time {
     font-weight: 600;
     color: var(--subtitle-color); }
@@ -1148,7 +1151,7 @@ a {
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1157,7 +1160,7 @@ a {
     display: flex;
     flex-direction: column;
     width: 330px;
-    height: 100%;
+    height: 100vh;
     margin-left: 40px;
     flex-shrink: 0; }
   .job-overview-buttons {
@@ -1245,18 +1248,36 @@ a {
     background-color: var(--header-bg-color);
     margin-left: 40px;
     border-radius: 0 0 8px 8px; 
-    display: block;
     width: 100%;
     align-self: start;
   }
 
-.job-bg, .job-bg img {
+.job-bg {
   border-radius: 8px 8px 0 0;
   object-fit: cover;
-  width: 100%;
-  height: 180px;
+  width: 80%;
+  height: 300px;
   transition: .3s;
+  margin: 0 auto;
   position: relative; }
+
+  .job-bg img {
+    border-radius: 8px 8px 0 0;
+    object-fit:fill;
+    width: 100%;
+    height: 270px; 
+  }
+
+  @media (max-width: 400px) {
+    .job-bg {
+      width: 100%;
+      height: 200px;
+    }
+    .job-bg img {
+      width: 100%;
+      height: 150px;
+    }
+  }
 
 .job-logos {
   margin-top: -30px;
@@ -1450,10 +1471,6 @@ a {
       justify-content: center;
       gap: 20px;
     }
-    .job-explain {
-      order: 1;
-      margin-top: 95vh;
-    }
   }
 
   @media (max-width: 1250px) {
@@ -1468,15 +1485,51 @@ a {
   }
 
 @media screen and (max-width: 800px) {
-  .job-explain {
-    margin-left: 0; 
-    margin-top: 107vh;
-  } 
   .job-overview-card {
     margin-left: 0;
     margin-right: 20px;
   }
 }
+
+@media (max-width: 1250px) {
+  .job-overview {
+    margin-top: 40vh;
+    height: 100%;
+  }
+}
+
+@media (max-width: 1250px) {
+  .job-overview {
+    margin-top: 40vh;
+    height: 100%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .job-overview {
+    margin-top: 45vh;
+  }
+}
+
+@media (max-width: 730px) {
+  .job-overview {
+   padding-top: 600px;
+  }
+  .job-explain {
+    margin: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .job-overview {
+    margin-top: 500px;
+    height: 100vh;
+  }
+  .job-explain {
+    margin-top: 1100px;
+  }
+}
+
 
 @media screen and (max-width: 730px) {
   .search-type {

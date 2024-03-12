@@ -1,4 +1,6 @@
 import logo from '../Bilder/Logo_background.png';
+import child from '../Bilder/Barnepass.png';
+import grass from '../Bilder/Grass.png';
 
 function getImg(imgName) {
     switch (imgName) {
@@ -8,10 +10,16 @@ function getImg(imgName) {
             <img src={logo} alt="WinWin Logo"/>
           </div>
         );
-      case 'gress':
+      case 'fas fa-child':
+      return (
+        <div className="gress">
+          <img src={child} alt="Gressklipping" />
+        </div>
+      );
+      case 'fas fa-leaf':
         return (
           <div className="gress">
-            <img src="https://www.deere.no/assets/images/region-2/products/commercial-mowing/front-rotary-mowers/1600t-wide-area-rotary-mower-r2c010728-hero.jpg" alt="Gressklipping" />
+            <img src={grass} alt="Gressklipping" />
           </div>
         );
       case 'Løvrydding':
