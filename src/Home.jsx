@@ -135,6 +135,8 @@ export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLoc
     setIsPopupOpen(true);
   };
 
+  const { t } = useTranslation();
+
   const closePopup = () => {
     setIsPopupOpen(false);
   };
@@ -230,7 +232,7 @@ export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLoc
           </div>
         </div>
         <div className="job-overview-cards">
-          <button className="job-overview-close" id="hide" onClick={onClose}>Tilbake</button>
+          <button className="job-overview-close" id="hide" onClick={onClose}>{t('tilbake')}</button>
             <div className="job-overview-card">
             {jobs
               .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
@@ -561,7 +563,7 @@ function Home() {
             </div>
           </div>
             <div className="job-time">
-              <div className="job-time-title">Fylke</div>
+              <div className="job-time-title">{t('fylke')}</div>
               <div className="job-wrapper">
                 <div className="type-container">
                   <input type="radio" name="location" id="job1" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
@@ -952,12 +954,12 @@ useEffect(() => {
                   <br />
                   <div className="type-container">
                       <input type="radio" name="location" id="job01" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
-                      <label htmlFor="job01">Time betalt</label>
+                      <label htmlFor="job01">{t('time-betalt')}</label>
                       <span className="job-number">{jobCounts['Time'] || 0}</span>
                     </div>
                     <div className="type-container">
                       <input type="radio" name="location" id="job02" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
-                      <label htmlFor="job02">Slutt betalt</label>
+                      <label htmlFor="job02">{t('slutt-betalt')}</label>
                       <span className="job-number">{jobCounts['Slutt'] || 0}</span>
                     </div>
                 </div>
@@ -966,7 +968,7 @@ useEffect(() => {
                     <button className="toggle-button" onClick={() => setShowTypeContainers(prev => !prev)}>
                       {showTypeContainers ? "-" : "+"}
                     </button>
-                    <div className="fylke-title">Fylke</div>
+                    <div className="job-time-title">{t('fylke')}</div>
                   </div>
                   <div className="job-wrapper">
                     {showTypeContainers && (
@@ -1076,41 +1078,41 @@ useEffect(() => {
                     <button className="toggle-button" onClick={() => setShowEmploymentTypes(prev => !prev)}>
                       {showEmploymentTypes ? "-" : "+"}
                     </button>
-                    <div className="job-time-title">Ansettelsestype</div>
+                    <div className="job-time-title">{t('ansettelsestype')}</div>
                   </div>
                   <div className="job-wrapper">
                     {showEmploymentTypes && (
                     <div className="type-container">
                       <input type="checkbox" id="job13" className="job-style" checked={selectedEmploymentTypes.includes("Heltidsjobber")} onChange={() => handleEmploymentTypeSelection("Heltidsjobber")}/>
-                      <label htmlFor="job13">Heltidsjobber</label>
+                      <label htmlFor="job13">{t('heltidsjobber')}</label>
                       <span className="job-number">{employmentTypeCounts["Heltidsjobber"] || 0}</span>
                     </div>
                     )}
                     {showEmploymentTypes && (
                     <div className="type-container">
                       <input type="checkbox" id="job14" className="job-style" checked={selectedEmploymentTypes.includes("Deltidsjobber")} onChange={() => handleEmploymentTypeSelection("Deltidsjobber")}/>
-                      <label htmlFor="job14">Deltidsjobber</label>
+                      <label htmlFor="job14">{t('deltidsjobber')}</label>
                       <span className="job-number">{employmentTypeCounts["Deltidsjobber"] || 0}</span>
                     </div>
                     )}
                     {showEmploymentTypes && (
                     <div className="type-container">
                       <input type="checkbox" id="job15" className="job-style" checked={selectedEmploymentTypes.includes("Eksterne jobber")} onChange={() => handleEmploymentTypeSelection("Eksterne jobber")}/>
-                      <label htmlFor="job15">Eksterne jobber</label>
+                      <label htmlFor="job15">{t('eksterne-jobber')}</label>
                       <span className="job-number">{employmentTypeCounts["Eksterne jobber"] || 0}</span>
                     </div>
                     )}
                     {showEmploymentTypes && (
                     <div className="type-container">
                       <input type="checkbox" id="job16" className="job-style" checked={selectedEmploymentTypes.includes("Kontrakt")} onChange={() => handleEmploymentTypeSelection("Kontrakt")}/>
-                      <label htmlFor="job16">Kontrakt</label>
+                      <label htmlFor="job16">{t('kontrakt')}</label>
                       <span className="job-number">{employmentTypeCounts["Kontrakt"] || 0}</span>
                     </div>
                     )}
                     {showEmploymentTypes && (
                     <div className="type-container">
                       <input type="checkbox" id="job17" className="job-style" checked={selectedEmploymentTypes.includes("Små jobber")} onChange={() => handleEmploymentTypeSelection("Små jobber")}/>
-                      <label htmlFor="job17">Små jobber</label>
+                      <label htmlFor="job17">{t('små-jobber')}</label>
                       <span className="job-number">{employmentTypeCounts["Små jobber"] || 0}</span>
                     </div>
                     )}
@@ -1121,34 +1123,34 @@ useEffect(() => {
                     <button className="toggle-button" onClick={() => setShowSeniorityLevels(prev => !prev)}>
                       {showSeniorityLevels ? "-" : "+"}
                     </button>
-                    <div className="job-time-title">Erfaringsnivå</div>
+                    <div className="job-time-title">{t('erfaringsnivå')}</div>
                   </div>
                   <div className="job-wrapper">
                     {showSeniorityLevels && (
                     <div className="type-container">
                       <input type="checkbox" id="job18" className="job-style" checked={selectedSeniorityLevels.includes("Studentnivå")} onChange={() => handleSeniorityLevelSelection("Studentnivå")}/>
-                      <label htmlFor="job18">Studentnivå</label>
+                      <label htmlFor="job18">{t('studentnivå')}</label>
                       <span className="job-number">{seniorityLevelCounts["Studentnivå"] || 0}</span>
                     </div>
                     )}
                     {showSeniorityLevels && (
                     <div className="type-container">
                       <input type="checkbox" id="job19" className="job-style" checked={selectedSeniorityLevels.includes("Inngangsnivå")} onChange={() => handleSeniorityLevelSelection("Inngangsnivå")}/>
-                      <label htmlFor="job19">Inngangsnivå</label>
+                      <label htmlFor="job19">{t('inngangsnivå')}</label>
                       <span className="job-number">{seniorityLevelCounts["Inngangsnivå"] || 0}</span>
                     </div>
                     )}
                     {showSeniorityLevels && (
                     <div className="type-container">
                       <input type="checkbox" id="job20" className="job-style" checked={selectedSeniorityLevels.includes("Midtnivå")} onChange={() => handleSeniorityLevelSelection("Midtnivå")}/>
-                      <label htmlFor="job20">Midtnivå</label>
+                      <label htmlFor="job20">{t('midtnivå')}</label>
                       <span className="job-number">{seniorityLevelCounts["Midtnivå"] || 0}</span>
                     </div>
                     )}
                     {showSeniorityLevels && (
                     <div className="type-container">
                       <input type="checkbox" id="job21" className="job-style" checked={selectedSeniorityLevels.includes("Seniornivå")} onChange={() => handleSeniorityLevelSelection("Seniornivå")}/>
-                      <label htmlFor="job21">Seniornivå</label>
+                      <label htmlFor="job21">{t('seniornivå')}</label>
                       <span className="job-number">{seniorityLevelCounts["Seniornivå"] || 0}</span>
                     </div>
                     )}
@@ -1166,7 +1168,7 @@ useEffect(() => {
                     Viser {jobCount} {jobCount === 1 ? 'jobb' : 'jobber'}
                   </div>
                   <div className="searched-sort">
-                    {t('sorter')}: <span className="post-time">Nyeste Post </span>
+                    {t('sorter')}: <span className="post-time">{t('nyeste-Post')}</span>
                     <span className="menu-icon">▼</span>
                   </div>
                 </div>

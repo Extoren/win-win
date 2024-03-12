@@ -83,7 +83,7 @@
 	position: absolute;
     right: 15px;
     top: 16px;
-    background: #6AAFEA;
+    background: var(--Hover-color);
     padding: 5px 11px;
     font-size: 12px;
     line-height: 1;
@@ -130,10 +130,6 @@
 .row2tab li:first-child {
     border-bottom: 2.5px solid var(--active-color);
     border-radius: 0 0 2px 2px;
-}
-.row2tab li:first-child {
-	color:  var(--subtitle-color);
-    font-weight: 600;
 }
 .row2tab li i {
     margin-right: 3px;

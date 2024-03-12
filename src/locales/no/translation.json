@@ -15,6 +15,27 @@
     "anmeld": "Rapporter",
     "søk":  "Søk nå",
     "lønnsområde": "Lønnsområde",
-    "sorter": "Sorter etter"
+    "sorter": "Sorter etter",
+    "fylke": "Fylke",
+    "nyeste-Post": "Nyeste Post",
+    "tilbake": "Tilbake",
+    "time-betalt": "Time betalt",
+    "slutt-betalt": "Slutt betalt",
+    "oppdrag": "Oppdrag",
+    "hjem": "Hjem",
+    "jobb": "Jobb",
+
+    "ansettelsestype": "Ansettelsestype",
+      "heltidsjobber": "Heltidsjobber",
+      "deltidsjobber": "Deltidsjobber",
+      "eksterne-jobber": "Eksterne jobber",
+      "kontrakt": "Kontrakt",
+      "små-jobber": "Små jobber",
+
+    "erfaringsnivå": "Erfaringsnivå",
+      "studentnivå": "Studentnivå",
+      "inngangsnivå": "Inngangsnivå",
+      "midtnivå": "Midtnivå",
+      "seniornivå": "Seniornivå"
   }
   

@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import './App.css'; 
 import { AuthContext } from './AuthContext';
-import { auth, database } from './firebaseConfig'; // Ensure you import your Firebase services
+import { auth, database } from './firebaseConfig'; 
 import { ref, get } from "firebase/database";
+import { useTranslation } from 'react-i18next';
 
 const NavigationBar = ({ onClose }) => {
   const location = useLocation();
@@ -39,6 +40,8 @@ const NavigationBar = ({ onClose }) => {
     }
 }, [isLoggedIn, auth.currentUser]);
 
+const { t } = useTranslation();
+
   return (
     <div className="nav-container">
       <nav className="nav-navigation">
@@ -47,7 +50,7 @@ const NavigationBar = ({ onClose }) => {
             <li className="nav-item">
               <NavLink to="/myJobs" className={`nav-link ${activePath === '/myJobs' ? 'active' : ''}`} onClick={() => {setActivePath('/');}}>
                 <i className="nav-icon fas fa-home"></i>
-                <span className="nav-text">Oppdrag</span>
+                <span className="nav-text">{t('oppdrag')}</span>
               </NavLink>
             </li>
           )}
@@ -55,7 +58,7 @@ const NavigationBar = ({ onClose }) => {
             <li className="nav-item">
               <NavLink to="/" className={`nav-link ${activePath === '/' ? 'active' : ''}`} onClick={() => {setActivePath('/'); onClose();}}>
                 <i className="nav-icon fas fa-home"></i>
-                <span className="nav-text">Hjem</span>
+                <span className="nav-text">{t('hjem')}</span>
               </NavLink>
             </li>
           )}
@@ -63,7 +66,7 @@ const NavigationBar = ({ onClose }) => {
             <li className="nav-item">
               <NavLink to="/favoritt" className={`nav-link ${activePath === '/favoritt' ? 'active' : ''}`} onClick={() => setActivePath('/create')}>
                 <i id="bigger-stronger" className="nav-icon fas fa-heart"></i>
-                <span className="nav-text">favoritt</span>
+                <span className="nav-text">{t('favorites')}</span>
               </NavLink>
             </li>
           )}
@@ -71,7 +74,7 @@ const NavigationBar = ({ onClose }) => {
             <li className="nav-item">
               <NavLink to="/create" className={`nav-link ${activePath === '/create' ? 'active' : ''}`} onClick={() => setActivePath('/create')}>
                 <i id="bigger-stronger" className="nav-icon fas fa-plus-circle"></i>
-                <span className="nav-text">Jobb</span>
+                <span className="nav-text">{t('jobb')}</span>
               </NavLink>
             </li>
           )}

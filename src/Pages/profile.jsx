@@ -63,13 +63,13 @@ function Profile() {
                             Lorem Ipsum is simply dummy text of the printing and typesetting
                             industry. Lorem Ipsum has been the industry's
                             </p>
-                            <span>Følg</span>
+                            <span>Verifisert</span>
                         </div>
                         <div className="col2 last">
                             <div className="grid clearfix">
                             <div className="col3 first">
                                 <h1>0</h1>
-                                <span>Jobber</span>
+                                <span>Utført</span>
                             </div>
                             <div className="col3">
                                 <h1>0</h1>
@@ -77,7 +77,7 @@ function Profile() {
                             </div>
                             <div className="col3 last">
                                 <h1>0</h1>
-                                <span>Følgere</span>
+                                <span>Prestasjoner</span>
                             </div>
                             </div>
                         </div>
@@ -85,13 +85,13 @@ function Profile() {
                         <div className="row clearfix">
                         <ul className="row2tab clearfix">
                             <li>
-                            <i className="fa fa-list-alt" /> Mine jobber{" "}
+                            <i className="fa fa-list-alt" /> Jobber{" "}
                             </li>
                             <li>
-                            <i className="fa fa-heart" /> Mine Favoritter{" "}
+                            <i className="fa fa-heart" /> Favoritter{" "}
                             </li>
                             <li>
-                            <i className="fa fa-check" /> Følgende{" "}
+                            <i className="fa fa-comment" /> Anmeldelser{" "}
                             </li>
                             <li>
                             <i className="fa fa-trophy " /> Prestasjoner{" "}
