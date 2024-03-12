@@ -141,20 +141,10 @@ export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLoc
   
     return (
       <div className="job-overview">
-        <div className="job-overview-cards">
-        <button className="job-overview-close" id="hide" onClick={onClose}>Tilbake</button>
-          <div className="job-overview-card">
-          {jobs
-            .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
-            .map(filteredJob => (
-              <OverviewCard key={filteredJob.id} job={filteredJob} onClick={() => onOverviewClick(filteredJob)} />
-          ))}
-          </div>
-        </div>
         <div className="job-explain">
         <button className="job-overview-close" id="show" onClick={onClose}>Tilbake</button>
           <div className="job-bg">
-            {getImg(job.img)}
+            {getImg(job.logo)}
           </div>
           <div className="job-logos">
             {getSvg(job.logo)}
@@ -237,6 +227,16 @@ export const JobDetailView = ({ job, jobs, onOverviewClick, onClose, selectedLoc
               <button className="search-buttons card-buttons" onClick={handleButtonClick}>Søk Nå</button>
               {isPopupOpen && <Popup onClose={closePopup} />}
             </div>
+          </div>
+        </div>
+        <div className="job-overview-cards">
+          <button className="job-overview-close" id="hide" onClick={onClose}>Tilbake</button>
+            <div className="job-overview-card">
+            {jobs
+              .filter(job => selectedLocation === '' || job.fylke === selectedLocation)
+              .map(filteredJob => (
+                <OverviewCard key={filteredJob.id} job={filteredJob} onClick={() => onOverviewClick(filteredJob)} />
+            ))}
           </div>
         </div>
       </div>
