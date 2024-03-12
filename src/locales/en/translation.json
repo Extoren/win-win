@@ -15,6 +15,27 @@
     "anmeld": "Report",
     "søk":  "Search Now",
     "lønnsområde": "Price",
-    "sorter": "Sort after"
+    "sorter": "Sort after",
+    "fylke": "County",
+    "nyeste-Post": "Newest Post",
+    "tilbake": "Back",
+    "time-betalt": "Hourly paid",
+    "slutt-betalt": "End paid",
+    "oppdrag": "Assignments",
+    "hjem": "Home",
+    "jobb": "Job",
+
+    "ansettelsestype": "Employment type",
+      "heltidsjobber": "Full-time jobs",
+      "deltidsjobber": "Part-time jobs",
+      "eksterne-jobber": "Remote jobs",
+      "kontrakt": "Contract",
+      "små-jobber": "Small jobs",
+
+    "erfaringsnivå": "Experience level",
+      "studentnivå": "Student level",
+      "inngangsnivå": "Entry level",
+      "midtnivå": "Mid level",
+      "seniornivå": "Senior level"
   }
   
