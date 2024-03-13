@@ -127,14 +127,14 @@
 .clearfix ul {
     border: none;
 }
-.row2tab li:first-child {
+/*.row2tab li:first-child {
     border-bottom: 2.5px solid var(--active-color);
     border-radius: 0 0 2px 2px;
 }
 .row2tab li i {
     margin-right: 3px;
     font-size: 14px;
-}
+}*/
 
 .smalltri {
 	border-right: 40px solid var(--active-color);
