@@ -85,13 +85,13 @@ function Profile() {
                         <div className="row clearfix">
                         <ul className="row2tab clearfix">
                             <li>
-                            <i className="fa fa-list-alt" /> Jobber{" "}
+                            <i className="fa fa-comment" /> Anmeldelser{" "}
                             </li>
                             <li>
                             <i className="fa fa-heart" /> Favoritter{" "}
                             </li>
                             <li>
-                            <i className="fa fa-comment" /> Anmeldelser{" "}
+                            <i className="fa fa-list-alt" /> Jobber{" "}
                             </li>
                             <li>
                             <i className="fa fa-trophy " /> Prestasjoner{" "}
