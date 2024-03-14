@@ -279,6 +279,7 @@ body {
   font-size: 14px; 
   z-index: 1000;
 }
+
   .header-menu a {
     text-decoration: none;
     color: var(--body-color);
@@ -1599,6 +1600,14 @@ a {
   .menu-background:hover {
     background-color: var(--alert-bg-color);
     transition: 1s;
+  }
+
+  .menu-background .fas.fa-heart {
+    color: white;
+  }
+  
+  .menu-background:hover .fas.fa-heart {
+    color: inherit;
   }
   
 
