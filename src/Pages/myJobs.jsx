@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
-import './myJobs.css';
+import './myJobs.css'; // Make sure you import your CSS file where you define the styles
 import Header from '../header';
 import NavigationBar from '../NavigationBar';
 import Footer from '../Footer';
 import { ref, onValue } from 'firebase/database';
-import { database, auth } from '../firebaseConfig'; // Make sure to import auth here
+import { database, auth } from '../firebaseConfig';
 import { JobCard } from '../Home';
-import { AuthContext } from '../AuthContext'; // Import AuthContext
+import { AuthContext } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 function MyJobs() {
   const [jobs, setJobs] = useState([]);
-  const { isLoggedIn } = useContext(AuthContext); // Use AuthContext
+  const [view, setView] = useState(null);
+  const [clickedButton, setClickedButton] = useState(null); // State to track the clicked button
+  const { isLoggedIn } = useContext(AuthContext);
   const [currentUser, setCurrentUser] = useState(null);
 
   const navigate = useNavigate();
@@ -20,17 +22,14 @@ function MyJobs() {
     navigate('/create', { state: { job: jobData } });
   };
 
-  // Get the current user's ID from the auth state
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        setCurrentUser(user.uid); // Set the ID of the currently logged-in user
+        setCurrentUser(user.uid);
       } else {
-        setCurrentUser(null); // No user is logged in
+        setCurrentUser(null);
       }
     });
-
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, [isLoggedIn]);
 
@@ -49,38 +48,58 @@ function MyJobs() {
         setJobs(loadedJobs);
       });
     } else {
-      setJobs([]); // Clear jobs if no user is logged in
+      setJobs([]);
     }
-  }, [currentUser]); // Depend on currentUser
+  }, [currentUser]);
+
+  const renderJobsView = () => (
+    <div className="myJobs">
+      {jobs.map(job => (
+        <div key={job.id}>
+          <div className="job-buttons">
+            <button className="Status-button" id="green" onClick={() => {}}>
+              <i className="fas fa-signal"></i> Status
+            </button>
+            <button className="edit-job-button" onClick={() => editJob(job)}>
+              <i className="fas fa-pencil-alt"></i> Rediger
+            </button>
+          </div>
+          <JobCard job={job} onClick={() => {}} />
+          <div className="job-buttons2">
+            <button className="trash-button" id="red" onClick={() => {}}>
+              <i className="fas fa-trash-alt"></i> Slett
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderChildView = () => (
+    // Placeholder for your child's view
+    <div>
+      <h2>Your Child</h2>
+      {/* Implement your child's view here */}
+    </div>
+  );
 
   return (
     <div className="container">
       <Header />
-      <center className="faq-header">
-        <h1>Dine <span>Oppdrag</span></h1>
-      </center>
-      <div className="myJobs">
-          {jobs.map(job => (
-            <div key={job.id}>
-                <div className="job-buttons">
-                  <button className="Status-button" id="green" onClick={() => {}}>
-                    <i className="fas fa-signal"></i> Status
-                  </button>
-                  <button className="edit-job-button" onClick={() => editJob(job)}>
-                    <i className="fas fa-pencil-alt"></i> Rediger
-                  </button>
-                </div>
-              <JobCard job={job} onClick={() => {}} />
-              <div className="job-buttons2">
-                <button className="trash-button" id="red" onClick={() => {}}>
-                  <i className="fas fa-trash-alt"></i> Slett
-                </button>
-              </div>
-            </div>
-          ))}
+      <center className="faq-header" id="hid">
+                    <div className="Status-menu">
+        <button className={clickedButton === 'child' ? 'active' : ''} onClick={() => { setView('child'); setClickedButton('child'); }}>
+          <i className="fas fa-child"></i> <br />Ditt barn
+        </button>
+        <button className={clickedButton === 'jobs' ? 'active' : ''} onClick={() => { setView('jobs'); setClickedButton('jobs'); }}>
+          <i className="fas fa-globe"></i> <br />Dine oppdrag
+        </button>
       </div>
+      </center>
+      {/* Conditional rendering based on the view */}
+      {view === 'jobs' && renderJobsView()}
+      {view === 'child' && renderChildView()}
       <NavigationBar />
-      <Footer />
     </div>
   );
 }
