@@ -1,7 +1,7 @@
 {
     "adult": "Adult",
     "child": "Child",
-    "assignments": "Assignments",
+    "assignments": "Home",
     "find_job": "Find Job",
     "faq": "FAQ",
     "create_job": "Create Job",
@@ -21,7 +21,6 @@
     "tilbake": "Back",
     "time-betalt": "Hourly paid",
     "slutt-betalt": "End paid",
-    "oppdrag": "Assignments",
     "hjem": "Home",
     "jobb": "Job",
 

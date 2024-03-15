@@ -50,7 +50,7 @@ const { t } = useTranslation();
             <li className="nav-item">
               <NavLink to="/myJobs" className={`nav-link ${activePath === '/myJobs' ? 'active' : ''}`} onClick={() => {setActivePath('/');}}>
                 <i className="nav-icon fas fa-home"></i>
-                <span className="nav-text">{t('oppdrag')}</span>
+                <span className="nav-text">{t('assignments')}</span>
               </NavLink>
             </li>
           )}
