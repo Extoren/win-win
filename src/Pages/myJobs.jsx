@@ -95,6 +95,7 @@ function MyJobs() {
           <i className="fas fa-globe"></i> <br />Dine oppdrag
         </button>
       </div>
+      
       </center>
       {/* Conditional rendering based on the view */}
       {view === 'jobs' && renderJobsView()}
