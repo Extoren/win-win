@@ -6,6 +6,7 @@ import { signOut } from 'firebase/auth';
 import logo from './Bilder/Logo_CC.png';
 import { database } from './firebaseConfig';
 import { ref, get } from "firebase/database";
+import { onValue, set, serverTimestamp } from 'firebase/database';
 import { useTranslation } from 'react-i18next'
 
 
@@ -21,6 +22,126 @@ function Header({ onClose }) {
     const [role, setRole] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+
+    // Add state to hold the list of parent requests
+    const [parentRequests, setParentRequests] = useState([]);
+
+    useEffect(() => {
+      if (role === 'Barn' && isLoggedIn && auth.currentUser) {
+        const parentRequestsRef = ref(database, `parentRequests/${auth.currentUser.uid}`);
+        const unsubscribe = onValue(parentRequestsRef, (snapshot) => {
+          const requests = [];
+          snapshot.forEach((childSnapshot) => {
+            requests.push({
+              id: childSnapshot.key,
+              ...childSnapshot.val()
+            });
+          });
+          setParentRequests(requests);
+          setNotificationCount(requests.length); // Update the notification count
+        });
+        
+        return () => unsubscribe(); // Unsubscribe when the component unmounts
+      }
+    }, [role, isLoggedIn, auth.currentUser]);
+    
+    
+
+    // Function to format the timestamp received from Firebase
+    const formatTimestamp = (timestamp) => {
+      // Assuming timestamp is a Firebase Timestamp object
+      if (!timestamp) return '';
+      const date = new Date(timestamp.seconds * 1000);
+      return date.toLocaleTimeString(); // You can adjust this format as needed
+    };
+
+    // Function to handle the child's response to a parent request
+    const handleParentRequestResponse = async (requestId, response) => {
+      const currentUserUid = auth.currentUser.uid;
+      const parentRequestRef = ref(database, `parentRequests/${currentUserUid}/${requestId}`);
+
+      try {
+        // Update the status of the parent request based on the child's response
+        await set(parentRequestRef, {
+          status: response, // 'accepted' or 'rejected'
+          responseTimestamp: serverTimestamp() // Use Firebase server timestamp
+        });
+        alert(`Request ${response}.`);
+      } catch (error) {
+        console.error('Error updating parent request response:', error);
+      }
+    };
+
+
+    // Update the render logic to include the parent request notifications
+    const renderNotifications = () => {
+      return parentRequests.map((request) => (
+        <div key={request.id} className="notification-item">
+          <i className="fas fa-user"></i>
+          <div className="notification-content">
+            <p className="notification-title">
+              {splitTextWithLineBreaks(`Godkjenner du forespørsel fra ${request.parentEmail}?`, 30)}
+            </p>
+            <div className='notification-buttons'>
+              <button id="no" onClick={() => handleParentRequestResponse(request.id, 'rejected')}>nei</button>
+              <button id="yes" onClick={() => handleParentRequestResponse(request.id, 'accepted')}>ja</button>
+            </div>
+            <p className="notification-time">{formatTimestamp(request.timestamp)}</p> {/* Make sure to write a function to format the timestamp */}
+          </div>
+        </div>
+      ));
+    };
+
+    const splitTextWithLineBreaks = (text, maxLineLength) => {
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = words[0];
+    
+      words.slice(1).forEach(word => {
+        if ((currentLine + " " + word).length > maxLineLength) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine += " " + word;
+        }
+      });
+    
+      // Push the last line
+      lines.push(currentLine);
+    
+      const formattedText = lines.map((line, index) => (
+        <React.Fragment key={index}>
+          {line}{index < lines.length - 1 && <br />}
+        </React.Fragment>
+      ));
+    
+      return formattedText;
+    };
+    
+
+
+    const toggleNotificationDropdown = () => {
+      setShowNotificationDropdown(!showNotificationDropdown);
+    };
+
+
+    useEffect(() => {
+      // Simulate fetching notification count, for example, from Firebase or another API
+      const fetchNotifications = async () => {
+        // Simulated fetch logic
+        const fetchedNotificationCount = 3; // Pretend we fetched this number from an API
+        const displayCount = fetchedNotificationCount > 9 ? "9+" : fetchedNotificationCount.toString();
+        setNotificationCount(displayCount);
+      };
+    
+      if (isLoggedIn) {
+        fetchNotifications();
+      }
+    }, [isLoggedIn]);
+    
   
     // Function to toggle the theme
     const toggleTheme = () => {
@@ -149,6 +270,29 @@ function Header({ onClose }) {
         </div>
       </div>
       <div className="user-settings">
+          {!isLoading && ['Voksen', 'Barn'].includes(role) && (
+          <div className="notification" onClick={toggleNotificationDropdown}>
+            <i className="far fa-bell"></i>
+            {notificationCount !== "0" && <span className="notification-count">{notificationCount}</span>}
+            {showNotificationDropdown && (
+              <div className="notification-dropdown">
+                <div className="notification-header">
+                  <span className="notification-title">Varsler</span>
+                  <i className="fas fa-cog notification-settings-icon"></i>
+                </div>
+                {renderNotifications()}
+                <div className="notification-item">
+                  <i className="fas fa-check"></i>
+                  <div className="notification-content">
+                    <p className="notification-title">Verifiser din bruker</p>
+                    <p className="notification-time">3 timer siden</p>
+                  </div>
+                </div>
+                {/* ... other notifications */}
+              </div>
+            )}
+          </div>
+        )}
         <div className={`App ${theme}`}>
           {/*<div className="dark-light" onClick={toggleTheme}>
             <svg

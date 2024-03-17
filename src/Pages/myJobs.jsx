@@ -3,11 +3,12 @@ import './myJobs.css'; // Make sure you import your CSS file where you define th
 import Header from '../header';
 import NavigationBar from '../NavigationBar';
 import Footer from '../Footer';
-import { ref, onValue } from 'firebase/database';
+import { ref, onValue, push, set, get, serverTimestamp } from 'firebase/database'; // Add missing imports here
 import { database, auth } from '../firebaseConfig';
 import { JobCard } from '../Home';
 import { AuthContext } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
+
 
 function MyJobs() {
   const [jobs, setJobs] = useState([]);
@@ -15,6 +16,72 @@ function MyJobs() {
   const [clickedButton, setClickedButton] = useState(null); // State to track the clicked button
   const { isLoggedIn } = useContext(AuthContext);
   const [currentUser, setCurrentUser] = useState(null);
+
+  const [childEmail, setChildEmail] = useState('');
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+
+  const handleAddChild = async () => {
+    console.log('Attempting to add child:', childEmail);
+    // Add logging for the current user's authentication state and email
+    if (auth.currentUser) {
+        console.log('Current user is authenticated:', auth.currentUser.uid);
+        console.log('Current user email:', auth.currentUser.email);
+    } else {
+        console.log('No authenticated user.');
+        setConfirmationMessage('No authenticated user. Please log in and try again.');
+        return; // Exit the function if there is no authenticated user
+    }
+
+    // Define a reference to the 'users' node in your Firebase Realtime Database
+    const usersRef = ref(database, 'users');
+    
+    // Use a try...catch block to handle any potential errors
+    try {
+        // Use the get function from Firebase to retrieve the users once
+        const snapshot = await get(usersRef);
+
+        // Initialize a variable to store the child's UID if found
+        let childUid = null;
+
+        // Iterate over the user data to find a matching email
+        snapshot.forEach((childSnapshot) => {
+            const user = childSnapshot.val();
+            if (user.email && user.email.toLowerCase() === childEmail.toLowerCase()) {
+                childUid = childSnapshot.key;
+                console.log(`Found child UID: ${childUid}`);
+            }
+        });
+
+        // If a child UID is found, proceed to create the parent request
+        if (childUid) {
+            const parentRequestRef = ref(database, `parentRequests/${childUid}`);
+            const newRequestRef = push(parentRequestRef);
+            await set(newRequestRef, {
+                parentEmail: auth.currentUser.email,
+                status: 'pending',
+                timestamp: serverTimestamp()
+            });
+
+            console.log(`Parent request created for child UID: ${childUid}`);
+            // Update the confirmation message and reset the email field
+            setConfirmationMessage(`Request sent to ${childEmail}! Please wait for their confirmation.`);
+            setChildEmail('');
+        } else {
+            console.log('No child found with that email.');
+            // If no child is found with the email, update the confirmation message accordingly
+            setConfirmationMessage('No child found with that email. Please check the email and try again.');
+        }
+    } catch (error) {
+        // Log and show any errors
+        console.error('Error adding child:', error);
+        setConfirmationMessage('Error occurred. Please try again later.');
+    }
+};
+
+  
+
+
+
 
   const navigate = useNavigate();
 
@@ -76,10 +143,17 @@ function MyJobs() {
   );
 
   const renderChildView = () => (
-    // Placeholder for your child's view
-    <div>
-      <h2>Your Child</h2>
-      {/* Implement your child's view here */}
+    <div className="myChild">
+      <div className='child-card'>
+        <h2>Legg til ditt barn</h2>
+        <input
+          placeholder='Epost'
+          value={childEmail}
+          onChange={(e) => setChildEmail(e.target.value)}
+        />
+        <button onClick={handleAddChild}>Legg til</button>
+        {confirmationMessage && <div className="confirmation-message">{confirmationMessage}</div>}
+      </div>
     </div>
   );
 
