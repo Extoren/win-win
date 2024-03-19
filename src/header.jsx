@@ -6,7 +6,7 @@ import { signOut } from 'firebase/auth';
 import logo from './Bilder/Logo_CC.png';
 import { database } from './firebaseConfig';
 import { ref, get } from "firebase/database";
-import { onValue, set, serverTimestamp } from 'firebase/database';
+import { onValue, push, set, serverTimestamp } from 'firebase/database';
 import { useTranslation } from 'react-i18next'
 
 
@@ -62,18 +62,35 @@ function Header({ onClose }) {
     const handleParentRequestResponse = async (requestId, response) => {
       const currentUserUid = auth.currentUser.uid;
       const parentRequestRef = ref(database, `parentRequests/${currentUserUid}/${requestId}`);
-
+  
       try {
-        // Update the status of the parent request based on the child's response
-        await set(parentRequestRef, {
-          status: response, // 'accepted' or 'rejected'
-          responseTimestamp: serverTimestamp() // Use Firebase server timestamp
-        });
-        alert(`Request ${response}.`);
+          if (response === 'accepted') {
+              // Get the request information to find the parent's UID
+              const requestSnapshot = await get(parentRequestRef);
+              if (requestSnapshot.exists()) {
+                  const requestInfo = requestSnapshot.val();
+                  // Assuming the parent UID is stored in the request (you might need to adjust this)
+                  const parentUid = requestInfo.parentUid;
+                  const notificationsRef = ref(database, `notifications/${parentUid}`);
+                  const newNotificationRef = push(notificationsRef);
+                  await set(newNotificationRef, {
+                      message: 'User accepted',
+                      timestamp: serverTimestamp(),
+                  });
+              }
+          }
+          // Update the status of the parent request based on the child's response
+          await set(parentRequestRef, null); // Remove the request to clear the notification
+  
+          // Optionally, refresh the list of requests or manage state to remove the handled request from the UI
+          // This part depends on how you manage state in your application
+  
+          alert(`Request ${response}.`);
       } catch (error) {
-        console.error('Error updating parent request response:', error);
+          console.error('Error updating parent request response:', error);
       }
-    };
+  };
+  
 
 
     // Update the render logic to include the parent request notifications
@@ -86,8 +103,8 @@ function Header({ onClose }) {
               {splitTextWithLineBreaks(`Godkjenner du forespørsel fra ${request.parentEmail}?`, 30)}
             </p>
             <div className='notification-buttons'>
-              <button id="no" onClick={() => handleParentRequestResponse(request.id, 'rejected')}>nei</button>
               <button id="yes" onClick={() => handleParentRequestResponse(request.id, 'accepted')}>ja</button>
+              <button id="no" onClick={() => handleParentRequestResponse(request.id, 'rejected')}>nei</button>
             </div>
             <p className="notification-time">{formatTimestamp(request.timestamp)}</p> {/* Make sure to write a function to format the timestamp */}
           </div>
@@ -132,7 +149,7 @@ function Header({ onClose }) {
       // Simulate fetching notification count, for example, from Firebase or another API
       const fetchNotifications = async () => {
         // Simulated fetch logic
-        const fetchedNotificationCount = 3; // Pretend we fetched this number from an API
+        const fetchedNotificationCount = 1; // Pretend we fetched this number from an API
         const displayCount = fetchedNotificationCount > 9 ? "9+" : fetchedNotificationCount.toString();
         setNotificationCount(displayCount);
       };
