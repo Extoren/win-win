@@ -40,6 +40,7 @@ function MakeUser() {
         if (user && currentStep === 1 && formData.name && formData.surname && selectedOption) {
             const updatedFormData = {
                 ...formData,
+                email: user.email,
                 role: selectedOption === 'option1' ? 'Barn' : 'Voksen', // Include the role based on the selected option
                 isSetupComplete: true
             };

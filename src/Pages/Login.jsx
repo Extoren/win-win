@@ -51,21 +51,27 @@ function Login() {
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
             const user = result.user;
+    
+            // After a user signs in, their email can be accessed through user.email
+            const userEmail = user.email;
             const db = getDatabase();
             const userRef = ref(db, 'users/' + user.uid);
-    
-            // Check if user data already exists and is setup complete
+            
             onValue(userRef, (snapshot) => {
                 const userData = snapshot.val();
                 if (userData && userData.isSetupComplete) {
-                    // User data exists and setup is complete, so just log the user in
                     setIsLoggedIn(true);
                     navigate('/');
                 } else {
-                    // User data does not exist, so set the user data
+                    // User data does not exist or setup is not complete,
+                    // so set or update the user data with the email
                     set(userRef, {
+                        email: userEmail, // Save the email
                         userType: userType,
-                        // Set any other user info you need to initialize
+                        // ...any other user info you need to initialize
+                        isSetupComplete: false,
+                    }).then(() => {
+                        navigate('/makeUser');
                     }).catch((error) => {
                         console.error("Error setting user data: ", error);
                     });
@@ -77,6 +83,7 @@ function Login() {
             console.error("Error signing in with Google: ", error);
         }
     };
+    
     
 
     useEffect(() => {
