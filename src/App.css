@@ -285,8 +285,7 @@ body {
   .header-menu a {
     text-decoration: none;
     color: var(--body-color);
-    font-weight: 500;
-    margin-left: 20px; }
+    font-weight: 500; }
     .header-menu a:hover {
       color: var(--active-color); }
     .header-menu a:not(:first-child) {
@@ -295,9 +294,11 @@ body {
       color: var(--active-color); }
 
       .header-menu-container {
+        position: absolute;
         display: flex;
         justify-content: center;
         flex-grow: 1;
+        left: 43.5%;
       }
 
 .user-settings {
