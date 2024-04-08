@@ -14,7 +14,7 @@ import 'nprogress/nprogress.css';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 import JobDetailView from './Home';
 import './i18n';
 import { Navigate } from 'react-router-dom';
