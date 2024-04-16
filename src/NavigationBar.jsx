@@ -78,6 +78,14 @@ const { t } = useTranslation();
               </NavLink>
             </li>
           )}
+          {!isLoading && role === 'Admin' && (
+            <li className="nav-item">
+              <NavLink to="/Administrator" className={`nav-link ${activePath === '/Administrator' ? 'active' : ''}`} onClick={() => setActivePath('/Administrator')}>
+                <i id="bigger-stronger" className="nav-icon fas fa-hammer"></i>
+                <span className="nav-text">Admin</span>
+              </NavLink>
+            </li>
+          )}
           <li className="nav-item">
             <NavLink to="/faq" className={`nav-link ${activePath === '/faq' ? 'active' : ''}`} onClick={() => setActivePath('/faq')}>
               <i className="nav-icon fas fa-question"></i>

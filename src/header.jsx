@@ -279,6 +279,11 @@ function Header({ onClose }) {
               <i className="fas fa-plus-circle"></i> {t('create_job')}
             </NavLink>
           )}
+          {!isLoading && role === 'Admin' && (
+            <NavLink to="/Administrator" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
+              <i className="fas fa-hammer"></i> Administrator
+            </NavLink>
+          )}
           {!isLoading && role === 'Barn' && (
             <NavLink to="/favoritt" className={location.pathname === "/favoritt" ? "" : "menu-background"} activeClassName="active">
               <i className="fas fa-heart"></i> {t('favorites')}
