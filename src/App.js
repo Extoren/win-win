@@ -18,7 +18,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from "@vercel/analytics/react";
 import JobDetailView from './Home';
 import './i18n';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom'; 
 import useUserRole from './hooks/useUserRole';
 import Profile from './Pages/profile';
 import Settings from './Pages/settings';
