@@ -33,6 +33,40 @@ const useFetchLocationNames = () => {
   return locationNames;
 };
 
+const useFetchEmploymentNames = () => {
+  const [employmentNames, setEmploymentNames] = useState({});
+
+  useEffect(() => {
+    const employmentNamesRef = ref(database, 'data/employment');
+    onValue(employmentNamesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setEmploymentNames(snapshot.val());
+      } else {
+        console.log("No employment types found in Firebase.");
+      }
+    });
+  }, []);
+
+  return employmentNames;
+}
+
+const useFetchSeniorityNames = () => {
+  const [seniorityNames, setSeniorityNames] = useState({});
+
+  useEffect(() => {
+    const seniorityNamesRef = ref(database, 'data/experience');
+    onValue(seniorityNamesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setSeniorityNames(snapshot.val());
+      } else {
+        console.log("No Experience levels found in Firebase.");
+      }
+    });
+  }, []);
+
+  return seniorityNames;
+}
+
 const useFetchJobCounts = () => {
   const [jobCounts, setJobCounts] = useState({});
 
@@ -326,6 +360,8 @@ function Home() {
 
     const { addNewLocation, updateLocationName } = useAdmin();
     const locationNames = useFetchLocationNames();
+    const employmentNames = useFetchEmploymentNames();
+    const seniorityNames = useFetchSeniorityNames();
     const jobCounts = useFetchJobCounts(); 
 
     const shouldFadeOut = (job) => {
@@ -1050,39 +1086,19 @@ useEffect(() => {
                   </div>
                   <div className="job-wrapper">
                     {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job13" className="job-style" checked={selectedEmploymentTypes.includes("Heltidsjobber")} onChange={() => handleEmploymentTypeSelection("Heltidsjobber")}/>
-                      <label htmlFor="job13">{t('heltidsjobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Heltidsjobber"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job14" className="job-style" checked={selectedEmploymentTypes.includes("Deltidsjobber")} onChange={() => handleEmploymentTypeSelection("Deltidsjobber")}/>
-                      <label htmlFor="job14">{t('deltidsjobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Deltidsjobber"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job15" className="job-style" checked={selectedEmploymentTypes.includes("Eksterne jobber")} onChange={() => handleEmploymentTypeSelection("Eksterne jobber")}/>
-                      <label htmlFor="job15">{t('eksterne-jobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Eksterne jobber"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job16" className="job-style" checked={selectedEmploymentTypes.includes("Kontrakt")} onChange={() => handleEmploymentTypeSelection("Kontrakt")}/>
-                      <label htmlFor="job16">{t('kontrakt')}</label>
-                      <span className="job-number">{employmentTypeCounts["Kontrakt"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job17" className="job-style" checked={selectedEmploymentTypes.includes("Små jobber")} onChange={() => handleEmploymentTypeSelection("Små jobber")}/>
-                      <label htmlFor="job17">{t('små-jobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Små jobber"] || 0}</span>
-                    </div>
+                        Object.keys(employmentNames).map((employmentKey) => (
+                            <div className="type-container" key={employmentKey}>
+                                <input 
+                                    type="checkbox" 
+                                    name="employment" 
+                                    id={`job-${employmentKey}`} 
+                                    className="job-style" 
+                                    onClick={(e) => handleEmploymentTypeSelection(employmentNames[employmentKey], e)}
+                                />
+                                <label htmlFor={`job-${employmentKey}`}>{employmentNames[employmentKey]}</label>
+                                <span className="job-number">{employmentTypeCounts[employmentNames[employmentKey]] || 0}</span>
+                            </div>
+                        ))
                     )}
                   </div>
                 </div>
@@ -1095,32 +1111,19 @@ useEffect(() => {
                   </div>
                   <div className="job-wrapper">
                     {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job18" className="job-style" checked={selectedSeniorityLevels.includes("Studentnivå")} onChange={() => handleSeniorityLevelSelection("Studentnivå")}/>
-                      <label htmlFor="job18">{t('studentnivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Studentnivå"] || 0}</span>
-                    </div>
-                    )}
-                    {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job19" className="job-style" checked={selectedSeniorityLevels.includes("Inngangsnivå")} onChange={() => handleSeniorityLevelSelection("Inngangsnivå")}/>
-                      <label htmlFor="job19">{t('inngangsnivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Inngangsnivå"] || 0}</span>
-                    </div>
-                    )}
-                    {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job20" className="job-style" checked={selectedSeniorityLevels.includes("Midtnivå")} onChange={() => handleSeniorityLevelSelection("Midtnivå")}/>
-                      <label htmlFor="job20">{t('midtnivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Midtnivå"] || 0}</span>
-                    </div>
-                    )}
-                    {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job21" className="job-style" checked={selectedSeniorityLevels.includes("Seniornivå")} onChange={() => handleSeniorityLevelSelection("Seniornivå")}/>
-                      <label htmlFor="job21">{t('seniornivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Seniornivå"] || 0}</span>
-                    </div>
+                        Object.keys(seniorityNames).map((seniorityKey) => (
+                            <div className="type-container" key={seniorityKey}>
+                                <input 
+                                    type="checkbox" 
+                                    name="employment" 
+                                    id={`job-${seniorityKey}`} 
+                                    className="job-style" 
+                                    onClick={(e) => handleSeniorityLevelSelection(seniorityNames[seniorityKey], e)}
+                                />
+                                <label htmlFor={`job-${seniorityKey}`}>{seniorityNames[seniorityKey]}</label>
+                                <span className="job-number">{seniorityLevelCounts[seniorityNames[seniorityKey]] || 0}</span>
+                            </div>
+                        ))
                     )}
                   </div>
                 </div>

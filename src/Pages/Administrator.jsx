@@ -2,74 +2,84 @@ import React, { useState } from 'react';
 import Header from '../header';
 import NavigationBar from '../NavigationBar';
 import { useAdmin } from '../AdminContext';
+import './Administrator.css';
 
 function Administrator() {
-  const [locationKey, setLocationKey] = useState('');
-  const [newLocationName, setNewLocationName] = useState('');
+    const [key, setKey] = useState('');
+    const [name, setName] = useState('');
+    const [type, setType] = useState('locations'); // Can be 'locations', 'employment', or 'seniority'
 
-  const { addNewLocation = () => {}, updateLocationName = () => {}, deleteLocation = () => {} } = useAdmin() || {};
+    const { addNewItem, updateItemName, deleteItem } = useAdmin() || {};
 
-  const handleLocationChange = (e) => {
-    e.preventDefault();
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        let promise;
 
-    let promise;
+        if (key) {
+            // Update existing item
+            promise = updateItemName(type, key, name);
+        } else {
+            // Add new item
+            promise = addNewItem(type, name);
+        }
 
-    if (locationKey) {
-      promise = updateLocationName(locationKey, newLocationName);
-    } else {
-      promise = addNewLocation(newLocationName);
-    }
+        promise.then(() => {
+            alert('Operation successful.');
+            setKey('');
+            setName('');
+        }).catch((error) => {
+            alert('An error occurred:', error);
+        });
+    };
 
-    promise.then(() => {
-      alert('Location updated successfully.');
-    }).catch((error) => {
-      alert('An error occurred:', error);
-    });
-  };
+    const handleDelete = (e) => {
+        e.preventDefault();
 
+        if (key) {
+            deleteItem(type, key).then(() => {
+                alert('Item deleted successfully.');
+                setKey('');
+                setName('');
+            }).catch((error) => {
+                alert('An error occurred:', error);
+            });
+        } else {
+            alert('Please enter a key to delete.');
+        }
+    };
 
-  const handleDelete = (e) => {
-    e.preventDefault();
-
-    if (locationKey) {
-      deleteLocation(locationKey).then(() => {
-        alert('Location deleted successfully.');
-      }).catch((error) => {
-        alert('An error occurred:', error);
-      });
-    } else {
-      alert('Please enter a location key to delete.');
-    }
-  };
-  
-
-  return (
-    <div>
-      <Header />
-      <h1>Administrator</h1>
-      <form onSubmit={handleLocationChange}>
-        <input
-          type="text"
-          placeholder="Location Key (leave empty to add new)"
-          value={locationKey}
-          onChange={e => setLocationKey(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Location Name"
-          value={newLocationName}
-          onChange={e => setNewLocationName(e.target.value)}
-        />
-        <button type="submit">
-          {locationKey ? 'Change Location Name' : 'Add New Location'}
-        </button>
-        <button onClick={handleDelete}>
-          Delete Location
-        </button>
-      </form>
-      <NavigationBar />
-    </div>
-  );
+    return (
+        <div>
+            <Header />
+            <h1>Administrator</h1>
+            <form onSubmit={handleSubmit} className="DataChange">
+                <select value={type} onChange={e => setType(e.target.value)}>
+                    <option value="locations">Locations</option>
+                    <option value="employment">Employment Types</option>
+                    <option value="experience">Experience Levels</option>
+                </select>
+                <input
+                    type="text"
+                    placeholder="Key (leave empty to add new)"
+                    value={key}
+                    onChange={e => setKey(e.target.value)}
+                />
+                <input
+                    type="text"
+                    placeholder="Name"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                />
+                <button type="submit">
+                    {key ? 'Update Item' : 'Add New Item'}
+                </button>
+                <button type="button" onClick={handleDelete}>
+                    Delete Item
+                </button>
+            </form>
+            <NavigationBar />
+        </div>
+    );
 }
 
 export default Administrator;

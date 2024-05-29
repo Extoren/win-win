@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ref, push, onValue, update, remove } from 'firebase/database';
+import { ref, push, set, update, remove, get } from 'firebase/database';
 import { database } from './firebaseConfig';
 
 const AdminContext = createContext();
@@ -7,74 +7,61 @@ const AdminContext = createContext();
 export const useAdmin = () => useContext(AdminContext);
 
 export const AdminProvider = ({ children }) => {
-  const [locationNames, setLocationNames] = useState({});
+  const [data, setData] = useState({
+    locations: {},
+    Employment: {},
+    Experience: {}
+  });
 
   useEffect(() => {
-    const locationNamesRef = ref(database, 'locationNames');
-    onValue(locationNamesRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setLocationNames(snapshot.val());
-      } else {
-        console.log("No location names found in Firebase.");
-      }
-    });
+    const fetchData = async () => {
+      const types = ['locations', 'Employment', 'Experience'];
+      const dataPromises = types.map(type =>
+        get(ref(database, `data/${type}`)).then(snapshot =>
+          snapshot.exists() ? snapshot.val() : {}
+        )
+      );
+
+      const results = await Promise.all(dataPromises);
+      setData({
+        locations: results[0],
+        Employment: results[1],
+        Experience: results[2]
+      });
+    };
+
+    fetchData();
   }, []);
 
-  const addNewLocation = (newLocationName) => {
-    onValue(ref(database, 'data/locations'), (snapshot) => {
-      const locations = snapshot.val();
-      const nextKey = locations ? Object.keys(locations).length + 1 : 1;
-      const updates = {};
-      updates[`/data/locations/${nextKey}`] = newLocationName;
-      return update(ref(database), updates);
-    }, {
-      onlyOnce: true
-    });
+  const addNewItem = (type, name) => {
+    const newDataRef = push(ref(database, `data/${type}`));
+    return set(newDataRef, name);
+  };
+
+  const updateItemName = (type, key, newName) => {
+    if (!key || !newName) {
+      console.error("Invalid key or name for update.");
+      return Promise.reject("Invalid key or name for update.");
+    }
+  
+    const updates = {};
+    const updatePath = `/data/${type}/${key}`;
+    updates[updatePath] = newName;
+  
+    console.log(`Updating at ${updatePath} with new name: ${newName}`);
+  
+    return update(ref(database), updates);
   };
   
 
-  const updateLocationName = (locationKey, newName) => {
-    const updates = {};
-    updates[`/data/locations/${locationKey}`] = newName;
-    return update(ref(database), updates); 
-  };
-  
-  const updateLocationKeyValue = (oldKey, newKey, newValue) => {
-    // First, check if the new key already exists to avoid overwriting data
-    const newKeyRef = ref(database, `data/locations/${newKey}`);
-    return onValue(newKeyRef, (snapshot) => {
-      if (snapshot.exists()) {
-        // Handle the case where the new key already exists
-        console.error(`The key ${newKey} already exists in the database.`);
-      } else {
-        // Proceed with the update since the new key does not exist
-        const updates = {};
-        updates[`data/locations/${newKey}`] = newValue;
-      
-        update(ref(database), updates)
-          .then(() => {
-            // Remove the old key after the new key-value pair has been written
-            remove(ref(database, `data/locations/${oldKey}`))
-              .then(() => {
-                console.log(`Key-value pair updated from ${oldKey} to ${newKey}: ${newValue}`);
-              })
-              .catch(error => console.error(`Error removing old key ${oldKey}:`, error));
-          })
-          .catch(error => console.error(`Error updating to new key ${newKey}:`, error));
-      }
-    }, {
-      onlyOnce: true
-    });
-  };
 
-  const deleteLocation = (locationKey) => {
-    const updates = {};
-    updates[`/data/locations/${locationKey}`] = null;
-    return update(ref(database), updates); // This should remove the location
+  const deleteItem = (type, key) => {
+    const deleteRef = ref(database, `data/${type}/${key}`);
+    return remove(deleteRef);
   };
 
   return (
-    <AdminContext.Provider value={{ locationNames, addNewLocation, deleteLocation, updateLocationName, updateLocationKeyValue }}>
+    <AdminContext.Provider value={{ data, addNewItem, deleteItem, updateItemName }}>
       {children}
     </AdminContext.Provider>
   );

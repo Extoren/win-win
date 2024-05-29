@@ -1,0 +1,49 @@
+.DataChange {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.DataChange input[type="text"],
+.DataChange select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.DataChange button {
+    width: 48%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 4%;
+}
+
+.DataChange button:nth-child(4) {
+    margin-right: 0;
+}
+
+.DataChange button[type="submit"] {
+    background-color: var(--active-color);
+    color: white;
+}
+
+.DataChange button[type="button"] {
+    background-color: #d9534f;
+    color: white;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 600px) {
+    .DataChange button {
+        width: 100%;
+        margin: 10px 0;
+    }
+}
