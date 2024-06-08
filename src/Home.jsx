@@ -2,7 +2,7 @@ import './App.css';
 import { simulateTyping } from './simulateTyping';
 import React, { useState, useRef, useEffect  } from 'react';
 import { onValue, ref } from 'firebase/database';
-import { database } from './firebaseConfig'; 
+import { database } from './firebaseConfig';
 import Header from './header';
 import getSvg  from './Accesorios/getSvg';
 import getImg  from './Accesorios/getImg';
@@ -13,7 +13,76 @@ import { jobTypeCategoryMapping } from './jobTypeCategoryMapping';
 import { useTranslation } from 'react-i18next'
 import { selectCategories } from './selectCategories';
 import Popup from './popup';
+import { useAdmin } from './AdminContext';
 
+const useFetchLocationNames = () => {
+  const [locationNames, setLocationNames] = useState({});
+
+  useEffect(() => {
+    const locationNamesRef = ref(database, 'data/locations');
+    onValue(locationNamesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setLocationNames(snapshot.val());
+      } else {
+        console.log("No location names found in Firebase.");
+      }
+    });
+  }, []);
+  
+
+  return locationNames;
+};
+
+const useFetchEmploymentNames = () => {
+  const [employmentNames, setEmploymentNames] = useState({});
+
+  useEffect(() => {
+    const employmentNamesRef = ref(database, 'data/employment');
+    onValue(employmentNamesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setEmploymentNames(snapshot.val());
+      } else {
+        console.log("No employment types found in Firebase.");
+      }
+    });
+  }, []);
+
+  return employmentNames;
+}
+
+const useFetchSeniorityNames = () => {
+  const [seniorityNames, setSeniorityNames] = useState({});
+
+  useEffect(() => {
+    const seniorityNamesRef = ref(database, 'data/experience');
+    onValue(seniorityNamesRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setSeniorityNames(snapshot.val());
+      } else {
+        console.log("No Experience levels found in Firebase.");
+      }
+    });
+  }, []);
+
+  return seniorityNames;
+}
+
+const useFetchJobCounts = () => {
+  const [jobCounts, setJobCounts] = useState({});
+
+  useEffect(() => {
+    const jobCountsRef = ref(database, 'path_to_job_counts'); // Replace with the correct path to your job counts in the database
+    onValue(jobCountsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setJobCounts(snapshot.val());
+      } else {
+        console.log("No job counts found in Firebase.");
+      }
+    });
+  }, []);
+
+  return jobCounts;
+};
 
 
 export const JobCard = ({ job, onClick, className }) => {
@@ -289,6 +358,12 @@ function Home() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedCategories, setSelectedCategories] = useState([]);
 
+    const { addNewLocation, updateLocationName } = useAdmin();
+    const locationNames = useFetchLocationNames();
+    const employmentNames = useFetchEmploymentNames();
+    const seniorityNames = useFetchSeniorityNames();
+    const jobCounts = useFetchJobCounts(); 
+
     const shouldFadeOut = (job) => {
       // If no categories are selected, don't fade out any jobs
       if (!selectedCategories.length) return false;
@@ -296,7 +371,6 @@ function Home() {
       // Fade out the job if its category is not in the selected categories
       return !selectedCategories.includes(job.category);
   };
-
 
     // When jobs or selectedCategory changes, update filteredJobs
     useEffect(() => {
@@ -352,7 +426,7 @@ function Home() {
   }, [jobs, selectedCategories]); // Update dependency array
 
 
-
+  
 
 
     const handleCloseClick = () => {
@@ -568,62 +642,62 @@ function Home() {
                 <div className="type-container">
                   <input type="radio" name="location" id="job1" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
                   <label htmlFor="job1">Agder</label>
-                  <span className="job-number">{jobCounts['Agder'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Agder'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job2" className="job-style" onClick={(e) => handleLocationSelection('Innlandet', e)}/>
                   <label htmlFor="job2">Innlandet</label>
-                  <span className="job-number">{jobCounts['Innlandet'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Innlandet'] || 0}</span>
                 </div>
                 <div className="type-container">
                 <input type="radio" name="location" id="job3" className="job-style" onClick={(e) => handleLocationSelection('Møre og Romsdal', e)}/>
                   <label htmlFor="job3">Møre og Romsdal</label>
-                  <span className="job-number">{jobCounts['Møre og Romsdal'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Møre og Romsdal'] || 0}</span>
                 </div>
                 <div className="type-container">
                 <input type="radio" name="location" id="job4" className="job-style" onClick={(e) => handleLocationSelection('Nordland', e)}/>
                   <label htmlFor="job4">Nordland</label>
-                  <span className="job-number">{jobCounts['Nordland'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Nordland'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job5" className="job-style" onClick={(e) => handleLocationSelection('Oslo', e)}/>
                   <label htmlFor="job5">Oslo</label>
-                  <span className="job-number">{jobCounts['Oslo'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Oslo'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job6" className="job-style" onClick={(e) => handleLocationSelection('Rogaland', e)}/>
                   <label htmlFor="job6">Rogaland</label>
-                  <span className="job-number">{jobCounts['Rogaland'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Rogaland'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job7" className="job-style" onClick={(e) => handleLocationSelection('Svalbard', e)}/>
                   <label htmlFor="job7">Svalbard</label>
-                  <span className="job-number">{jobCounts['Svalbard'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Svalbard'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job8" className="job-style" onClick={(e) => handleLocationSelection('Troms og Finnmark', e)}/>
                   <label htmlFor="job8">Troms og Finnmark</label>
-                  <span className="job-number">{jobCounts['Troms og Finnmark'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Troms og Finnmark'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job9" className="job-style" onClick={(e) => handleLocationSelection('Trøndelag', e)}/>
                   <label htmlFor="job9">Trøndelag</label>
-                  <span className="job-number">{jobCounts['Trøndelag'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Trøndelag'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job10" className="job-style" onClick={(e) => handleLocationSelection('Vestfold og Telemark', e)}/>
                   <label htmlFor="job10">Vestfold og Telemark</label>
-                  <span className="job-number">{jobCounts['Vestfold og Telemark'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Vestfold og Telemark'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job11" className="job-style" onClick={(e) => handleLocationSelection('Vestland', e)}/>
                   <label htmlFor="job11">Vestland</label>
-                  <span className="job-number">{jobCounts['Vestland'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Vestland'] || 0}</span>
                 </div>
                 <div className="type-container">
                   <input type="radio" name="location" id="job12" className="job-style" onClick={(e) => handleLocationSelection('Viken', e)}/>
                   <label htmlFor="job12">Viken</label>
-                  <span className="job-number">{jobCounts['Viken'] || 0}</span>
+                  <span className="job-number">{countyJobCounts['Viken'] || 0}</span>
                 </div>
               </div>
             </div>
@@ -693,12 +767,12 @@ function Home() {
     // State to hold the number of jobs
     const [jobCount, setJobCount] = useState(0);
 
-    const [jobCounts, setJobCounts] = useState({});
+    const [countyJobCounts, setCountyJobCounts] = useState({});
 
     // Effect to update the job count when the component mounts
     useEffect(() => {
-        setJobCount(jobs.length);
-        setJobCounts(countJobsByCounty(jobs));
+      setJobCount(jobs.length);
+      setCountyJobCounts(countJobsByCounty(jobs)); // Using the correct setter function name
     }, [jobs]);
 
     
@@ -754,10 +828,9 @@ useEffect(() => {
   // Update the counts for the filters based on the filtered jobs
   setEmploymentTypeCounts(countJobsByEmploymentType(updatedFilteredJobs));
   setSeniorityLevelCounts(countJobsBySeniorityLevel(updatedFilteredJobs));
-  setJobCounts(countJobsByCounty(updatedFilteredJobs)); // Assuming you use this state to dynamically render County options
+  setCountyJobCounts(countJobsByCounty(updatedFilteredJobs)); // Assuming you use this state to dynamically render County options
 }, [jobs, selectedCategory, priceRange, selectedLocation, selectedEmploymentTypes, selectedSeniorityLevels]);
 
-// ...rest of your component
 
     
     
@@ -955,12 +1028,12 @@ useEffect(() => {
                   <div className="type-container">
                       <input type="radio" name="location" id="job01" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
                       <label htmlFor="job01">{t('time-betalt')}</label>
-                      <span className="job-number">{jobCounts['Time'] || 0}</span>
+                      <span className="job-number">{countyJobCounts['Time'] || 0}</span>
                     </div>
                     <div className="type-container">
                       <input type="radio" name="location" id="job02" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
                       <label htmlFor="job02">{t('slutt-betalt')}</label>
-                      <span className="job-number">{jobCounts['Slutt'] || 0}</span>
+                      <span className="job-number">{countyJobCounts['Slutt'] || 0}</span>
                     </div>
                 </div>
                 <div className="job-time">
@@ -972,88 +1045,19 @@ useEffect(() => {
                   </div>
                   <div className="job-wrapper">
                     {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job1" className="job-style" onClick={(e) => handleLocationSelection('Agder', e)}/>
-                      <label htmlFor="job1">Agder</label>
-                      <span className="job-number">{jobCounts['Agder'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job2" className="job-style" onClick={(e) => handleLocationSelection('Innlandet', e)}/>
-                      <label htmlFor="job2">Innlandet</label>
-                      <span className="job-number">{jobCounts['Innlandet'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                    <input type="radio" name="location" id="job3" className="job-style" onClick={(e) => handleLocationSelection('Møre og Romsdal', e)}/>
-                      <label htmlFor="job3">Møre og Romsdal</label>
-                      <span className="job-number">{jobCounts['Møre og Romsdal'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                    <input type="radio" name="location" id="job4" className="job-style" onClick={(e) => handleLocationSelection('Nordland', e)}/>
-                      <label htmlFor="job4">Nordland</label>
-                      <span className="job-number">{jobCounts['Nordland'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job5" className="job-style" onClick={(e) => handleLocationSelection('Oslo', e)}/>
-                      <label htmlFor="job5">Oslo</label>
-                      <span className="job-number">{jobCounts['Oslo'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job6" className="job-style" onClick={(e) => handleLocationSelection('Rogaland', e)}/>
-                      <label htmlFor="job6">Rogaland</label>
-                      <span className="job-number">{jobCounts['Rogaland'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job7" className="job-style" onClick={(e) => handleLocationSelection('Svalbard', e)}/>
-                      <label htmlFor="job7">Svalbard</label>
-                      <span className="job-number">{jobCounts['Svalbard'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job8" className="job-style" onClick={(e) => handleLocationSelection('Troms og Finnmark', e)}/>
-                      <label htmlFor="job8">Troms og Finnmark</label>
-                      <span className="job-number">{jobCounts['Troms og Finnmark'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job9" className="job-style" onClick={(e) => handleLocationSelection('Trøndelag', e)}/>
-                      <label htmlFor="job9">Trøndelag</label>
-                      <span className="job-number">{jobCounts['Trøndelag'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job10" className="job-style" onClick={(e) => handleLocationSelection('Vestfold og Telemark', e)}/>
-                      <label htmlFor="job10">Vestfold og Telemark</label>
-                      <span className="job-number">{jobCounts['Vestfold og Telemark'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job11" className="job-style" onClick={(e) => handleLocationSelection('Vestland', e)}/>
-                      <label htmlFor="job11">Vestland</label>
-                      <span className="job-number">{jobCounts['Vestland'] || 0}</span>
-                    </div>
-                    )}
-                    {showTypeContainers && (
-                    <div className="type-container">
-                      <input type="radio" name="location" id="job12" className="job-style" onClick={(e) => handleLocationSelection('Viken', e)}/>
-                      <label htmlFor="job12">Viken</label>
-                      <span className="job-number">{jobCounts['Viken'] || 0}</span>
-                    </div>
+                        Object.keys(locationNames).map((locationKey) => (
+                            <div className="type-container" key={locationKey}>
+                                <input 
+                                    type="radio" 
+                                    name="location" 
+                                    id={`job-${locationKey}`} 
+                                    className="job-style" 
+                                    onClick={(e) => handleLocationSelection(locationNames[locationKey], e)}
+                                />
+                                <label htmlFor={`job-${locationKey}`}>{locationNames[locationKey]}</label>
+                                <span className="job-number">{countyJobCounts[locationNames[locationKey]] || 0}</span>
+                            </div>
+                        ))
                     )}
                   </div>
                 </div>
@@ -1082,39 +1086,19 @@ useEffect(() => {
                   </div>
                   <div className="job-wrapper">
                     {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job13" className="job-style" checked={selectedEmploymentTypes.includes("Heltidsjobber")} onChange={() => handleEmploymentTypeSelection("Heltidsjobber")}/>
-                      <label htmlFor="job13">{t('heltidsjobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Heltidsjobber"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job14" className="job-style" checked={selectedEmploymentTypes.includes("Deltidsjobber")} onChange={() => handleEmploymentTypeSelection("Deltidsjobber")}/>
-                      <label htmlFor="job14">{t('deltidsjobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Deltidsjobber"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job15" className="job-style" checked={selectedEmploymentTypes.includes("Eksterne jobber")} onChange={() => handleEmploymentTypeSelection("Eksterne jobber")}/>
-                      <label htmlFor="job15">{t('eksterne-jobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Eksterne jobber"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job16" className="job-style" checked={selectedEmploymentTypes.includes("Kontrakt")} onChange={() => handleEmploymentTypeSelection("Kontrakt")}/>
-                      <label htmlFor="job16">{t('kontrakt')}</label>
-                      <span className="job-number">{employmentTypeCounts["Kontrakt"] || 0}</span>
-                    </div>
-                    )}
-                    {showEmploymentTypes && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job17" className="job-style" checked={selectedEmploymentTypes.includes("Små jobber")} onChange={() => handleEmploymentTypeSelection("Små jobber")}/>
-                      <label htmlFor="job17">{t('små-jobber')}</label>
-                      <span className="job-number">{employmentTypeCounts["Små jobber"] || 0}</span>
-                    </div>
+                        Object.keys(employmentNames).map((employmentKey) => (
+                            <div className="type-container" key={employmentKey}>
+                                <input 
+                                    type="checkbox" 
+                                    name="employment" 
+                                    id={`job-${employmentKey}`} 
+                                    className="job-style" 
+                                    onClick={(e) => handleEmploymentTypeSelection(employmentNames[employmentKey], e)}
+                                />
+                                <label htmlFor={`job-${employmentKey}`}>{employmentNames[employmentKey]}</label>
+                                <span className="job-number">{employmentTypeCounts[employmentNames[employmentKey]] || 0}</span>
+                            </div>
+                        ))
                     )}
                   </div>
                 </div>
@@ -1127,32 +1111,19 @@ useEffect(() => {
                   </div>
                   <div className="job-wrapper">
                     {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job18" className="job-style" checked={selectedSeniorityLevels.includes("Studentnivå")} onChange={() => handleSeniorityLevelSelection("Studentnivå")}/>
-                      <label htmlFor="job18">{t('studentnivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Studentnivå"] || 0}</span>
-                    </div>
-                    )}
-                    {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job19" className="job-style" checked={selectedSeniorityLevels.includes("Inngangsnivå")} onChange={() => handleSeniorityLevelSelection("Inngangsnivå")}/>
-                      <label htmlFor="job19">{t('inngangsnivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Inngangsnivå"] || 0}</span>
-                    </div>
-                    )}
-                    {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job20" className="job-style" checked={selectedSeniorityLevels.includes("Midtnivå")} onChange={() => handleSeniorityLevelSelection("Midtnivå")}/>
-                      <label htmlFor="job20">{t('midtnivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Midtnivå"] || 0}</span>
-                    </div>
-                    )}
-                    {showSeniorityLevels && (
-                    <div className="type-container">
-                      <input type="checkbox" id="job21" className="job-style" checked={selectedSeniorityLevels.includes("Seniornivå")} onChange={() => handleSeniorityLevelSelection("Seniornivå")}/>
-                      <label htmlFor="job21">{t('seniornivå')}</label>
-                      <span className="job-number">{seniorityLevelCounts["Seniornivå"] || 0}</span>
-                    </div>
+                        Object.keys(seniorityNames).map((seniorityKey) => (
+                            <div className="type-container" key={seniorityKey}>
+                                <input 
+                                    type="checkbox" 
+                                    name="employment" 
+                                    id={`job-${seniorityKey}`} 
+                                    className="job-style" 
+                                    onClick={(e) => handleSeniorityLevelSelection(seniorityNames[seniorityKey], e)}
+                                />
+                                <label htmlFor={`job-${seniorityKey}`}>{seniorityNames[seniorityKey]}</label>
+                                <span className="job-number">{seniorityLevelCounts[seniorityNames[seniorityKey]] || 0}</span>
+                            </div>
+                        ))
                     )}
                   </div>
                 </div>

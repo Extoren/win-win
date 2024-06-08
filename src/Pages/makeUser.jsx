@@ -42,7 +42,7 @@ function MakeUser() {
                 ...formData,
                 email: user.email,
                 role: selectedOption === 'option1' ? 'Barn' : 'Voksen', // Include the role based on the selected option
-                isSetupComplete: true
+                isSetupComplete: true,
             };
     
             updateDatabaseWithUserData(user.uid, updatedFormData);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import './profile.css';
 import Header from '../header';
 import NavigationBar from '../NavigationBar';
@@ -12,6 +12,7 @@ function Profile() {
     const [userName, setUserName] = useState({ firstName: '', lastName: '' });
     const [userData, setUserData] = useState({}); // state to store user data
     const { userId } = useParams(); // useParams hook to get userId from URL
+    const scrollWrapperRef = useRef(null);
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -46,10 +47,41 @@ function Profile() {
         }
     }, [userId]); // Only re-run the effect if the userId changes
 
+    useEffect(() => {
+        const scrollWrapper = scrollWrapperRef.current;
+
+        function updateScrollbarThumb() {
+            const scrollTop = scrollWrapper.scrollTop;
+            const scrollHeight = scrollWrapper.scrollHeight;
+            const clientHeight = scrollWrapper.clientHeight;
+
+            if (scrollTop === 0) {
+                // At the top
+                scrollWrapper.classList.add('at-top');
+                scrollWrapper.classList.remove('at-bottom');
+            } else if (scrollTop + clientHeight >= scrollHeight) {
+                // At the bottom
+                scrollWrapper.classList.add('at-bottom');
+                scrollWrapper.classList.remove('at-top');
+            } else {
+                // In between
+                scrollWrapper.classList.remove('at-top');
+                scrollWrapper.classList.remove('at-bottom');
+            }
+        }
+
+        scrollWrapper.addEventListener('scroll', updateScrollbarThumb);
+        updateScrollbarThumb(); // Initial check
+
+        return () => {
+            scrollWrapper.removeEventListener('scroll', updateScrollbarThumb);
+        };
+    }, []);
+
     return (
         <div className="container">
             <Header />
-
+            <div className="scroll-wrapper" ref={scrollWrapperRef}>
                 <div className="innerwrap">
                     <section className="section1 clearfix">
                     <div>
@@ -58,8 +90,9 @@ function Profile() {
                             <div className="profile-picture">
                                 <i className="fas fa-user"></i>
                             </div>
-                            <h2>{`${userData.name || ''} ${userData.surname || ''}`}</h2>
-                            <p>
+                            <h2>{`${userData.name || ''} ${userData.surname || ''}`} <i id="yellow2">(Du)</i></h2>
+                            <p id="stars">??? <i class="fa fa-star" aria-hidden="true"></i></p>
+                            <p id="moveRight">
                             Lorem Ipsum is simply dummy text of the printing and typesetting
                             industry. Lorem Ipsum has been the industry's
                             </p>
@@ -185,8 +218,8 @@ function Profile() {
                     </div>
                 </div>
                 </div>
-
-
+                <div className="scroll-text">Bla meg =)</div>
+            </div>
             <NavigationBar />
         </div>
     );

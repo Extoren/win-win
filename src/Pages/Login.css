@@ -229,7 +229,7 @@ h2 {
     color: white;
 }
 
-input {
+input .logIn {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -239,7 +239,7 @@ input {
     color: var(--body-color);
 }
 
-input::placeholder {
+input .logIn::placeholder {
     color: var(--placeholder-input)
 }
 

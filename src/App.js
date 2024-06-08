@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from 'react';
 import './App.css';
 import FAQ from "./Pages/FAQ";
 import Login from "./Pages/Login";
+import Administrator from './Pages/Administrator';
 import Home from './Home';
 import Create from './Pages/create';
 import { AuthProvider, AuthContext } from './AuthContext';
@@ -17,10 +18,11 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from "@vercel/analytics/react";
 import JobDetailView from './Home';
 import './i18n';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom'; 
 import useUserRole from './hooks/useUserRole';
 import Profile from './Pages/profile';
 import Settings from './Pages/settings';
+import { AdminProvider } from './AdminContext';
 
 const ProtectedRoute = ({ children }) => {
     const { role, isLoading } = useUserRole();
@@ -30,6 +32,16 @@ const ProtectedRoute = ({ children }) => {
     }
 
     return role === 'Voksen' ? children : <Navigate to="/" replace />;
+};
+
+const ProtectedAdmin = ({ children }) => {
+  const { role, isLoading } = useUserRole();
+
+  if (isLoading) {
+      return <div>Loading...</div>; // Or any loading indicator you prefer
+  }
+
+  return role === 'Admin' ? children : <Navigate to="/" replace />;
 };
 
 NProgress.configure({ speed: 200 }); // Adjust the speed as needed
@@ -73,11 +85,13 @@ const SettingsRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
+    <AdminProvider>
       <Router>
         <Analytics />
         <SpeedInsights/>
         <RouteChangeTracker />
         <Routes>
+          <Route path="/administrator" element={<ProtectedAdmin><Administrator /></ProtectedAdmin>} />
           <Route path="/settings" element={<SettingsRoute><Settings /></SettingsRoute>} />
           <Route path="/win/:userId" element={<Profile />} />
           <Route path="/makeUser" element={<MakeUser />} />
@@ -89,6 +103,7 @@ function App() {
           <Route path="/myJobs" element={<ProtectedRoute><MyJobs /></ProtectedRoute>} />
         </Routes>
       </Router>
+    </AdminProvider>
     </AuthProvider>
   );
 }
