@@ -1,58 +1,110 @@
-*, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; -ms-box-sizing:border-box; -o-box-sizing:border-box; box-sizing: border-box; }
+.container {
+    position: relative;
+    overflow: hidden;
+}
 
+.scroll-wrapper {
+    position: relative;
+    height: 100vh;
+    overflow-y: scroll; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    padding-right: 20px; /* Space for the custom scrollbar */
+    box-sizing: content-box;
+}
+
+/* Custom scrollbar */
+.scroll-wrapper::-webkit-scrollbar {
+    width: 12px;
+}
+
+.scroll-wrapper::-webkit-scrollbar-thumb {
+    background: var(--active-color); /* Adjust scrollbar color */
+    border-radius: 6px;
+    transition: border-radius 0.3s;
+}
+
+.scroll-wrapper.at-top::-webkit-scrollbar-thumb {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.scroll-wrapper.at-bottom::-webkit-scrollbar-thumb {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.scroll-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Adjust scrollbar track color */
+}
+
+/* Text element next to scrollbar */
+.scroll-text {
+    position: fixed;
+    top: 50%;
+    right: -25px; /* Adjust position to move it outside of the container */
+    transform: translateY(-50%) rotate(90deg);
+    font-size: 1.3em;
+    color: var(--active-light-color); /* Adjust text color */
+    z-index: 1000; /* Ensure it is above other elements */
+    pointer-events: none; /* Ensure it does not interfere with scrolling */
+}
+
+/* Your existing CSS */
 .clearfix:before, .clearfix:after { display: table; content: ''; }
 .clearfix:after { clear: both; }
 
-
-
-
+/* Grid styling */
 .grid .col2 {
-	width: 50%;
-	padding: 0 10px 0 0;
+    width: 50%;
+    padding: 0 10px 0 0;
 }
+
 .grid .col2.first {
-	float: left;
+    float: left;
 }
+
 .grid .col2.last {
-	float: right;
+    float: right;
 }
 
 .grid .col3 {
-	width: 32%;
-	float: left;
-	margin-right: 11px;
+    width: 32%;
+    float: left;
+    margin-right: 11px;
 }
+
 .grid .col3.first {
-	margin-left: 0;
-	float: left;
+    margin-left: 0;
+    float: left;
 }
+
 .grid .col3.last {
-	margin-right: 0;
-	float: right;
+    margin-right: 0;
+    float: left;
 }
 
 .innerwrap {
-    width: 1200px;
+    width: 1300px;
     margin: 0 auto;
-    padding-top: 50px;
+    margin-top: 50px;
+    overflow-x: hidden;
 }
 
 .section1 {
-	background: var(--header-bg-color);
-	position: relative;
-	border-radius: 2px;
-}
-.section1 div .row:first-child {
-	padding: 25px;
+    background: var(--header-bg-color);
+    position: relative;
+    border-radius: 2px;
 }
 
+.section1 div .row:first-child {
+    padding: 25px;
+}
 
 .section1 .col2.first .profile-picture {
-	border-radius: 50%;
-	margin: 0 20px;
-	border:2px solid #f1f1f1;
-	padding: 2px;
-	float: left;
+    border-radius: 50%;
+    margin: 0 20px;
+    border:2px solid #f1f1f1;
+    padding: 2px;
+    float: left;
     width: 100px;
     height: 100px;
     margin-top: 20px;
@@ -65,22 +117,26 @@
     font-size: clamp(3rem, 2em, 2rem);
     transition: 3s;
 }
+
 .section1 .col2.first {
-	line-height: 25px;
-	position: relative;
-	border-right:1px solid #a2a2a2;
+    line-height: 25px;
+    position: relative;
+    border-right:1px solid #a2a2a2;
 }
+
 .section1 .col2.first h1 {
     font-weight: normal;
     margin-bottom: 10px;
-	margin-top: 15px;
-	text-transform: capitalize;
+    margin-top: 15px;
+    text-transform: capitalize;
 }
+
 .section1 .col2.first p {
-	font-size: 14px;
+    font-size: 14px;
 }
+
 .section1 .col2.first span {
-	position: absolute;
+    position: absolute;
     right: 15px;
     top: 16px;
     background: var(--Hover-color);
@@ -89,16 +145,18 @@
     line-height: 1;
     border-radius: 2px;
     color: #fff;
-  cursor:pointer;
+    cursor:pointer;
 }
 
 .section1 .col2.last {
-	padding: 8px 0;
+    padding: 8px 0;
 }
+
 .section1 .col2.last .col3 span {
     color: #a2a2a2;
     font-size: 14px;
 }
+
 .section1 .col2.last .col3 h1 {
     color: var(--warning-color);
 }
@@ -108,8 +166,9 @@
     line-height: 30px;
     border-right: 1px solid #ccc;
 }
+
 .section1 .col2.last .col3.last {
-	border-right: 0;
+    border-right: 0;
 }
 
 .row2tab li {
@@ -124,20 +183,13 @@
     color: #555;
     border-bottom: 2px solid #f1f1f1;
 }
+
 .clearfix ul {
     border: none;
 }
-/*.row2tab li:first-child {
-    border-bottom: 2.5px solid var(--active-color);
-    border-radius: 0 0 2px 2px;
-}
-.row2tab li i {
-    margin-right: 3px;
-    font-size: 14px;
-}*/
 
 .smalltri {
-	border-right: 40px solid var(--active-color);
+    border-right: 40px solid var(--active-color);
     height: 0;
     width: 0;
     border-left: 20px solid transparent;
@@ -148,6 +200,7 @@
     right: 0;
     position: absolute;
 }
+
 .smalltri i {
     position: absolute;
     top: -5px;
@@ -157,20 +210,21 @@
     font-size: 12px;
 }
 
-section.section2 {
+.section2 {
     margin: 50px 0;
 }
 
 .section2 .col3 {
-	width: 30%;
-	margin-right: 60px;
-	background: #fff;
-	border-radius: 2px;
+    width: 30%;
+    margin-right: 60px;
+    background: #fff;
+    border-radius: 2px;
 }
 
 .section2 .postcont img {
-	width: 100%;
+    width: 100%;
 }
+
 .section2 .profileinfo {
     text-align: center;
     padding: 0 10px 30px;
@@ -178,6 +232,7 @@ section.section2 {
     font-size: 14px;
     line-height: 25px;
 }
+
 .section2 .profileinfo .profile-picture {
     border-radius: 50%;
     width: 80px;
@@ -199,83 +254,117 @@ section.section2 {
 
 .section2 .col3.center .profileinfo img {
     border: 3px solid #FB4C22;
+}
 
-}
 .section2 .profileinfo p {
-	text-align: justify;
+    text-align: justify;
 }
+
 .section2 .profileinfo span {
-	margin-top: 15px;
+    margin-top: 15px;
     display: block;
     text-align: left;
     color: #6AAFEA;
     cursor: pointer;
 }
+
 .section2 .profileinfo span i {
-	margin-left: 10px;
+    margin-left: 10px;
 }
 
 @media only screen and (max-width: 1300px) {
-	.innerwrap {
-		width: 90%;
-	}
-	.section2 .col3 {
-		margin-right: 5%;
-	}
-	.section1 .grid .col3 {
-		margin-right: 2%;
-	}
-	.section1 .col2.last .col3.last {
-		margin-right: 0;
-	}
+    .innerwrap {
+        width: 90%;
+    }
+
+    .section2 .col3 {
+        margin-right: 5%;
+    }
+
+    .section1 .grid .col3 {
+        margin-right: 2%;
+    }
+
+    .section1 .col2.last .col3.last {
+        margin-right: 0;
+    }
 }
 
 @media only screen and (max-width: 1060px) {
-	.section1 .col2 {
-		width: 100%;
-		border-right:0 !important;
-		padding: 0;
-	}
+    .section1 .col2 {
+        width: 100%;
+        border-right:0 !important;
+        padding: 0;
+    }
 }
 
 @media only screen and (max-width: 740px) {
-	.section2 .col3 {
-		width: 100%;
-		float: none !important;
-		margin-bottom: 10px;
-	}
-	.row2tab li {
-		width: 50%;
-		text-align: left;
-	}
-	.section1 .col2.first {
-		text-align: center;
-	}
-	.section1 .col2.first .profile-picture {
-		display: inline-block;
-		float: none;
-	}
+    .section2 .col3 {
+        width: 100%;
+        float: none !important;
+        margin-bottom: 10px;
+    }
+
+    .row2tab li {
+        width: 50%;
+        text-align: left;
+    }
+
+    .section1 .col2.first {
+        text-align: center;
+    }
+
+    .section1 .col2.first .profile-picture {
+        display: inline-block;
+        float: none;
+    }
+
     .section1 .col2.first .profile-picture .fa-user {
         margin-top: 20px;
-	}
-	.section1 .col2.first span {
-		position: relative;
-		right: 0;
-	}
-  .section1 .col2.last {
-    margin-top:25px;
-  }
+    }
+
+    .section1 .col2.first span {
+        position: relative;
+        right: 0;
+    }
+
+    .section1 .col2.last {
+        margin-top:25px;
+    }
 }
+
 @media only screen and (max-width: 450px) {
-  .row2tab li {
-		width: 100%;
-		text-align: left;
-	}
-	.section1 .col2.last .col3 span {
-		font-size: 10px;
-	}
-	.section1 .col2.last .col3 h1 {
-		font-size: 18px;
-	}
-	
+    .row2tab li {
+        width: 100%;
+        text-align: left;
+    }
+
+    .section1 .col2.last .col3 span {
+        font-size: 10px;
+    }
+
+    .section1 .col2.last .col3 h1 {
+        font-size: 18px;
+    }
+}
+
+#yellow2 {
+    color: var(--active-color);
+    margin-left: 5px;
+}
+
+#moveRight {
+    margin-left: 140px;
+}
+
+@media (max-width:740px) {
+    #moveRight {
+        margin-left: 0;
+    }
+}
+
+#stars {
+    color: var(--active-color);
+    margin:-10px;
+    padding: -40px;
 }

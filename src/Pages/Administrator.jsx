@@ -92,9 +92,120 @@ function Administrator() {
     };
 
     return (
-        <div>
+        <div className="bodyPart">
             <Header />
-            <h1>Administrator</h1>
+            <h1>Admin Panel</h1>
+            <div className="settings">
+                {/* make alot of buttons */}
+                <div className="settings-holder">
+                    <div className="settings-text">
+                        <p>Generelt</p>
+                    </div>
+                    <div className="settings-buttons">
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-chart-line" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Vis Analyser</h1>
+                                <p style={{margin: 0}}>Analyser bruker- og systemdata.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-exchange-alt" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Dataoverføring</h1>
+                                <p style={{margin: 0}}>Administrer dataimport og -eksport.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-database" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Database-administrasjon</h1>
+                                <p style={{margin: 0}}>Overvåk databaseoperasjoner.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-user-shield" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Bruker-tillatelser</h1>
+                                <p style={{margin: 0}}>Administrer brukerroller og tilgang.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-server" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Server-status</h1>
+                                <p style={{margin: 0}}>Overvåk serverens helse og oppetid.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-users-cog" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Rolle-administrasjon</h1>
+                                <p style={{margin: 0}}>Tildel og oppdater brukerroller.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-bell" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Varslings-innstillinger</h1>
+                                <p style={{margin: 0}}>Konfigurer systemvarsler.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-history" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Aktivitets-logger</h1>
+                                <p style={{margin: 0}}>Se og administrer aktivitetslogger.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-exclamation-triangle" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Rapporter Problem</h1>
+                                <p style={{margin: 0}}>Rapporter et problem eller en feil.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button>
+                        <div style={{display: 'flex'}}>
+                            <i class="fas fa-comments" style={{marginRight: '20px'}}></i>
+                            <div>
+                                <h1 style={{margin: 0}}>Kontakt Support</h1>
+                                <p style={{margin: 0}}>Ta kontakt med kundeservice.</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    </div>
+                </div>
+            </div>
             <div className="AdminContainer">
                 <form onSubmit={handleSubmit} className="DataChange">
                     <select value={type} onChange={e => setType(e.target.value)}>

@@ -189,7 +189,7 @@ function Login() {
                             <div className="form-section login">
                                 <h2>Log In</h2>
                                 <form>
-                                    <input disabled id="not" type="tel" placeholder="Email" required="" />
+                                    <input className="logIn" disabled id="not" type="tel" placeholder="Email" required="" />
                                     <button disabled id="not" type="submit">Logg Inn</button>
                                 </form>
 

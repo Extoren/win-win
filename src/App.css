@@ -15,7 +15,8 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: var(--active-color); /* Set the color of the scrollbar thumb */
-  border-radius: 6px; /* Optional: add rounded corners to the scrollbar thumb */
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -1791,6 +1792,16 @@ a {
   .menu-background:hover .fas.fa-heart {
     color: inherit;
   }
+
+  .active-admin {
+    background-color: var(--alert-bg-color);
+    padding: 5px;
+    border-radius: 10px;
+  }
+
+  .active-admin i {
+      color: var(--active-color);
+  }
   
 
 @media screen and (max-width: 520px) {
@@ -1975,6 +1986,7 @@ a {
   color: var(--active-color) !important;
   background: var(--active-color) !important;
   border-radius: 10px;
+  width: 100%;
   padding: 1px;
   height: 5px;
   -webkit-appearance: none;

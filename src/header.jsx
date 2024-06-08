@@ -280,9 +280,14 @@ function Header({ onClose }) {
             </NavLink>
           )}
           {!isLoading && role === 'Admin' && (
-            <NavLink to="/Administrator" className={location.pathname === "/create" ? "" : "menu-background"} activeClassName="active">
-              <i className="fas fa-hammer"></i> Administrator
-            </NavLink>
+              <NavLink 
+                  to="/Administrator" 
+                  className={({ isActive }) => 
+                      isActive ? "active-admin" : "menu-background"
+                  } 
+                  activeClassName="active">
+                  <i className="fas fa-hammer"></i> Administrator
+              </NavLink>
           )}
           {!isLoading && role === 'Barn' && (
             <NavLink to="/favoritt" className={location.pathname === "/favoritt" ? "" : "menu-background"} activeClassName="active">
