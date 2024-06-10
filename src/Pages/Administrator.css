@@ -6,10 +6,18 @@
     overflow: hidden;
 }
 
-.settings-holder {
-    max-height: 80vh; /* Limit the height of the settings holder */
-    overflow-y: auto; /* Enable vertical scrolling */
-    width: 100%; /* Ensure it takes the full width */
+.settings-holder2 {
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 100%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.settings-buttons {
+    border: 5px solid var(--alert-bg-color-part-two);
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
 }
 
 .AdminContainer {
