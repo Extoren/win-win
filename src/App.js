@@ -23,6 +23,8 @@ import useUserRole from './hooks/useUserRole';
 import Profile from './Pages/profile';
 import Settings from './Pages/settings';
 import { AdminProvider } from './AdminContext';
+import JobStatus from './Pages/JobStatus';
+import Alerts from './Pages/Alerts';
 
 const ProtectedRoute = ({ children }) => {
     const { role, isLoading } = useUserRole();
@@ -99,8 +101,10 @@ function App() {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/" element={<Home />} />
           <Route path="/:jobId" element={<JobDetailView />} />
+          <Route path="/jobStatus/:jobId" element={<JobStatus />} />
           <Route path="/create" element={<ProtectedRoute><Create /></ProtectedRoute>} />
           <Route path="/myJobs" element={<ProtectedRoute><MyJobs /></ProtectedRoute>} />
+          <Route path="/alerts" element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
         </Routes>
       </Router>
     </AdminProvider>

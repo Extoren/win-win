@@ -20,17 +20,63 @@
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    gap: 20px;
+    gap: 10px;
     margin-bottom: 20px;
+    transition: 3s;
 }
 
-@media (max-width: 600px) {
+.Status-menu .row button {
+    margin-right: 10px;
+    transition: 1s;
+}
+
+#homePage {
+    transition: 1s;
+}
+
+@media (max-width: 800px) {
     .Status-menu {
         flex-direction: column;
         gap: 0px;
     }
     #hid {
         border: none;
+    }
+
+    .Status-menu button {
+        order: 2;
+        width: 200px;
+        height: 100px;
+    }
+
+    #homePage {
+        order: 1;
+        width: 200px;
+        height: 100px;
+    }
+
+    .Status-menu .row {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+        order: 2;
+    }
+}
+
+@media (max-width: 500px) {
+    .Status-menu .row button {
+        order: 2;
+        width: 150px;
+        height: 150px;
+        font-size: 1.4em;
+    }
+
+    #homePage {
+        order: 1;
+        width: 150px;
+        height: 100px;
+        font-size: 1.4em;
     }
 }
 
@@ -66,7 +112,23 @@
     font-size: 1.9em;
     transition: height 0.3s ease;
   }
+
+  .Status-menu button.active {
+    color:  var(--active-light-color);
+  }
   
+
+.Status-menu #homePage {
+    border: none;
+    background-color: var(--border-color);
+}
+  
+  .job-stats {
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+}
 
 
 .myJobs .job-buttons {

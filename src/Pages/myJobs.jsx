@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import './myJobs.css'; // Make sure you import your CSS file where you define the styles
+import './myJobs.css';
 import Header from '../header';
 import NavigationBar from '../NavigationBar';
 import Footer from '../Footer';
-import { ref, onValue, push, set, get, serverTimestamp } from 'firebase/database'; // Add missing imports here
+import { ref, onValue, push, set, get, serverTimestamp } from 'firebase/database';
 import { database, auth } from '../firebaseConfig';
 import { JobCard } from '../Home';
 import { AuthContext } from '../AuthContext';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, Link } from 'react-router-dom';
+import JobStatus from './JobStatus';
 
 function MyJobs() {
   const [jobs, setJobs] = useState([]);
@@ -78,11 +78,6 @@ function MyJobs() {
     }
 };
 
-  
-
-
-
-
   const navigate = useNavigate();
 
   const editJob = (jobData) => {
@@ -124,10 +119,10 @@ function MyJobs() {
       {jobs.map(job => (
         <div key={job.id}>
           <div className="job-buttons">
-            <button className="Status-button" id="green" onClick={() => {}}>
+            <Link to={`/jobStatus/${job.id}`} className="Status-button" id="green">
               <i className="fas fa-signal"></i> Status
-            </button>
-            <button className="edit-job-button" onClick={() => editJob(job)}>
+            </Link>
+            <button className="edit-job-button" onClick={() => navigate('/create', { state: { job } })}>
               <i className="fas fa-pencil-alt"></i> Rediger
             </button>
           </div>
@@ -161,14 +156,21 @@ function MyJobs() {
     <div className="container">
       <Header />
       <center className="faq-header" id="hid">
-                    <div className="Status-menu">
-        <button className={clickedButton === 'child' ? 'active' : ''} onClick={() => { setView('child'); setClickedButton('child'); }}>
-          <i className="fas fa-child"></i> <br />Ditt barn
-        </button>
-        <button className={clickedButton === 'jobs' ? 'active' : ''} onClick={() => { setView('jobs'); setClickedButton('jobs'); }}>
-          <i className="fas fa-globe"></i> <br />Dine oppdrag
-        </button>
-      </div>
+      <div className="Status-menu">
+          <Link to="/">
+            <button id="homePage" className={clickedButton === 'home' ? 'active' : ''} onClick={() => setClickedButton('home')}>
+              <i className="fas fa-globe"></i> <br />Forside
+            </button>
+          </Link>
+          <div className="row">
+            <button className={clickedButton === 'child' ? 'active' : ''} onClick={() => { setView('child'); setClickedButton('child'); }}>
+              <i className="fas fa-child"></i> <br />Ditt barn
+            </button>
+            <button className={clickedButton === 'jobs' ? 'active' : ''} onClick={() => { setView('jobs'); setClickedButton('jobs'); }}>
+              <i className="fa fa-list-ul"></i> <br />Dine oppdrag
+            </button>
+          </div>
+        </div>
       </center>
       {/* Conditional rendering based on the view */}
       {view === 'jobs' && renderJobsView()}

@@ -304,7 +304,9 @@ function Header({ onClose }) {
             {showNotificationDropdown && (
               <div className="notification-dropdown">
                 <div className="notification-header">
-                  <span className="notification-title">Varsler</span>
+                  <Link to="/Alerts">
+                  <span className="notification-title">Se alle varsler</span>
+                  </Link>
                   <i className="fas fa-cog notification-settings-icon"></i>
                 </div>
                 {renderNotifications()}

@@ -97,7 +97,7 @@ function Administrator() {
             <h1>Admin Panel</h1>
             <div className="settings">
                 {/* make alot of buttons */}
-                <div className="settings-holder">
+                <div className="settings-holder2">
                     <div className="settings-text">
                         <p>Generelt</p>
                     </div>
